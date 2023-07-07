@@ -1,3 +1,4 @@
+import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
 
 export const TopNavigationBar = styled.div`
@@ -12,7 +13,20 @@ export const TopNavigationBar = styled.div`
     
     div.left {
         display: flex;
-        
+        align-items: center;
+        gap: 20px;
+
+        a {
+            font-size: 200%;
+            text-decoration: none;
+            font-weight: 900;
+            color: rgb(00, 155, 255 )
+        }
+
+        svg {
+            font-size: 180%;
+            margin: 20px;
+        }
     }
 
     div.right {
@@ -76,7 +90,8 @@ export const SideBarMenueContainer = styled.div`
     overflow-y: auto;
     padding: 10px;
     border-radius: 5px;
-    background: green;
+    // background: #003366;
+    color: white;
 
     @media (max-width: 1200px) {
         
@@ -91,10 +106,37 @@ export const SideBarMenueContainer = styled.div`
     }
 `;
 
-export const SideBarMenuItem = styled.div`
+export const SideBarMenuItem = styled(NavLink)`
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    justify-content: space-between;
     width: 100%;
+    color: grey;
+    padding: 7px 0;
+    cursor: pointer;
+    text-decoration: none;
+    text-align: left;
+
+    svg {
+        width: 20%;
+    }
+
+    span.text {
+        width: 60%;
+    }
+
+    span.number {
+        width: 20%;
+    }
+
+
+    &:hover {
+        color: #3399ff;
+    }
+
+    &.active {
+        color: #0059b3;
+    }
 
     @media (max-width: 768px) {
         
