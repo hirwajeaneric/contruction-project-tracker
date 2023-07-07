@@ -32,13 +32,23 @@ export const HorizontallyFlexSpaceBetweenContainer = styled.div`
     
     div.left {
         display: flex;
-        width: 48%;
-        background-color: gray;
+        background-color: rgba(0,0,0,0.05);
     }
 
     div.right {
         display: flex;
-        width: 48%;
+        background-color: grey;
+    }
+
+    div.left49width {
+        display: flex;
+        width: 49%;
+        background-color: rgba(0,0,0,0.05);
+    }
+
+    div.right49width {
+        display: flex;
+        width: 49%;
         background-color: grey;
     }
 
@@ -46,6 +56,7 @@ export const HorizontallyFlexSpaceBetweenContainer = styled.div`
         div.left {
             display: flex;
             width: 100%;
+            background-color: rgba(0,0,0,0.05);
             margin-bottom: 20px;
         }
     
@@ -53,27 +64,51 @@ export const HorizontallyFlexSpaceBetweenContainer = styled.div`
             display: flex;
             width: 100%;
         }
+        
+        div.left49width {
+            display: flex;
+            width: 100%;
+            background-color: rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+        }
+    
+        div.right49width {
+            display: flex;
+            width: 100%;
+            background-color: grey;
+        }
     }
 
     @media (max-width: 480px) {
         div.left {
-            display: flex;
-            width: 100%;
-            margin-bottom: 15px;
+            background-color: rgba(0,0,0,0.05);
+            
         }
     
         div.right {
-            display: flex;
-            width: 100%;
+            background-color: grey;
+        
+        }
+        
+        div.left49width {
+            background-color: rgba(0,0,0,0.05);
+            
+        }
+    
+        div.right49width {
+            background-color: grey;
+        
         }
     }
 `;
 
+
 export const HorizontallyFlexGapContainer = styled.div`
     width: 100%;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
+    flex-wrap: nowrap;
 
     div.left {
         display: flex;
