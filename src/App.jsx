@@ -1,5 +1,4 @@
-import { useEffect, } from 'react';
-const serverUrl = import.meta.env.VITE_REACT_APP_SERVERURL;
+import { createContext, useEffect, useState } from 'react';
 import { useCookies } from 'react-cookie';
 import Auth from './pages/auth/Auth';
 import DashboardMain from './pages/DashboardMain';
@@ -13,23 +12,35 @@ import ForgotPassword from './pages/auth/ForgotPassword';
 import ResetPassword from './pages/auth/ResetPassword';
 import Reports from './pages/Reports';
 import Settings from './pages/Settings';
+import ResponseComponent from './components/ResponseComponent';
+import { useDispatch } from 'react-redux';
+const serverUrl = import.meta.env.VITE_REACT_APP_SERVERURL;
 
-const App = () => {
+export const GeneralContext = createContext();
+
+function App() {
+  const dispatch = useDispatch();
+  const [responseMessage, setResponseMessage] = useState({ message: '', severity: ''});
+  const [open, setOpen] = useState(false);
   const [ cookies, setCookie, removeCookie ] = useCookies(null);
-  // const authToken = cookies.AuthToken
-  const authToken = 'Hello World';
+  const authToken = cookies.AuthToken;
+  const user = cookies.UserData;
 
-  // useEffect(() => {
-  //   if (authToken) {
-      // dispatch information
-  //   }
-  // }, [authToken])
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpen(false);
+  };
 
-  // Sort by date
-  // const sortedTasks = tasks?.sort((a,b) => new Date(a.date) - new Date(b.date))
+  useEffect(() => {  
+    if (user !== null) {
+      // dispatch(getDjPictures(user.id))
+    }
+  },[dispatch]);
 
   return (
-    <>
+    <GeneralContext.Provider value={{setOpen, responseMessage, setResponseMessage}}>
       <BrowserRouter>
         <Routes>
           
@@ -49,7 +60,15 @@ const App = () => {
           </Route>
         </Routes>
       </BrowserRouter>
-    </>
+
+      {/* RESPONSE MESSAGE DISPLAYER ****************************************************************************************************************************** */}
+      <ResponseComponent 
+        message={responseMessage.message} 
+        severity={responseMessage.severity}
+        open={open} 
+        handleClose={handleClose} 
+      />
+    </GeneralContext.Provider>
   )
 }
 

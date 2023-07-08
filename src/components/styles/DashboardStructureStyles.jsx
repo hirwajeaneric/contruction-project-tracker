@@ -8,6 +8,7 @@ export const TopNavigationBar = styled.div`
     align-items: center;
     padding: 0 10px;
     z-index: 1000;
+    height: 10vh;
     height: 10svh; 
     width: 100vw; 
     
@@ -25,7 +26,7 @@ export const TopNavigationBar = styled.div`
 
         svg {
             font-size: 180%;
-            margin: 20px;
+            margin: 20px 20px 20px 10px;
         }
     }
 
@@ -68,6 +69,7 @@ export const SideNavigationBar = styled.div`
     width: 20%;
     position: fixed;
     z-index: 999;
+    height: 90vh;
     height: 90svh;
     bottom: 0;
     left: 0;
@@ -96,6 +98,7 @@ export const SideBarMenueContainer = styled.div`
     border-radius: 5px;
     background: #003366;
     color: white;
+    height: 90vh;
     height: 90svh;
 
     @media (max-width: 1200px) {
@@ -117,7 +120,7 @@ export const SideBarMenuItem = styled(NavLink)`
     justify-content: space-between;
     width: 100%;
     color: white;
-    padding: 7px 0;
+    padding: 12px 0;
     cursor: pointer;
     text-decoration: none;
     text-align: left;
@@ -165,6 +168,7 @@ export const DashboardMainContainer = styled.div`
     width: 80%;
     position: fixed;
     z-index: 999;
+    height: 90vh;
     height: 90svh;
     bottom: 0;
     right: 0;

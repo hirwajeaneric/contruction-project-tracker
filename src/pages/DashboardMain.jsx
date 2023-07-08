@@ -9,12 +9,13 @@ import Avatar from "@mui/material/Avatar";
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import { Divider, IconButton, ListItemIcon, Tooltip } from "@mui/material";
-import React from "react";
+import { useState } from "react";
 import { Logout, PersonAdd, Settings } from "@mui/icons-material";
 
 const DashboardMain = () => {
-    const [anchorEl, setAnchorEl] = React.useState(null);
+    const [anchorEl, setAnchorEl] = useState(null);
     const navigate = useNavigate();
+    const [fullSize, setFullSize] = useState(false);
     const open = Boolean(anchorEl);
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
@@ -31,7 +32,7 @@ const DashboardMain = () => {
         <VerticallyFlexSpaceBetweenContainer style={{ backgroundColor: '#e0ebeb' }}>
             <TopNavigationBar>
                 <div className="left">
-                    <MdMenu />
+                    <MdMenu style={{ cursor: 'pointer' }} onClick={() => setFullSize(!fullSize)}/>
                     <Link to='/'>Contruc</Link>
                 </div>    
                 <div className="right">
@@ -108,29 +109,37 @@ const DashboardMain = () => {
                         </ListItemIcon>Logout
                     </MenuItem>
                 </Menu>
-            </TopNavigationBar>    
+            </TopNavigationBar> 
+
+
             <HorizontallyFlexGapContainer style={{ position: 'relative' }}>
                 
-                <SideNavigationBar>
+                <SideNavigationBar style={{ width: fullSize ? '5%' : '20%' }}>
                     <SideBarMenueContainer>
                         <SideBarMenuItem to={''}>
-                            <MdHome />
-                            <div className="nav-data">
-                                <span className="text">Home</span>
+                            <MdHome style={{ width: fullSize ? '100%' : '20%'}}/>
+                            <div style={{ width: fullSize ? '0%' : '80%'}} className="nav-data">
+                                {!fullSize && <span className="text">Home</span>}
                             </div>
                         </SideBarMenuItem>
                         <SideBarMenuItem to={'projects'}>
-                            <AiFillBuild />
-                            <div className="nav-data">
+                            <AiFillBuild style={{ width: fullSize ? '100%' : '20%'}}/>
+                            <div style={{ width: fullSize ? '0%' : '80%'}} className="nav-data">
+                            {!fullSize && <>
                                 <span className="text">Projects</span>
                                 <span className="number">0</span>
+                                </>
+                            }
                             </div>
                         </SideBarMenuItem>
                         <SideBarMenuItem to={'materials'}>
-                            <PiToolboxFill />
-                            <div className="nav-data">
+                            <PiToolboxFill style={{ width: fullSize ? '100%' : '20%'}}/>
+                            <div style={{ width: fullSize ? '0%' : '80%'}} className="nav-data">
+                            {!fullSize && <>
                                 <span className="text">Materials</span>
                                 <span className="number">20</span>
+                                </>
+                            }
                             </div>
                         </SideBarMenuItem>
                         {/* <SideBarMenuItem to={'report'}>
@@ -140,9 +149,9 @@ const DashboardMain = () => {
                             </div>
                         </SideBarMenuItem> */}
                         <SideBarMenuItem to={'settings'}>
-                            <TiUser />
-                            <div className="nav-data">
-                                <span className="text">My account</span>
+                            <TiUser style={{ width: fullSize ? '100%' : '20%'}}/>
+                            <div style={{ width: fullSize ? '0%' : '80%'}} className="nav-data">
+                            {!fullSize && <span className="text">My account</span>}
                             </div>
                         </SideBarMenuItem>                    
                     </SideBarMenueContainer>
@@ -150,7 +159,7 @@ const DashboardMain = () => {
                 
 
 
-                <DashboardMainContainer>
+                <DashboardMainContainer  style={{ width: fullSize ? '95%' : '80%' }}>
                     <DashboardInnerContainer>
                         <Outlet />
                     </DashboardInnerContainer>

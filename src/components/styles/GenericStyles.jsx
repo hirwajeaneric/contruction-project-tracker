@@ -33,6 +33,21 @@ export const VerticallyFlexGapContainer = styled.div`
     align-items: center;
 `;
 
+export const VerticallyFlexSpaceBetweenForm = styled.form`
+    width: 100%;  
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+`;
+
+export const VerticallyFlexGapForm = styled.form`
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+`;
+
 export const HorizontallyFlexSpaceBetweenContainer = styled.div`
     width: 100%;
     display: flex;
@@ -147,4 +162,6 @@ export const HorizontallyFlexGapContainer = styled.div`
 `;
 
 
+export const FormElement = styled.div`
 
+`;
