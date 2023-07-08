@@ -1,4 +1,4 @@
-import { Link, Outlet } from "react-router-dom";
+import { Link, Outlet, useNavigate } from "react-router-dom";
 import { DashboardInnerContainer, DashboardMainContainer, SideBarMenuItem, SideBarMenueContainer, SideNavigationBar, TopNavigationBar } from "../components/styles/DashboardStructureStyles"
 import { HorizontallyFlexGapContainer, VerticallyFlexSpaceBetweenContainer } from "../components/styles/GenericStyles"
 import { MdHome, MdMenu, MdNotifications } from 'react-icons/md';
@@ -14,6 +14,7 @@ import { Logout, PersonAdd, Settings } from "@mui/icons-material";
 
 const DashboardMain = () => {
     const [anchorEl, setAnchorEl] = React.useState(null);
+    const navigate = useNavigate();
     const open = Boolean(anchorEl);
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
@@ -21,6 +22,10 @@ const DashboardMain = () => {
     const handleClose = () => {
         setAnchorEl(null);
     };
+
+    const signout = () => {
+        navigate('/auth/signin')
+    }
     
     return (
         <VerticallyFlexSpaceBetweenContainer style={{ backgroundColor: '#e0ebeb' }}>
@@ -97,7 +102,7 @@ const DashboardMain = () => {
                             <Settings fontSize="small" />
                         </ListItemIcon>Settings
                     </MenuItem>
-                    <MenuItem onClick={handleClose}>
+                    <MenuItem onClick={() => {handleClose(); signout()}}>
                         <ListItemIcon>
                             <Logout fontSize="small" />
                         </ListItemIcon>Logout
