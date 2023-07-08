@@ -8,6 +8,16 @@ export const CenterFlexedContainer = styled.div`
     align-items: center;
 `;
 
+export const HeaderOne = styled.h1`
+    font-weight: 400;
+    font-size: 2.2rem;
+`;
+
+export const HeaderTwo = styled.h2`
+    font-weight: 400;
+    font-size: 1.3rem;
+`;
+
 export const VerticallyFlexSpaceBetweenContainer = styled.div`
     width: 100%;  
     display: flex;
@@ -32,31 +42,26 @@ export const HorizontallyFlexSpaceBetweenContainer = styled.div`
     
     div.left {
         display: flex;
-        background-color: rgba(0,0,0,0.05);
     }
 
     div.right {
         display: flex;
-        background-color: grey;
     }
 
     div.left49width {
         display: flex;
         width: 49%;
-        background-color: rgba(0,0,0,0.05);
     }
 
     div.right49width {
         display: flex;
         width: 49%;
-        background-color: grey;
     }
 
     @media (max-width: 768px) {
         div.left {
             display: flex;
             width: 100%;
-            background-color: rgba(0,0,0,0.05);
             margin-bottom: 20px;
         }
     
@@ -68,35 +73,29 @@ export const HorizontallyFlexSpaceBetweenContainer = styled.div`
         div.left49width {
             display: flex;
             width: 100%;
-            background-color: rgba(0,0,0,0.05);
             margin-bottom: 20px;
         }
     
         div.right49width {
             display: flex;
             width: 100%;
-            background-color: grey;
         }
     }
 
     @media (max-width: 480px) {
         div.left {
-            background-color: rgba(0,0,0,0.05);
             
         }
     
         div.right {
-            background-color: grey;
         
         }
         
         div.left49width {
-            background-color: rgba(0,0,0,0.05);
             
         }
     
         div.right49width {
-            background-color: grey;
         
         }
     }

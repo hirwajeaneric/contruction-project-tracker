@@ -11,6 +11,8 @@ import Signin from './pages/auth/Signin';
 import Signup from './pages/auth/Signup';
 import ForgotPassword from './pages/auth/ForgotPassword';
 import ResetPassword from './pages/auth/ResetPassword';
+import Reports from './pages/Reports';
+import Settings from './pages/Settings';
 
 const App = () => {
   const [ cookies, setCookie, removeCookie ] = useCookies(null);
@@ -40,8 +42,10 @@ const App = () => {
 
           <Route path='/' element={authToken ? <DashboardMain /> : <Navigate replace to={'/auth/signin'} />}>
             <Route path='' element={<Home />} />
-            <Route path='' element={<Materials />} />
-            <Route path='' element={<Project />} />
+            <Route path='materials' element={<Materials />} />
+            <Route path='projects' element={<Project />} />
+            <Route path='report' element={<Reports />} />
+            <Route path='settings' element={<Settings />} />
           </Route>
         </Routes>
       </BrowserRouter>
