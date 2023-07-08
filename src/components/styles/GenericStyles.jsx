@@ -163,5 +163,31 @@ export const HorizontallyFlexGapContainer = styled.div`
 
 
 export const FormElement = styled.div`
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 10px;
 
+    label {
+        
+    }
+
+    p {
+        font-size: 90%;
+        color: tomato;
+    }
+
+    input {
+        width: 100%;
+        padding: 12px 12px;
+        border: 1px solid #b3cccc;
+        border-radius: 3px;
+        font-size: 100%;
+    }
+
+    button {
+        width: 100%;
+    }
 `;

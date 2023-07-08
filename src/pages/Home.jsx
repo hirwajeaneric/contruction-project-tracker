@@ -6,6 +6,7 @@ import ConstructionIcon from '@mui/icons-material/Construction';
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
 import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
 import { useNavigate } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -13,6 +14,10 @@ const Home = () => {
   
   return (
     <VerticallyFlexGapContainer style={{ gap: '15px' }}>
+      <Helmet>
+        <title>Dashboard - Home</title>
+        <meta name="description" content={`Welcome to your user dashboard.`} /> 
+      </Helmet>
       {/* First dashboard section  */}
       <VerticallyFlexGapContainer style={{ gap: '40px', backgroundColor: 'white', padding: '20px', borderRadius: '5px', boxShadow: '0 2px 4px 0 rgba(0, 0, 0, 0.1)' }}>
         <HorizontallyFlexSpaceBetweenContainer>
