@@ -18,19 +18,19 @@ const ForgotPassword = () => {
   const { register, handleSubmit, formState: { errors } } = useForm();
 
   const onSubmit = data => {
+    
+    
     setIsProcessing(true);
-
-    const userInfo = JSON.parse(localStorage.getItem('userInfo'));
-    data.requestingUserId = userInfo.id;
-
-    axios.post(serverUrl+'api/v1/cpta/user/signin', data)
+    axios.post(serverUrl+'/api/v1/cpta/user/requestPasswordReset', data)
     .then(response => {
       setTimeout(() => {
-        if (response.status === 201) {
+        if (response.status === 200) {
           setIsProcessing(false);
-          setCookie('AuthToken', response.data.user.token);
-          setCookie('UserData', JSON.stringify(response.data.user));
-          window.location.replace('/');
+          setResponseMessage({message: response.data.message, severity:'success'});
+          setOpen(true);
+          setTimeout(()=> {
+            window.location.reload();
+          },2000)
         }
       }, 3000)
     })
@@ -86,7 +86,7 @@ const ForgotPassword = () => {
           <FormElement>
             {isProcessing 
               ? <Button disabled variant="contained" color="primary" size="small">PROCESSING...</Button> 
-              : <Button variant="contained" color="primary" size="medium" type="submit">Log in</Button>
+              : <Button variant="contained" color="primary" size="medium" type="submit">Send reset link</Button>
             }
           </FormElement>
           <Link style={{ color: 'gray', fontSize:'90%', textAlign: 'center', textDecoration: 'none' }} to={'/auth/signin'}>I can't recover my account using this page</Link>

@@ -7,11 +7,16 @@ import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
 import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
 import { useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
+import { useCookies } from "react-cookie";
+import { useSelector } from "react-redux";
 
 const Home = () => {
   const navigate = useNavigate();
+  const [ cookies, setCookie, removeCookie ] = useCookies(null);
+  const user = cookies.UserData;
 
-  
+  const { isLoading, listOfConsultantsProjects, listOfOwnerProjects } = useSelector(state => state.project);
+
   return (
     <VerticallyFlexGapContainer style={{ gap: '15px' }}>
       <Helmet>
@@ -22,7 +27,7 @@ const Home = () => {
       <VerticallyFlexGapContainer style={{ gap: '40px', backgroundColor: 'white', padding: '20px', borderRadius: '5px', boxShadow: '0 2px 4px 0 rgba(0, 0, 0, 0.1)' }}>
         <HorizontallyFlexSpaceBetweenContainer>
           <div className="left49width" style={{ flexDirection: 'column'}}>
-            <HeaderOne style={{ color: '#0080ff' }}>Welcome Hirwa Jean Eric</HeaderOne>
+            <HeaderOne style={{ color: '#0080ff' }}>{`Welcome ${user.fullName}`}</HeaderOne>
             <p style={{ color: '#476b6b'}}>Here are some quick steps to get you started</p>
           </div>
           <div className="right49width" style={{ justifyContent: "flex-end" }}>
@@ -73,50 +78,40 @@ const Home = () => {
         </HorizontallyFlexSpaceBetweenContainer>
 
         <VerticallyFlexGapContainer style={{ gap: '10px' }}>
-          <HorizontallyFlexGapContainer>
-            <div style={{ width: '5%' }}>
-              <Avatar style={{ border: '2px solid blue' }}>PI</Avatar>
-            </div>
-            <VerticallyFlexGapContainer style={{ borderBottom: '1px solid #b3d9ff', paddingBottom: '10px', width: '95%', justifyContent: 'flex-start', alignItems: 'flex-start', gap: '5px' }}>
-              <HeaderTwo>Project 1</HeaderTwo>
-              <ProjectProgressBar>
-                Hello world
-              </ProjectProgressBar>
-            </VerticallyFlexGapContainer>
-          </HorizontallyFlexGapContainer>
-          <HorizontallyFlexGapContainer>
-            <div style={{ width: '5%' }}>
-              <Avatar style={{ border: '2px solid blue' }}>PI</Avatar>
-            </div>
-            <VerticallyFlexGapContainer style={{ borderBottom: '1px solid #b3d9ff', paddingBottom: '10px', width: '95%', justifyContent: 'flex-start', alignItems: 'flex-start', gap: '5px' }}>
-              <HeaderTwo>Project 1</HeaderTwo>
-              <ProjectProgressBar>
-                Hello world
-              </ProjectProgressBar>
-            </VerticallyFlexGapContainer>
-          </HorizontallyFlexGapContainer>
-          <HorizontallyFlexGapContainer>
-            <div style={{ width: '5%' }}>
-              <Avatar style={{ border: '2px solid blue' }}>PI</Avatar>
-            </div>
-            <VerticallyFlexGapContainer style={{ borderBottom: '1px solid #b3d9ff', paddingBottom: '10px', width: '95%', justifyContent: 'flex-start', alignItems: 'flex-start', gap: '5px' }}>
-              <HeaderTwo>Project 1</HeaderTwo>
-              <ProjectProgressBar>
-                Hello world
-              </ProjectProgressBar>
-            </VerticallyFlexGapContainer>
-          </HorizontallyFlexGapContainer>
-          <HorizontallyFlexGapContainer>
-            <div style={{ width: '5%' }}>
-              <Avatar style={{ border: '2px solid blue' }}>PI</Avatar>
-            </div>
-            <VerticallyFlexGapContainer style={{ borderBottom: '1px solid #b3d9ff', paddingBottom: '10px', width: '95%', justifyContent: 'flex-start', alignItems: 'flex-start', gap: '5px' }}>
-              <HeaderTwo>Project 1</HeaderTwo>
-              <ProjectProgressBar>
-                Hello world
-              </ProjectProgressBar>
-            </VerticallyFlexGapContainer>
-          </HorizontallyFlexGapContainer>
+          {isLoading ? 
+          <p style={{ color: 'gray' }}>Loading...</p> :
+          <>
+            {(listOfConsultantsProjects.length === 0 && listOfOwnerProjects.length === 0) && <p style={{ color: 'gray' }}>No available projects yet</p>}
+            {listOfOwnerProjects && listOfOwnerProjects.map((project, index) => (
+              <HorizontallyFlexGapContainer key={index}>
+                <div style={{ width: '5%' }}>
+                  <Avatar style={{ border: '2px solid blue' }}>PI</Avatar>
+                </div>
+                <VerticallyFlexGapContainer style={{ borderBottom: '1px solid #b3d9ff', paddingBottom: '10px', width: '95%', justifyContent: 'flex-start', alignItems: 'flex-start', gap: '5px' }}>
+                  <HeaderTwo>{`Project ${project.name}`}</HeaderTwo>
+                  <p style={{ fontSize: '90%', color: 'gray' }}>{project.description}</p>
+                  <ProjectProgressBar>
+                    Hello world
+                  </ProjectProgressBar>
+                </VerticallyFlexGapContainer>
+              </HorizontallyFlexGapContainer>
+            ))}
+
+            {listOfConsultantsProjects && listOfConsultantsProjects.map((project, index) => (
+              <HorizontallyFlexGapContainer key={index}>
+                <div style={{ width: '5%' }}>
+                  <Avatar style={{ border: '2px solid blue' }}>PI</Avatar>
+                </div>
+                <VerticallyFlexGapContainer style={{ borderBottom: '1px solid #b3d9ff', paddingBottom: '10px', width: '95%', justifyContent: 'flex-start', alignItems: 'flex-start', gap: '5px' }}>
+                  <HeaderTwo>{`Project ${project.name}`}</HeaderTwo>
+                  <p style={{ fontSize: '90%', color: 'gray' }}>{project.description}</p>
+                  <ProjectProgressBar>
+                    Hello world
+                  </ProjectProgressBar>
+                </VerticallyFlexGapContainer>
+              </HorizontallyFlexGapContainer>
+            ))}
+          </>}
         </VerticallyFlexGapContainer>
       </VerticallyFlexGapContainer>
 

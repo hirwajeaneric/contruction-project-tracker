@@ -19,29 +19,38 @@ const Signup = () => {
   const { register, handleSubmit, formState: { errors } } = useForm();
 
   const onSubmit = data => {
-    setIsProcessing(true);
 
-    const userInfo = JSON.parse(localStorage.getItem('userInfo'));
-    data.requestingUserId = userInfo.id;
+    if (data.password !== data.confirmPassword) {
+      setResponseMessage({message:'Passwords do not match', severity: 'warning'});
+      setOpen(true);
+      return;
+    } else {
 
-    axios.post(serverUrl+'api/v1/cpta/user/signup', data)
-    .then(response => {
-      setTimeout(() => {
-        if (response.status === 201) {
+      data.role = 'Consultant';
+      setIsProcessing(true);
+
+      axios.post(serverUrl+'/api/v1/cpta/user/signup', data)
+      .then(response => {
+        setTimeout(() => {
+          if (response.status === 201) {
+            setIsProcessing(false);
+            setCookie('AuthToken', response.data.user.token);
+            setCookie('UserData', JSON.stringify(response.data.user));
+            
+            console.log(response.data.user);
+
+            // window.location.replace('/');
+          }
+        }, 3000)
+      })
+      .catch(error => {
+        if (error.response && error.response.status >= 400 && error.response.status <= 500) {
           setIsProcessing(false);
-          setCookie('AuthToken', response.data.user.token);
-          setCookie('UserData', JSON.stringify(response.data.user));
-          window.location.replace('/');
+          setResponseMessage({ message: error.response.data.msg, severity:'error'})
+          setOpen(true);
         }
-      }, 3000)
-    })
-    .catch(error => {
-      if (error.response && error.response.status >= 400 && error.response.status <= 500) {
-        setIsProcessing(false);
-        setResponseMessage({ message: error.response.data.msg, severity:'error'})
-        setOpen(true);
-      }
-    })
+      })
+    }
   };
 
   return (
@@ -69,16 +78,16 @@ const Signup = () => {
         <VerticallyFlexGapForm className="right" style={{ position: 'absolute', right: '0', top: '0', bottom: '0' }} onSubmit={handleSubmit(onSubmit)}>
           <HeaderOne>Register</HeaderOne>
           <FormElement style={{ color: 'gray' }}>
-            <label htmlFor="name">Full name</label>
+            <label htmlFor="fullName">Full name</label>
             <input 
               type="text" 
-              id="name"
+              id="fullName"
               placeholder="name" 
-              {...register("name", 
+              {...register("fullName", 
               {required: true})} 
-              aria-invalid={errors.name ? "true" : "false"}
+              aria-invalid={errors.fullName ? "true" : "false"}
             />
-            {errors.name?.type === "required" && (
+            {errors.fullName?.type === "required" && (
               <p role="alert">Full name is required</p>
             )}
           </FormElement>
