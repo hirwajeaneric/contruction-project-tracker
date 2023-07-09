@@ -1,14 +1,19 @@
+import { Helmet } from "react-helmet-async";
 import { useSelector } from "react-redux";
 import CreateProjectForm from "../components/forms/CreateProjectForm";
-import { ProjectProgressBar } from "../components/styles/DashboardStructureStyles";
-import { HeaderTwo, HorizontallyFlexGapContainer, HorizontallyFlexSpaceBetweenContainer, VerticallyFlexGapContainer, VerticallyFlexGapForm } from "../components/styles/GenericStyles"
+import { HeaderTwo, HorizontallyFlexSpaceBetweenContainer, VerticallyFlexGapContainer } from "../components/styles/GenericStyles"
+import ProjectItem from "../components/ProjectItem";
 
 const Project = () => {
-  
   const { isLoading, listOfConsultantsProjects, listOfOwnerProjects } = useSelector(state => state.project);
 
   return (
     <VerticallyFlexGapContainer style={{ gap: '20px'}}>
+      <Helmet>
+        <title>My projects - A list of both my projects and projects I manage</title>
+        <meta name="description" content={`A list of both my projects and projects I manage.`} /> 
+      </Helmet>
+
       <HeaderTwo style={{ width: '100%', textAlign: 'left' }}>My Projects</HeaderTwo>
       <CreateProjectForm />
       
@@ -25,33 +30,11 @@ const Project = () => {
           <>
             {(listOfConsultantsProjects.length === 0 && listOfOwnerProjects.length === 0) && <p style={{ color: 'gray' }}>No available projects yet</p>}
             {listOfOwnerProjects && listOfOwnerProjects.map((project, index) => (
-              <HorizontallyFlexGapContainer key={index}>
-                <div style={{ width: '5%' }}>
-                  <Avatar style={{ border: '2px solid blue' }}>PI</Avatar>
-                </div>
-                <VerticallyFlexGapContainer style={{ borderBottom: '1px solid #b3d9ff', paddingBottom: '10px', width: '95%', justifyContent: 'flex-start', alignItems: 'flex-start', gap: '5px' }}>
-                  <HeaderTwo>{`Project ${project.name}`}</HeaderTwo>
-                  <p style={{ fontSize: '90%', color: 'gray' }}>{project.description}</p>
-                  <ProjectProgressBar>
-                    Hello world
-                  </ProjectProgressBar>
-                </VerticallyFlexGapContainer>
-              </HorizontallyFlexGapContainer>
+              <ProjectItem key={index} project={project} />
             ))}
 
             {listOfConsultantsProjects && listOfConsultantsProjects.map((project, index) => (
-              <HorizontallyFlexGapContainer key={index}>
-                <div style={{ width: '5%' }}>
-                  <Avatar style={{ border: '2px solid blue' }}>PI</Avatar>
-                </div>
-                <VerticallyFlexGapContainer style={{ borderBottom: '1px solid #b3d9ff', paddingBottom: '10px', width: '95%', justifyContent: 'flex-start', alignItems: 'flex-start', gap: '5px' }}>
-                  <HeaderTwo>{`Project ${project.name}`}</HeaderTwo>
-                  <p style={{ fontSize: '90%', color: 'gray' }}>{project.description}</p>
-                  <ProjectProgressBar>
-                    Hello world
-                  </ProjectProgressBar>
-                </VerticallyFlexGapContainer>
-              </HorizontallyFlexGapContainer>
+              <ProjectItem key={index} project={project}/>
             ))}
           </>}
         </VerticallyFlexGapContainer>

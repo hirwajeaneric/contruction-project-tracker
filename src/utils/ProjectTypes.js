@@ -1,0 +1,22 @@
+export const ProjectTypes = [
+    "Residential building construction",
+    "Commercial building construction",
+    "Bridge construction",
+    "Road construction",
+    "Tunnel construction",
+    "Railway construction",
+    "Airport construction",
+    "Dam construction",
+    "Power plant construction",
+    "Hospital construction",
+    "School construction",
+    "Shopping mall construction",
+    "Stadium construction",
+    "Hotel construction",
+    "Convention center construction",
+    "Warehouse construction",
+    "Data center construction",
+    "Park construction",
+    "Highway construction",
+    "Pipeline construction"
+  ];

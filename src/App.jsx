@@ -15,6 +15,7 @@ import Settings from './pages/Settings';
 import ResponseComponent from './components/ResponseComponent';
 import { useDispatch } from 'react-redux';
 import { getAllProjects } from './redux/features/projectSlice';
+import ProjectDetails from './pages/ProjectDetails';
 const serverUrl = import.meta.env.VITE_REACT_APP_SERVERURL;
 
 export const GeneralContext = createContext();
@@ -56,6 +57,7 @@ function App() {
             <Route path='' element={<Home />} />
             <Route path='materials' element={<Materials />} />
             <Route path='projects' element={<Project />} />
+            <Route path='projects/:code' element={<ProjectDetails />} />
             <Route path='report' element={<Reports />} />
             <Route path='settings' element={<Settings />} />
           </Route>

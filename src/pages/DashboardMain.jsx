@@ -13,6 +13,7 @@ import { useState } from "react";
 import { Logout, PersonAdd, Settings } from "@mui/icons-material";
 import { useCookies } from "react-cookie";
 import { useSelector } from "react-redux";
+import { getSimpleCapitalizedChars } from "../utils/HelperFunctions";
 
 const DashboardMain = () => {
     const [ cookies, setCookie, removeCookie ] = useCookies(null);
@@ -27,18 +28,7 @@ const DashboardMain = () => {
         setAnchorEl(null);
     };
 
-    const user = cookies.UserData;
-
-    function getCapitalizedChars(name) {
-        var words = name.split(" ");
-        var result = "";
-        
-        for (var i = 0; i < words.length; i++) {
-          result += words[i].charAt(0).toUpperCase();
-        }
-        
-        return result.substring(0, 2);
-      }      
+    const user = cookies.UserData;      
 
     const signout = () => {
         removeCookie('AuthToken');
@@ -66,7 +56,7 @@ const DashboardMain = () => {
                             aria-haspopup="true"
                             aria-expanded={open ? 'true' : undefined}
                         >
-                            <Avatar sx={{ width: 32, height: 32, background: 'black' }}>{getCapitalizedChars(user.fullName)}</Avatar>
+                            <Avatar sx={{ width: 32, height: 32, background: 'black' }}>{getSimpleCapitalizedChars(user.fullName)}</Avatar>
                         </IconButton>
                     </Tooltip>
                 </div>
@@ -106,7 +96,7 @@ const DashboardMain = () => {
                     anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
                 >
                     <MenuItem onClick={handleClose} style={{ display:'flex', flexDirection:'row', alignItems:'flex-start' }}>
-                    <Avatar sx={{ width: 32, height: 32 }}>{getCapitalizedChars(user.fullName)}</Avatar>
+                    <Avatar sx={{ width: 32, height: 32 }}>{getSimpleCapitalizedChars(user.fullName)}</Avatar>
                         <VerticallyFlexGapContainer style={{ justifyContent:'flex-start', alignItems:'flex-start', gap: '5px' }}>
                             <p>{user.fullName}</p>
                             <p style={{ color: 'blue', fontWeight:'700', fontSize:'90%' }}>{user.role}</p>

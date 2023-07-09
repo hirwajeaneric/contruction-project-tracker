@@ -8,12 +8,43 @@ import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
 import { useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { useCookies } from "react-cookie";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { getSimpleCapitalizedChars } from "../utils/HelperFunctions";
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import DeleteIcon from '@mui/icons-material/Delete';
+import { useContext, useState } from "react";
+import axios from "axios";
+import { GeneralContext } from "../App";
 
 const Home = () => {
   const navigate = useNavigate();
   const [ cookies, setCookie, removeCookie ] = useCookies(null);
   const user = cookies.UserData;
+  const [isProcessing, setIsProcessing] = useState(false);
+  const { setOpen, setResponseMessage } = useContext(GeneralContext);
+  const dispatch = useDispatch();
+
+  const deleteProject = (projectId) => {
+    setIsProcessing(true);
+    axios.delete(serverUrl+'/api/v1/cpta/project/delete?id='+projectId)
+    .then(response => {
+      setTimeout(() => {
+        if (response.status === 200) {
+          setIsProcessing(false);
+          setResponseMessage({ message: response.data.message, severity: 'success' });
+          setOpen(true);
+          dispatch(getAllProjects(user.id));
+        }
+      }, 3000)
+    })
+    .catch(error => {
+      if (error.response && error.response.status >= 400 && error.response.status <= 500) {
+        setIsProcessing(false);
+        setResponseMessage({ message: error.response.data.msg, severity:'error'})
+        setOpen(true);
+      }
+    })
+  }
 
   const { isLoading, listOfConsultantsProjects, listOfOwnerProjects } = useSelector(state => state.project);
 
@@ -23,6 +54,7 @@ const Home = () => {
         <title>Dashboard - Home</title>
         <meta name="description" content={`Welcome to your user dashboard.`} /> 
       </Helmet>
+
       {/* First dashboard section  */}
       <VerticallyFlexGapContainer style={{ gap: '40px', backgroundColor: 'white', padding: '20px', borderRadius: '5px', boxShadow: '0 2px 4px 0 rgba(0, 0, 0, 0.1)' }}>
         <HorizontallyFlexSpaceBetweenContainer>
@@ -88,7 +120,12 @@ const Home = () => {
                   <Avatar style={{ border: '2px solid blue' }}>PI</Avatar>
                 </div>
                 <VerticallyFlexGapContainer style={{ borderBottom: '1px solid #b3d9ff', paddingBottom: '10px', width: '95%', justifyContent: 'flex-start', alignItems: 'flex-start', gap: '5px' }}>
-                  <HeaderTwo>{`Project ${project.name}`}</HeaderTwo>
+                  <HorizontallyFlexSpaceBetweenContainer style={{ width: '100%'}}>
+                    <HeaderTwo style={{ width:'70%', }}>{`Project ${project.name}`}</HeaderTwo>
+                    <HorizontallyFlexGapContainer style={{ width:'30%', gap: '40px', justifyContent:'flex-end' }}>
+                      <Button variant="contained" color="primary" size="small" type="button" onClick={(e) => {navigate(`/projects/${project.code}`)}}><VisibilityIcon /></Button>
+                    </HorizontallyFlexGapContainer>
+                  </HorizontallyFlexSpaceBetweenContainer>
                   <p style={{ fontSize: '90%', color: 'gray' }}>{project.description}</p>
                   <ProjectProgressBar>
                     Hello world
@@ -100,10 +137,15 @@ const Home = () => {
             {listOfConsultantsProjects && listOfConsultantsProjects.map((project, index) => (
               <HorizontallyFlexGapContainer key={index}>
                 <div style={{ width: '5%' }}>
-                  <Avatar style={{ border: '2px solid blue' }}>PI</Avatar>
+                  <Avatar style={{ border: '2px solid blue' }}>{getSimpleCapitalizedChars(project.name)}</Avatar>
                 </div>
                 <VerticallyFlexGapContainer style={{ borderBottom: '1px solid #b3d9ff', paddingBottom: '10px', width: '95%', justifyContent: 'flex-start', alignItems: 'flex-start', gap: '5px' }}>
-                  <HeaderTwo>{`Project ${project.name}`}</HeaderTwo>
+                  <HorizontallyFlexSpaceBetweenContainer style={{ width: '100%'}}>
+                    <HeaderTwo style={{ width:'70%', }}>{`Project ${project.name}`}</HeaderTwo>
+                    <HorizontallyFlexGapContainer style={{ width:'30%', gap: '40px', justifyContent:'flex-end' }}>
+                      <Button variant="contained" color="primary" size="small" type="button" onClick={(e) => {navigate(`/projects/${project.code}`)}}><VisibilityIcon /></Button>
+                    </HorizontallyFlexGapContainer>
+                  </HorizontallyFlexSpaceBetweenContainer>
                   <p style={{ fontSize: '90%', color: 'gray' }}>{project.description}</p>
                   <ProjectProgressBar>
                     Hello world

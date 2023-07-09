@@ -39,8 +39,8 @@ export const getProjectDetails = createAsyncThunk(
     'project/getProjectDetails',
     async (projectId, thunkAPI) => { 
         try {
-            const response = await axios.get(Endpoints.APIS.jobApis.findById+projectId)
-            return response.data.job;
+            const response = await axios.get(`${serverUrl}/api/v1/cpta/project/findById?id=${projectId}`)
+            return response.data.project;
         } catch (error) {
             return thunkAPI.rejectWithValue('Something went wrong!!');
         }

@@ -178,7 +178,12 @@ export const FormElement = styled.div`
         color: tomato;
     }
 
-    input {
+    textarea {
+        font-size: 110%;
+        font-family: 'Trebuchet MS', Arial, sans-serif;
+    }
+
+    input, textarea, select, option {
         width: 100%;
         padding: 12px 12px;
         border: 1px solid #b3cccc;
