@@ -35,18 +35,6 @@ export const getAllProjects = createAsyncThunk(
     }
 );
 
-export const getProjectDetails = createAsyncThunk(
-    'project/getProjectDetails',
-    async (projectId, thunkAPI) => { 
-        try {
-            const response = await axios.get(`${serverUrl}/api/v1/cpta/project/findById?id=${projectId}`)
-            return response.data.project;
-        } catch (error) {
-            return thunkAPI.rejectWithValue('Something went wrong!!');
-        }
-    }
-);
-
 export const deleteProject = createAsyncThunk(
     'project/deleteProject',
     async (id, thunkAPI) => { 
@@ -96,16 +84,6 @@ const userSlice = createSlice({
             state.numberOfProjects = state.listOfConsultantsProjects.length + state.listOfOwnerProjects.length;
         },
         [getAllProjects.rejected] : (state) => {
-            state.isLoading = false;
-        },
-        [getProjectDetails.pending] : (state) => {
-            state.isLoading = true;
-        },
-        [getProjectDetails.fulfilled] : (state, action) => {
-            state.isLoading = false;
-            state.selectedProject = action.payload;
-        },
-        [getProjectDetails.rejected] : (state) => {
             state.isLoading = false;
         },
         [deleteProject.pending] : (state) => {

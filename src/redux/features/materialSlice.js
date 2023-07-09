@@ -3,52 +3,38 @@ import axios from "axios";
 const serverUrl = import.meta.env.VITE_REACT_APP_SERVERURL;
 
 const initialState = {
-    listOfProjects: [],
-    listOfOwnerProjects: [],
-    listOfConsultantsProjects: [],
-    selectedProject: {},
-    numberOfProjects: 0,
-    responseMessage: '',
+    listOfProjectResources: [],
+    listOfIssueResources: [],
+    listOfSprintResources: [],
+    selectedResource: {},
+    numberOfProjectResources: 0,
+    numberOfIssueResources: [],
+    numberOfSprintResources: [],
     searchedQuery: '',
-    searchProjectsResults: [],
+    searchResourcesResults: [],
     isLoading: false,
 }
 
-export const getAllProjects = createAsyncThunk(
-    'project/getAllProjects',
-    async (userId, thunkAPI) => {
+export const getProjectResources = createAsyncThunk(
+    'resource/getProjectResources',
+    async (project, thunkAPI) => {
         try {
-            const response = await axios.get(serverUrl+`/api/v1/cpta/project/list`);
-            response.data.projects.forEach((element, index) => {
+            const response = await axios.get(`${serverUrl}/api/v1/cpta/material/findByProjectId?project=${project}`);
+            response.data.resources.forEach((element, index) => {
                 element.id = element._id;
                 delete element._id;
                 delete element.__v;
-                element.startDate = new Date(element.startDate).toLocaleString();
-                element.endDate = new Date(element.endDate).toLocaleString();
-                element.estimatedEndDate = new Date(element.estimatedEndDate).toLocaleString();
-                element.number = index;
+                element.entryDate = new Date(element.entryDate).toLocaleString();
             });
-            return { projects: response.data.projects, user: userId }
+            return { resources: response.data.resources, user: userId }
         } catch (error) {
             return thunkAPI.rejectWithValue('Something went wrong!!');
         }
     }
 );
 
-export const getProjectDetails = createAsyncThunk(
-    'project/getProjectDetails',
-    async (projectId, thunkAPI) => { 
-        try {
-            const response = await axios.get(`${serverUrl}/api/v1/cpta/project/findById?id=${projectId}`)
-            return response.data.project;
-        } catch (error) {
-            return thunkAPI.rejectWithValue('Something went wrong!!');
-        }
-    }
-);
-
-export const deleteProject = createAsyncThunk(
-    'project/deleteProject',
+export const deleteResource = createAsyncThunk(
+    'resource/deleteResource',
     async (id, thunkAPI) => { 
         try {
             const response = await axios.delete(Endpoints.APIS.jobApis.delete+id)
@@ -62,67 +48,57 @@ export const deleteProject = createAsyncThunk(
 );
 
 const userSlice = createSlice({
-    name: 'project',
+    name: 'material',
     initialState,
     reducers: {
-        updateProjects: (state, action) => {
-            state.selectedProject = action.payload;
-            let projects = state.listOfProjects;
+        updateResources: (state, action) => {
+            state.selectedResource = action.payload;
+            let resources = state.listOfProjectResources;
 
-            projects.forEach(project => {
-                if (project.id === action.payload._id) {
-                    project = action.payload;
+            resources.forEach(resource => {
+                if (resource.id === action.payload._id) {
+                    resource = action.payload;
                 }
             })
-            state.listOfProjects = projects;
+            state.listOfProjectResources = resources;
         },
         dynamicSearch: (state, action) => {
-            state.searchProjectsResults = state.listOfProjects.filter(project => project.jobLocation.toUpperCase().includes(action.payload.toUpperCase()));
+            state.searchResourcesResults = state.listOfProjectResources.filter(resource => resource.name.toUpperCase().includes(action.payload.toUpperCase()));
         },
         manualSearch: (state, action) => {
-            state.searchProjectsResults = state.listOfProjects.filter(project => project.jobLocation.toUpperCase().includes(action.payload.toUpperCase()));
+            state.searchResourcesResults = state.listOfProjectResources.filter(resource => resource.name.toUpperCase().includes(action.payload.toUpperCase()));
         }
     },
     extraReducers: {
-        [getAllProjects.pending] : (state) => {
+        [getProjectResources.pending] : (state) => {
             state.isLoading = true;
         },
-        [getAllProjects.fulfilled] : (state, action) => {
+        [getProjectResources.fulfilled] : (state, action) => {
             state.isLoading = false;
-            let listOfProjects = action.payload.projects.sort((a,b) => new Date(a.creationDate) - new Date(b.creationDate));
-            state.listOfProjects = listOfProjects;
-            state.listOfConsultantsProjects = action.payload.projects.filter(project => project.consultantId === action.payload.user);
-            state.listOfOwnerProjects = action.payload.projects.filter(project => project.ownerId === action.payload.user);
-            state.numberOfProjects = state.listOfConsultantsProjects.length + state.listOfOwnerProjects.length;
+            let listOfProjectResources = action.payload.resources.sort((a,b) => new Date(a.creationDate) - new Date(b.creationDate));
+            state.listOfProjectResources = listOfProjectResources;
+            state.listOfConsultantsResources = action.payload.resources.filter(resource => resource.consultantId === action.payload.user);
+            state.listOfOwnerResources = action.payload.resources.filter(resource => resource.ownerId === action.payload.user);
+            state.numberOfResources = state.listOfConsultantsResources.length + state.listOfOwnerResources.length;
         },
-        [getAllProjects.rejected] : (state) => {
+        [getProjectResources.rejected] : (state) => {
             state.isLoading = false;
         },
-        [getProjectDetails.pending] : (state) => {
+        [deleteResource.pending] : (state) => {
             state.isLoading = true;
         },
-        [getProjectDetails.fulfilled] : (state, action) => {
+        [deleteResource.fulfilled] : (state, action) => {
             state.isLoading = false;
-            state.selectedProject = action.payload;
+            let resources = state.listOfProjectResources;
+            resources.filter(resource => resource._id !== action.payload)
+            state.listOfProjectResources = resources;
+            state.responseMessage = 'Resource deleted';
         },
-        [getProjectDetails.rejected] : (state) => {
-            state.isLoading = false;
-        },
-        [deleteProject.pending] : (state) => {
-            state.isLoading = true;
-        },
-        [deleteProject.fulfilled] : (state, action) => {
-            state.isLoading = false;
-            let projects = state.listOfProjects;
-            projects.filter(project => project._id !== action.payload)
-            state.listOfProjects = projects;
-            state.responseMessage = 'Project deleted';
-        },
-        [deleteProject.rejected] : (state) => {
+        [deleteResource.rejected] : (state) => {
             state.isLoading = false;
         }
     }
 });
 
-export const { updateProjects, dynamicSearch, manualSearch } = userSlice.actions;
+export const { updateResources, dynamicSearch, manualSearch } = userSlice.actions;
 export default userSlice.reducer;

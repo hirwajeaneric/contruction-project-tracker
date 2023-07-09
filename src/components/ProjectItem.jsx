@@ -40,7 +40,7 @@ const ProjectItem = ({ project }) => {
     return (
         <HorizontallyFlexGapContainer>
             <div style={{ width: '5%' }}>
-                <Avatar style={{ border: '2px solid blue' }}>{getSimpleCapitalizedChars(project.name)}</Avatar>
+                <Avatar style={{ border: '2px solid blue', background: 'orange' }}>{getSimpleCapitalizedChars(project.name)}</Avatar>
             </div>
             <VerticallyFlexGapContainer style={{ borderBottom: '1px solid #b3d9ff', paddingBottom: '10px', width: '95%', justifyContent: 'flex-start', alignItems: 'flex-start', gap: '5px' }}>
             <HorizontallyFlexSpaceBetweenContainer style={{ width: '100%'}}>

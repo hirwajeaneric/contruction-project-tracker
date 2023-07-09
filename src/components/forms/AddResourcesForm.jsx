@@ -55,7 +55,7 @@ export default function AddResourcesForm({projectId}) {
     return (
         <VerticallyFlexGapForm onSubmit={handleSubmit(onSubmit)} style={{ gap: '20px', backgroundColor: 'white', padding: '20px', borderRadius: '5px', boxShadow: '0 2px 4px 0 rgba(0, 0, 0, 0.1)' }}>
             <HorizontallyFlexSpaceBetweenContainer>
-                <p style={{ width: '100%', fontWeight: '600', textAlign:'left' }}>Add Materials</p>
+                <p style={{ width: '100%', fontWeight: '600', textAlign:'left' }}>Add</p>
             </HorizontallyFlexSpaceBetweenContainer>
             {openForm && 
             <VerticallyFlexGapContainer style={{ gap: '15px' }}>
@@ -73,16 +73,6 @@ export default function AddResourcesForm({projectId}) {
                         {errors.name?.type === "required" && (
                         <p role="alert">Material name is required</p>
                         )}
-                    </FormElement>
-                    <FormElement style={{ color: 'gray' }}>
-                        <label htmlFor="picture">Picture</label>
-                        <input 
-                            type="file" 
-                            id="picture" 
-                            {...register("picture", 
-                            {required: true})} 
-                            aria-invalid={errors.picture ? "true" : "false"}
-                        />
                     </FormElement>
                     <FormElement style={{ color: 'gray' }}>
                         <label htmlFor="estimatedEndDate">Type *</label>
@@ -141,7 +131,18 @@ export default function AddResourcesForm({projectId}) {
                     </FormElement>
                 </HorizontallyFlexGapContainer>
 
-                <FormElement style={{ flexDirection: 'row', gap: '70%' }}>
+                <FormElement style={{ color: 'gray' }}>
+                    <label htmlFor="picture">Picture</label>
+                    <input 
+                        type="file" 
+                        id="picture" 
+                        {...register("picture", 
+                        {required: true})} 
+                        aria-invalid={errors.picture ? "true" : "false"}
+                    />
+                </FormElement>
+
+                <FormElement style={{ flexDirection: 'row', gap: '60%' }}>
                     {isProcessing 
                     ? <Button disabled variant="contained" color="primary" size="small">PROCESSING...</Button> 
                     : <Button variant="contained" color="primary" size="medium" type="submit">Add</Button>

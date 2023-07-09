@@ -149,7 +149,7 @@ const DashboardMain = () => {
                         </SideBarMenuItem>
                         { 
                             listOfConsultantsProjects.map((project, index) => {
-                                return (<SideBarMenuItem key={index} to={`/${project.code}`}>
+                                return (<SideBarMenuItem key={index} onClick={()=>{window.location.replace(`/${project.code}`)}} to={`/${project.code}`} style={{ fontSize:'90%' }}>
                                     <MdHome style={{ width: fullSize ? '100%' : '20%', color: "transparent"}}/>
                                     <div style={{ width: fullSize ? '0%' : '80%'}} className="nav-data">
                                         {!fullSize && 
@@ -164,7 +164,8 @@ const DashboardMain = () => {
                         }
                         {
                             listOfOwnerProjects.map((project, index) => {
-                                return (<SideBarMenuItem key={index} to={'projects'}>
+                                return (<SideBarMenuItem key={index} onClick={()=>{window.location.replace(`/${project.code}`)}} to={`/${project.code}`} style={{ fontSize:'90%' }}>
+                                    <MdHome style={{ width: fullSize ? '100%' : '20%', color: "transparent"}}/>
                                     <div style={{ width: fullSize ? '0%' : '80%'}} className="nav-data">
                                         {!fullSize && 
                                             <>

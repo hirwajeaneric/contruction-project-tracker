@@ -8,6 +8,7 @@ import { GeneralContext } from "../App";
 import { useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
 import AddResourcesForm from "../components/forms/AddResourcesForm";
+import ResourcesTable from "../components/tables/ResourcesTable";
 const serverUrl = import.meta.env.VITE_REACT_APP_SERVERURL;
 
 const ProjectMaterials = () => {
@@ -40,16 +41,18 @@ const ProjectMaterials = () => {
           <p style={{ color: 'gray' }}>{project.code}</p>
         </HorizontallyFlexGapContainer>
       </VerticallyFlexGapContainer>
-      <AddResourcesForm />
-      
-      {/* List of projects  */}
-      <VerticallyFlexGapContainer style={{ gap: '20px', backgroundColor: 'white', padding: '20px', borderRadius: '5px', boxShadow: '0 2px 4px 0 rgba(0, 0, 0, 0.1)' }}>
-        
-        <HorizontallyFlexSpaceBetweenContainer style={{ borderBottom: '1px solid #b3d9ff', paddingBottom: '15px'}}>
-          <p style={{ fontWeight: '600' }}>Resources</p>
-        </HorizontallyFlexSpaceBetweenContainer>
 
-      </VerticallyFlexGapContainer>
+      <HorizontallyFlexGapContainer style={{ gap: '20px', alignItems:'flex-start'}}>
+        {/* List of resources  */}
+        <VerticallyFlexGapContainer style={{ justifyContent:'flex-start', backgroundColor: 'white', padding: '20px', borderRadius: '5px', boxShadow: '0 2px 4px 0 rgba(0, 0, 0, 0.1)' }}>
+          <p style={{ fontWeight: '600', width: '100%', textAlign:'left' }}>Resources</p>
+          <ResourcesTable data={[]}/>
+        </VerticallyFlexGapContainer>
+        
+        {/* Add resource form  */}
+        <AddResourcesForm />
+      </HorizontallyFlexGapContainer>
+
     </VerticallyFlexGapContainer>
   )
 }

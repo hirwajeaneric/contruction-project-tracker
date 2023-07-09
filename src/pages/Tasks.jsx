@@ -7,8 +7,7 @@ import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import CreateProjectForm from "../components/forms/CreateProjectForm";
 import { ProjectProgressBar } from "../components/styles/DashboardStructureStyles";
-import { HeaderTwo, HorizontallyFlexGapContainer, HorizontallyFlexSpaceBetweenContainer, VerticallyFlexGapContainer, VerticallyFlexGapForm } from "../components/styles/GenericStyles"
-import { getProjectDetails } from "../redux/features/projectSlice";
+import { HeaderTwo, HorizontallyFlexGapContainer, HorizontallyFlexSpaceBetweenContainer, VerticallyFlexGapContainer, VerticallyFlexGapForm } from "../components/styles/GenericStyles";
 import { getSimpleCapitalizedChars } from "../utils/HelperFunctions";
 const serverUrl = import.meta.env.VITE_REACT_APP_SERVERURL;
 import PersonIcon from '@mui/icons-material/Person';

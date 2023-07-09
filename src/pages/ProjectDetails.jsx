@@ -78,7 +78,7 @@ const ProjectDetails = () => {
               <HeaderTwo style={{ width: '100%', textAlign: 'left' }}>{project.name}</HeaderTwo>
               <p style={{ color: 'gray' }}>{project.code}</p>
             </HorizontallyFlexGapContainer>
-            <p style={{ color: 'gray', textAlign:'left', width: '100%' }}>{project.description}</p>
+            <p style={{ color: 'gray', textAlign:'left', lineHeight: '1.5rem', width: '100%' }}>{project.description}</p>
             <HorizontallyFlexSpaceBetweenContainer style={{ fontSize: '90%', textAlign: 'left' }}>
               <VerticallyFlexGapContainer style={{ alignItems: 'flex-start', gap: '10px' }}>
                 <p>Create on: <span style={{ color: 'gray', textAlign: 'left' }}>{new Date(project.creationDate).toLocaleString()}</span></p>
@@ -97,7 +97,7 @@ const ProjectDetails = () => {
             </HorizontallyFlexSpaceBetweenContainer>
             <HorizontallyFlexGapContainer style={{ gap: '20px' }}>
               <Button variant="contained" color="success" size="small" type="button" onClick={() => { setOpenAddOwnerForm(!openAddOwnerForm) }}><PersonIcon /> Add Owner</Button>
-              <Button variant="contained" color="primary" size="small" type="button" onClick={() => {navigate(`/${project.code}/resources`)}}><ConstructionIcon /> Add Resources</Button>
+              <Button variant="contained" color="primary" size="small" type="button" onClick={() => {navigate(`/${project.code}/resources`)}}><ConstructionIcon /> Add / View Resources</Button>
               <Button variant="contained" color="secondary" size="small" type=" button" onClick={() => {navigate(`/${project.code}/activities`)}}><SportsScoreIcon /> Add Millestones</Button>
             </HorizontallyFlexGapContainer>
           </VerticallyFlexGapContainer>
