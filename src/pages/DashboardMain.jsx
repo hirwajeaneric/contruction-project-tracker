@@ -1,6 +1,6 @@
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import { DashboardInnerContainer, DashboardMainContainer, SideBarMenuItem, SideBarMenueContainer, SideNavigationBar, TopNavigationBar } from "../components/styles/DashboardStructureStyles"
-import { HorizontallyFlexGapContainer, VerticallyFlexSpaceBetweenContainer } from "../components/styles/GenericStyles"
+import { HorizontallyFlexGapContainer, VerticallyFlexGapContainer, VerticallyFlexSpaceBetweenContainer } from "../components/styles/GenericStyles"
 import { MdHome, MdMenu, MdNotifications } from 'react-icons/md';
 import { AiFillBuild } from 'react-icons/ai';
 import { PiToolboxFill } from 'react-icons/pi';
@@ -11,8 +11,11 @@ import MenuItem from '@mui/material/MenuItem';
 import { Divider, IconButton, ListItemIcon, Tooltip } from "@mui/material";
 import { useState } from "react";
 import { Logout, PersonAdd, Settings } from "@mui/icons-material";
+import { useCookies } from "react-cookie";
+import { useSelector } from "react-redux";
 
 const DashboardMain = () => {
+    const [ cookies, setCookie, removeCookie ] = useCookies(null);
     const [anchorEl, setAnchorEl] = useState(null);
     const navigate = useNavigate();
     const [fullSize, setFullSize] = useState(false);
@@ -24,9 +27,26 @@ const DashboardMain = () => {
         setAnchorEl(null);
     };
 
+    const user = cookies.UserData;
+
+    function getCapitalizedChars(name) {
+        var words = name.split(" ");
+        var result = "";
+        
+        for (var i = 0; i < words.length; i++) {
+          result += words[i].charAt(0).toUpperCase();
+        }
+        
+        return result.substring(0, 2);
+      }      
+
     const signout = () => {
+        removeCookie('AuthToken');
+        removeCookie('UserData');
         navigate('/auth/signin')
     }
+
+    const { isLoading, listOfConsultantsProjects, listOfOwnerProjects, numberOfProjects } = useSelector(state => state.project);
     
     return (
         <VerticallyFlexSpaceBetweenContainer style={{ backgroundColor: '#e0ebeb' }}>
@@ -41,12 +61,12 @@ const DashboardMain = () => {
                         <IconButton
                             onClick={handleClick}
                             size="small"
-                            sx={{ ml: 2 }}
+                            sx={{ ml: 2, background: 'white' }}
                             aria-controls={open ? 'account-menu' : undefined}
                             aria-haspopup="true"
                             aria-expanded={open ? 'true' : undefined}
                         >
-                            <Avatar sx={{ width: 32, height: 32 }}>M</Avatar>
+                            <Avatar sx={{ width: 32, height: 32, background: 'black' }}>{getCapitalizedChars(user.fullName)}</Avatar>
                         </IconButton>
                     </Tooltip>
                 </div>
@@ -85,20 +105,25 @@ const DashboardMain = () => {
                     transformOrigin={{ horizontal: 'right', vertical: 'top' }}
                     anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
                 >
-                    <MenuItem onClick={handleClose}>
-                        <Avatar /> Profile
+                    <MenuItem onClick={handleClose} style={{ display:'flex', flexDirection:'row', alignItems:'flex-start' }}>
+                    <Avatar sx={{ width: 32, height: 32 }}>{getCapitalizedChars(user.fullName)}</Avatar>
+                        <VerticallyFlexGapContainer style={{ justifyContent:'flex-start', alignItems:'flex-start', gap: '5px' }}>
+                            <p>{user.fullName}</p>
+                            <p style={{ color: 'blue', fontWeight:'700', fontSize:'90%' }}>{user.role}</p>
+                            <p style={{ color: 'gray', fontSize:'90%' }}>{user.email}</p>
+                        </VerticallyFlexGapContainer>
                     </MenuItem>
-                    <MenuItem onClick={handleClose}>
+                    {/* <MenuItem onClick={handleClose}>
                         <Avatar /> My account
-                    </MenuItem>
+                    </MenuItem> */}
                     <Divider />
-                    <MenuItem onClick={handleClose}>
+                    {/* <MenuItem onClick={handleClose}>
                         <ListItemIcon>
                             <PersonAdd fontSize="small" />
                         </ListItemIcon>
                         Add another account
-                    </MenuItem>
-                    <MenuItem onClick={handleClose}>
+                    </MenuItem> */}
+                    <MenuItem onClick={() => {navigate('/settings'); handleClose();}}>
                         <ListItemIcon>
                             <Settings fontSize="small" />
                         </ListItemIcon>Settings
@@ -127,7 +152,7 @@ const DashboardMain = () => {
                             <div style={{ width: fullSize ? '0%' : '80%'}} className="nav-data">
                             {!fullSize && <>
                                 <span className="text">Projects</span>
-                                <span className="number">0</span>
+                                <span className="number">{numberOfProjects}</span>
                                 </>
                             }
                             </div>

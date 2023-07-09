@@ -18,15 +18,12 @@ const Signin = () => {
   const { register, handleSubmit, formState: { errors } } = useForm();
 
   const onSubmit = data => {
+    
     setIsProcessing(true);
-
-    const userInfo = JSON.parse(localStorage.getItem('userInfo'));
-    data.requestingUserId = userInfo.id;
-
-    axios.post(serverUrl+'api/v1/cpta/user/signin', data)
+    axios.post(serverUrl+'/api/v1/cpta/user/signin', data)
     .then(response => {
       setTimeout(() => {
-        if (response.status === 201) {
+        if (response.status === 200) {
           setIsProcessing(false);
           setCookie('AuthToken', response.data.user.token);
           setCookie('UserData', JSON.stringify(response.data.user));

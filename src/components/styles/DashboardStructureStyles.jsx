@@ -77,11 +77,11 @@ export const SideNavigationBar = styled.div`
     background-color: #e0ebeb;
 
     @media (max-width: 1200px) {
-        display: none;
+        width: 20%;
     }
     
     @media (max-width: 768px) {
-        
+        width: 20%;
     }
 
     @media (max-width: 480px) {
@@ -136,11 +136,11 @@ export const SideBarMenuItem = styled(NavLink)`
         width: 80%;
 
         span.text {
-            width: 70%;
+            width: 80%;
         }
     
         span.number {
-            width: 30%;
+            width: 20%;
             font-size: 90%;
         }
     }
@@ -153,8 +153,8 @@ export const SideBarMenuItem = styled(NavLink)`
         color: #1a8cff;
     }
 
-    @media (max-width: 768px) {
-        
+    @media (max-width: 991px) {
+
     }
 
     @media (max-width: 480px) {

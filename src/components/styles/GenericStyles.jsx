@@ -116,7 +116,6 @@ export const HorizontallyFlexSpaceBetweenContainer = styled.div`
     }
 `;
 
-
 export const HorizontallyFlexGapContainer = styled.div`
     width: 100%;
     display: flex;

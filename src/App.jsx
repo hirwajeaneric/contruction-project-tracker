@@ -14,6 +14,7 @@ import Reports from './pages/Reports';
 import Settings from './pages/Settings';
 import ResponseComponent from './components/ResponseComponent';
 import { useDispatch } from 'react-redux';
+import { getAllProjects } from './redux/features/projectSlice';
 const serverUrl = import.meta.env.VITE_REACT_APP_SERVERURL;
 
 export const GeneralContext = createContext();
@@ -35,7 +36,7 @@ function App() {
 
   useEffect(() => {  
     if (user !== null) {
-      // dispatch(getDjPictures(user.id))
+      dispatch(getAllProjects(user.id))
     }
   },[dispatch]);
 
@@ -48,7 +49,7 @@ function App() {
             <Route path='signin' element={<Signin />} />
             <Route path='signup' element={<Signup />} />
             <Route path='forgot-password' element={<ForgotPassword />} />
-            <Route path='reset-password' element={<ResetPassword />} />
+            <Route path='reset-password/:token/:userId' element={<ResetPassword />} />
           </Route>
 
           <Route path='/' element={authToken ? <DashboardMain /> : <Navigate replace to={'/auth/signin'} />}>
