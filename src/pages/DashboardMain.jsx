@@ -147,16 +147,41 @@ const DashboardMain = () => {
                             }
                             </div>
                         </SideBarMenuItem>
-                        <SideBarMenuItem to={'materials'}>
+                        { 
+                            listOfConsultantsProjects.map((project, index) => {
+                                return (<SideBarMenuItem key={index} to={`/${project.code}`}>
+                                    <MdHome style={{ width: fullSize ? '100%' : '20%', color: "transparent"}}/>
+                                    <div style={{ width: fullSize ? '0%' : '80%'}} className="nav-data">
+                                        {!fullSize && 
+                                            <>
+                                                <span className="text">{project.name}</span>
+                                                <span className="number">{project.progress} %</span>
+                                            </>    
+                                        }
+                                    </div>
+                                </SideBarMenuItem>)
+                            }) 
+                        }
+                        {
+                            listOfOwnerProjects.map((project, index) => {
+                                return (<SideBarMenuItem key={index} to={'projects'}>
+                                    <div style={{ width: fullSize ? '0%' : '80%'}} className="nav-data">
+                                        {!fullSize && 
+                                            <>
+                                                <span className="text">{project.name}</span>
+                                                <span className="number">{project.progress} %</span>
+                                            </>    
+                                        }
+                                    </div>
+                                </SideBarMenuItem>)
+                            }) 
+                        }
+                        {/* <SideBarMenuItem to={'resources'}>
                             <PiToolboxFill style={{ width: fullSize ? '100%' : '20%'}}/>
                             <div style={{ width: fullSize ? '0%' : '80%'}} className="nav-data">
-                            {!fullSize && <>
-                                <span className="text">Materials</span>
-                                <span className="number">20</span>
-                                </>
-                            }
+                            {!fullSize && <><span className="text">Resources</span></>}
                             </div>
-                        </SideBarMenuItem>
+                        </SideBarMenuItem> */}
                         {/* <SideBarMenuItem to={'report'}>
                             <BiSolidReport />
                             <div className="nav-data">

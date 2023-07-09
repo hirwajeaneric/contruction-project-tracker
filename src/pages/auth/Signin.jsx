@@ -95,7 +95,7 @@ const Signin = () => {
           <FormElement>
             {isProcessing 
               ? <Button disabled variant="contained" color="primary" size="small">PROCESSING...</Button> 
-              : <Button variant="contained" color="primary" size="medium" type="submit">Log in</Button>
+              : <Button variant="contained" color="primary" size="small" type="submit">Log in</Button>
             }
           </FormElement>
         </VerticallyFlexGapForm>

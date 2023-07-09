@@ -16,6 +16,8 @@ import ResponseComponent from './components/ResponseComponent';
 import { useDispatch } from 'react-redux';
 import { getAllProjects } from './redux/features/projectSlice';
 import ProjectDetails from './pages/ProjectDetails';
+import Tasks from './pages/Tasks';
+import ProjectMaterials from './pages/ProjectMaterials';
 const serverUrl = import.meta.env.VITE_REACT_APP_SERVERURL;
 
 export const GeneralContext = createContext();
@@ -55,9 +57,11 @@ function App() {
 
           <Route path='/' element={authToken ? <DashboardMain /> : <Navigate replace to={'/auth/signin'} />}>
             <Route path='' element={<Home />} />
-            <Route path='materials' element={<Materials />} />
+            <Route path='resources' element={<Materials />} />
             <Route path='projects' element={<Project />} />
-            <Route path='projects/:code' element={<ProjectDetails />} />
+            <Route path='/:code' element={<ProjectDetails />} />
+            <Route path='/:code/activities' element={<Tasks />} />
+            <Route path='/:code/resources' element={<ProjectMaterials />} />
             <Route path='report' element={<Reports />} />
             <Route path='settings' element={<Settings />} />
           </Route>

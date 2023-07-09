@@ -240,4 +240,23 @@ export const ProjectProgressBar = styled.div`
     background: #e0ebeb;
     width: 100%;
     border-radius: 5px;
+
+    p {
+        color: black;
+        text-align: center;
+        font-size: 90%;
+        padding: 3px 0;
+        width: 100%;
+    }
+
+    div {
+        background-color: green;
+        border-radius: 5px;
+        p {
+            color: white;
+            text-align: center;
+            font-size: 90%;
+            padding: 3px 0;
+        }
+    }
 `;

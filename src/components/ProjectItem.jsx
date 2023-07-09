@@ -46,7 +46,7 @@ const ProjectItem = ({ project }) => {
             <HorizontallyFlexSpaceBetweenContainer style={{ width: '100%'}}>
                 <HeaderTwo style={{ width:'70%', }}>{project.name}</HeaderTwo>
                 <HorizontallyFlexGapContainer style={{ width:'30%', gap: '40px', justifyContent:'flex-end' }}>
-                    <Button variant="contained" color="primary" size="small" type="button" onClick={(e) => {navigate(`/projects/${project.code}`)}}><VisibilityIcon /></Button>
+                    <Button variant="contained" color="primary" size="small" type="button" onClick={(e) => {navigate(`/${project.code}`)}}><VisibilityIcon /></Button>
                     {isProcessing 
                     ? <Button disabled variant="contained" color="primary" size="small">PROCESSING...</Button> 
                     : <Button variant="contained" color="error" size="small" type="button" onClick={(e) => {e.preventDefault(); deleteProject(project.id);}}><DeleteIcon /></Button>
@@ -55,7 +55,10 @@ const ProjectItem = ({ project }) => {
                 </HorizontallyFlexSpaceBetweenContainer>
                 <p style={{ fontSize: '90%', color: 'gray' }}>{project.description}</p>
                 <ProjectProgressBar>
-                Hello world
+                    <div style={{ width: `${project.progress}`}}>
+                        {project.progress !== 0 && <p>{`${project.progress}%`}</p>}
+                    </div>
+                    {project.progress === 0 && <p>{`${project.progress}%`}</p>}
                 </ProjectProgressBar>
             </VerticallyFlexGapContainer>
         </HorizontallyFlexGapContainer>
