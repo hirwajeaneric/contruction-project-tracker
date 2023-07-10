@@ -19,6 +19,22 @@ import ProjectDetails from './pages/ProjectDetails';
 import Tasks from './pages/Tasks';
 import ProjectMaterials from './pages/ProjectMaterials';
 const serverUrl = import.meta.env.VITE_REACT_APP_SERVERURL;
+import Modal from '@mui/material/Modal';
+import { Box, Typography } from '@mui/material';
+import ResourcesDetails from './components/forms/ResourcesDetails';
+import IssueDetails from './components/forms/IssueDetails';
+import SprintDetails from './components/forms/SprintDetails';
+
+const style = {
+  position: 'absolute',
+  top: '0px',
+  right: '0px',
+  width: '40%',
+  bgcolor: 'background.paper',
+  boxShadow: 24,
+  p: 4,
+  height: '100vh'
+};
 
 export const GeneralContext = createContext();
 
@@ -29,6 +45,12 @@ function App() {
   const [ cookies, setCookie, removeCookie ] = useCookies(null);
   const authToken = cookies.AuthToken;
   const user = cookies.UserData;
+  const [detailsFormType, setDetailsFormType] = useState('');
+  const [detailsData, setDetailsData] = useState('');
+
+  const [openModal, setOpenModal] = useState(false);
+  const handleOpenModal = () => setOpenModal(true);
+  const handleCloseModal = () => setOpenModal(false);
 
   const handleClose = (event, reason) => {
     if (reason === 'clickaway') {
@@ -44,7 +66,17 @@ function App() {
   },[dispatch]);
 
   return (
-    <GeneralContext.Provider value={{setOpen, responseMessage, setResponseMessage}}>
+    <GeneralContext.Provider 
+      value={{
+        setOpen, 
+        responseMessage, 
+        setResponseMessage, 
+        handleOpenModal, 
+        setDetailsFormType,
+        detailsFormType,
+        setDetailsData, 
+        detailsData, 
+      }}>
       <BrowserRouter>
         <Routes>
           
@@ -68,7 +100,18 @@ function App() {
         </Routes>
       </BrowserRouter>
 
-      
+      {/* Multi-purpose modal  */}
+      <Modal open={openModal} onClose={handleCloseModal} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
+        <Box sx={style}>
+          {/* Resource Modal Display  */}
+          {detailsFormType === 'resource' && <ResourcesDetails data={detailsData}/>}
+          {/* Issue details display  */}
+          {detailsFormType === 'issue' && <IssueDetails data={detailsData}/>}
+          {/* Spring details display  */}
+          {detailsFormType === 'sprint' && <SprintDetails data={detailsData} />}
+        </Box>
+      </Modal>
+
 
       {/* RESPONSE MESSAGE DISPLAYER ****************************************************************************************************************************** */}
       <ResponseComponent 

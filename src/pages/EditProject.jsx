@@ -13,7 +13,7 @@ import SportsScoreIcon from '@mui/icons-material/SportsScore';
 import { useForm } from "react-hook-form";
 import { GeneralContext } from "../App";
 
-const ProjectDetails = () => {
+const EditProject = () => {
   const navigate = useNavigate();
   const params = useParams();
   const { isLoading, listOfConsultantsProjects, listOfOwnerProjects } = useSelector(state => state.project);
@@ -153,4 +153,4 @@ const ProjectDetails = () => {
   )
 }
 
-export default ProjectDetails
+export default EditProject

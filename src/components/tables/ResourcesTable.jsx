@@ -2,6 +2,8 @@ import { DataGrid, GridToolbarContainer, GridToolbarExport } from '@mui/x-data-g
 import { Box, IconButton, Tooltip } from '@mui/material';
 import { Preview } from '@mui/icons-material';
 import { useNavigate, useParams } from 'react-router-dom';
+import { GeneralContext } from '../../App';
+import { useContext } from 'react';
 
 const columns = [
   {
@@ -69,11 +71,16 @@ export default function ResourcesTable({data}) {
 const TableActions = ({parameters}) => {
   const navigate = useNavigate();
   const params = useParams();
+  const { handleOpenModal, setDetailsFormType, setDetailsData } = useContext(GeneralContext);
 
   return (
     <Box>
       <Tooltip title='View / Edit'>
-        <IconButton onClick={() => {navigate(`/${params.code}/resources/${parameters.row.id}`)}}>
+        <IconButton onClick={() => {
+            handleOpenModal(); 
+            setDetailsFormType('resource');
+            setDetailsData(parameters.row);
+          }}>
           <Preview />
         </IconButton>
       </Tooltip>
