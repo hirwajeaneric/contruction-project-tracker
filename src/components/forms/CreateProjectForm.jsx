@@ -18,7 +18,6 @@ export default function CreateProjectForm() {
     const [ cookies, setCookie, removeCookie ] = useCookies(null);
     const user = cookies.UserData;
     const dispatch = useDispatch();
-    const [openForm, setOpenForm] = useState(false);
 
     const onSubmit = data => {
         if (data.password !== data.confirmPassword) {
@@ -56,11 +55,9 @@ export default function CreateProjectForm() {
 
     return (
         <VerticallyFlexGapForm onSubmit={handleSubmit(onSubmit)} style={{ gap: '20px', backgroundColor: 'white', padding: '20px', borderRadius: '5px', boxShadow: '0 2px 4px 0 rgba(0, 0, 0, 0.1)' }}>
-            <HorizontallyFlexSpaceBetweenContainer>
+            <HorizontallyFlexSpaceBetweenContainer style={{ borderBottom: '1px solid #b3d9ff', paddingBottom: '15px'}}>
                 <p style={{ width: '100%', fontWeight: '600', textAlign:'left' }}>Create New Project</p>
-                <Button variant="contained" color={openForm ? "secondary":"primary"} size="medium" type="button" onClick={() => {setOpenForm(!openForm)}}>{openForm ? 'Cancel': 'Add'}</Button>
             </HorizontallyFlexSpaceBetweenContainer>
-            {openForm && 
             <VerticallyFlexGapContainer style={{ gap: '15px' }}>
                 <HorizontallyFlexGapContainer style={{ gap: '20px' }}>
                     <FormElement style={{ color: 'gray' }}>
@@ -231,7 +228,7 @@ export default function CreateProjectForm() {
                     }
                     <Button variant="contained" color="secondary" size="medium" type="button" onClick={() => {window.location.reload()}}>Cancel</Button>
                 </FormElement>
-            </VerticallyFlexGapContainer>}
+            </VerticallyFlexGapContainer>
         </VerticallyFlexGapForm>
     )
 }

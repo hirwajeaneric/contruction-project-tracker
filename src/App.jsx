@@ -24,6 +24,7 @@ import { Box, Typography } from '@mui/material';
 import ResourcesDetails from './components/forms/ResourcesDetails';
 import IssueDetails from './components/forms/IssueDetails';
 import SprintDetails from './components/forms/SprintDetails';
+import MoreProjectDetails from './components/forms/MoreProjectDetails';
 
 const style = {
   position: 'absolute',
@@ -33,6 +34,7 @@ const style = {
   bgcolor: 'background.paper',
   boxShadow: 24,
   p: 4,
+  overflowY: 'auto',
   height: '100vh'
 };
 
@@ -49,7 +51,7 @@ function App() {
   const [detailsData, setDetailsData] = useState('');
 
   const [openModal, setOpenModal] = useState(false);
-  const handleOpenModal = () => setOpenModal(true);
+  const handleOpenModal = () => setOpenModal(!openModal);
   const handleCloseModal = () => setOpenModal(false);
 
   const handleClose = (event, reason) => {
@@ -103,6 +105,8 @@ function App() {
       {/* Multi-purpose modal  */}
       <Modal open={openModal} onClose={handleCloseModal} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
         <Box sx={style}>
+          {/* Resource Modal Display  */}
+          {detailsFormType === 'project' && <MoreProjectDetails data={detailsData}/>}
           {/* Resource Modal Display  */}
           {detailsFormType === 'resource' && <ResourcesDetails data={detailsData}/>}
           {/* Issue details display  */}

@@ -1,7 +1,7 @@
 import { Avatar, Button } from '@mui/material';
 import React from 'react'
 import { useNavigate } from 'react-router-dom';
-import { HeaderTwo, HorizontallyFlexGapContainer, HorizontallyFlexSpaceBetweenContainer, VerticallyFlexGapContainer } from './styles/GenericStyles';
+import { HeaderTwo, HorizontallyFlexGapContainer, HorizontallyFlexSpaceBetweenContainer, ProjectItemContainer, VerticallyFlexGapContainer } from './styles/GenericStyles';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { getSimpleCapitalizedChars } from '../utils/HelperFunctions';
@@ -38,20 +38,20 @@ const ProjectItem = ({ project }) => {
         })
     }
     return (
-        <HorizontallyFlexGapContainer>
-            <div style={{ width: '5%' }}>
+        <ProjectItemContainer>
+            <div className='avatar-container'>
                 <Avatar style={{ border: '2px solid blue', background: 'orange' }}>{getSimpleCapitalizedChars(project.name)}</Avatar>
             </div>
-            <VerticallyFlexGapContainer style={{ borderBottom: '1px solid #b3d9ff', paddingBottom: '10px', width: '95%', justifyContent: 'flex-start', alignItems: 'flex-start', gap: '5px' }}>
-            <HorizontallyFlexSpaceBetweenContainer style={{ width: '100%'}}>
-                <HeaderTwo style={{ width:'70%', }}>{project.name}</HeaderTwo>
-                <HorizontallyFlexGapContainer style={{ width:'30%', gap: '40px', justifyContent:'flex-end' }}>
-                    <Button variant="contained" color="primary" size="small" type="button" onClick={(e) => {navigate(`/${project.code}`)}}><VisibilityIcon /></Button>
-                    {isProcessing 
-                    ? <Button disabled variant="contained" color="primary" size="small">PROCESSING...</Button> 
-                    : <Button variant="contained" color="error" size="small" type="button" onClick={(e) => {e.preventDefault(); deleteProject(project.id);}}><DeleteIcon /></Button>
-                    }
-                </HorizontallyFlexGapContainer>
+            <VerticallyFlexGapContainer style={{ width: '95%', justifyContent: 'flex-start', alignItems: 'flex-start', gap: '10px' }}>
+                <HorizontallyFlexSpaceBetweenContainer style={{ width: '100%'}}>
+                    <HeaderTwo style={{ width:'50%', }}>{project.name}</HeaderTwo>
+                    <HorizontallyFlexGapContainer style={{ width:'50%', gap: '40px', justifyContent:'flex-end' }}>
+                        <Button variant="text" color="primary" size="small" type="button" onClick={(e) => {navigate(`/${project.code}`)}}>View more</Button>
+                        {isProcessing 
+                        ? <Button disabled variant="text" color="primary" size="small">PROCESSING...</Button> 
+                        : <Button variant="text" color="error" size="small" type="button" onClick={(e) => {e.preventDefault(); deleteProject(project.id);}}>Delete</Button>
+                        }
+                    </HorizontallyFlexGapContainer>
                 </HorizontallyFlexSpaceBetweenContainer>
                 <p style={{ fontSize: '90%', color: 'gray' }}>{project.description}</p>
                 <ProjectProgressBar>
@@ -61,7 +61,7 @@ const ProjectItem = ({ project }) => {
                     {project.progress === 0 && <p>{`${project.progress}%`}</p>}
                 </ProjectProgressBar>
             </VerticallyFlexGapContainer>
-        </HorizontallyFlexGapContainer>
+        </ProjectItemContainer>
     )
 }
 

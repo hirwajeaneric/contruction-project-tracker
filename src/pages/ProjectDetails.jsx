@@ -18,7 +18,7 @@ const ProjectDetails = () => {
   const params = useParams();
   const { isLoading, listOfConsultantsProjects, listOfOwnerProjects } = useSelector(state => state.project);
   const [openAddOwnerForm, setOpenAddOwnerForm] = useState(false);
-  const { setOpen, setResponseMessage } = useContext(GeneralContext);
+  const { setOpen, setResponseMessage, handleOpenModal, setDetailsFormType, setDetailsData } = useContext(GeneralContext);
   const [isProcessing, setIsProcessing] = useState(false);
   const { register, handleSubmit, formState: { errors } } = useForm();
   const [project, setProject] = useState({});
@@ -74,13 +74,23 @@ const ProjectDetails = () => {
       <VerticallyFlexGapContainer style={{ gap: '20px', backgroundColor: 'white', padding: '20px', borderRadius: '5px', boxShadow: '0 2px 4px 0 rgba(0, 0, 0, 0.1)' }}>
         {isLoading ? <p>Loading...</p> :
           <VerticallyFlexGapContainer style={{ gap: '20px'}}>
-            <HorizontallyFlexSpaceBetweenContainer style={{ borderBottom: '1px solid #a3c2c2', paddingBottom: '10px' }}>
+            <HorizontallyFlexGapContainer style={{ borderBottom: '1px solid #a3c2c2', paddingBottom: '10px' }}>
               <HeaderTwo style={{ width: '100%', textAlign: 'left' }}>{project.name}</HeaderTwo>
               <HorizontallyFlexGapContainer style={{ gap: '20px', justifyContent: 'flex-end' }}>
                 <p style={{ color: 'black' }}>Code: <span style={{ color: 'gray' }}>{project.code}</span></p>
-                <Button variant='contained' size='small' color='info'>Edit/View</Button>
+                <Button 
+                  variant='contained' 
+                  size='small' 
+                  color='info' 
+                  onClick={() => { 
+                    handleOpenModal(); 
+                    setDetailsFormType('project');
+                    setDetailsData(project);
+                  }}>
+                    Edit/View Project
+                  </Button>
               </HorizontallyFlexGapContainer>
-            </HorizontallyFlexSpaceBetweenContainer>
+            </HorizontallyFlexGapContainer>
             <p style={{ color: 'gray', textAlign:'left', lineHeight: '1.5rem', width: '100%' }}>{project.description}</p>
             <HorizontallyFlexSpaceBetweenContainer style={{ fontSize: '90%', textAlign: 'left' }}>
               <VerticallyFlexGapContainer style={{ alignItems: 'flex-start', gap: '10px' }}>

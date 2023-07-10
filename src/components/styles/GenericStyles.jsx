@@ -160,6 +160,53 @@ export const HorizontallyFlexGapContainer = styled.div`
     }
 `;
 
+export const ProjectItemContainer = styled.div`
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    flex-wrap: nowrap;
+    border-bottom: 1px solid #b3d9ff; 
+    padding: 20px 20px 20px 0px;
+    align-items: flex-start;
+
+    div.avatar-container {
+        width: 15%;
+        display: flex;
+        justify-content: center;
+    }
+
+    div.right {
+        display: flex;
+        
+    }
+
+    @media (max-width: 768px) {
+        div.left {
+            display: flex;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+    
+        div.right {
+            display: flex;
+            width: 100%;
+        }
+    }
+
+    @media (max-width: 480px) {
+        div.left {
+            display: flex;
+            width: 100%;
+            margin-bottom: 15px;
+        }
+    
+        div.right {
+            display: flex;
+            width: 100%;
+        }
+    }
+`;
 
 export const FormElement = styled.div`
     width: 100%;
@@ -170,7 +217,7 @@ export const FormElement = styled.div`
     gap: 10px;
 
     label {
-        
+        font-size: 90%;
     }
 
     p {

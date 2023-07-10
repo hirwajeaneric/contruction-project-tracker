@@ -8,6 +8,7 @@ import axios from "axios";
 import { useDispatch } from "react-redux";
 import { getProjectResources } from "../../redux/features/materialSlice";
 import { measurementUnits } from "../../utils/MeasurementUnits";
+import { currencies } from "../../utils/Currencies";
 
 export default function AddResourcesForm({projectId}) {
     const [isProcessing, setIsProcessing] = useState(false);
@@ -139,6 +140,21 @@ export default function AddResourcesForm({projectId}) {
                             {required: false})} 
                         />
                     </FormElement>
+                    <FormElement style={{ color: 'gray' }}>
+                        <label htmlFor="currency">Currency *</label>
+                        <select 
+                            {...register("currency", { required: true })}
+                            aria-invalid={errors.currency ? "true" : "false"}
+                        >
+                            <option value="">Choose currency</option>
+                            {currencies.map((currency, index) => (
+                                <option key={index} value={currency}>{currency}</option>
+                            ))}
+                        </select>
+                        {errors.currency?.type === "required" && (
+                        <p role="alert">Choose currency</p>
+                        )}
+                    </FormElement>
                     {/* <FormElement style={{ color: 'gray' }}>
                         <label htmlFor="picture">Picture</label>
                         <input 
@@ -150,7 +166,7 @@ export default function AddResourcesForm({projectId}) {
                     </FormElement> */}
                 </HorizontallyFlexGapContainer>
 
-                <FormElement style={{ flexDirection: 'row', gap: '60%' }}>
+                <FormElement style={{ flexDirection: 'row', gap: '40%' }}>
                     {isProcessing 
                     ? <Button disabled variant="contained" color="primary" size="small">PROCESSING...</Button> 
                     : <Button variant="contained" color="primary" size="small" type="submit">Add</Button>
