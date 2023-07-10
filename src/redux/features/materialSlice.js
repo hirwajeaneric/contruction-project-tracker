@@ -20,13 +20,13 @@ export const getProjectResources = createAsyncThunk(
     async (project, thunkAPI) => {
         try {
             const response = await axios.get(`${serverUrl}/api/v1/cpta/material/findByProjectId?project=${project}`);
-            response.data.resources.forEach((element, index) => {
+            response.data.materials.forEach((element, index) => {
                 element.id = element._id;
                 delete element._id;
                 delete element.__v;
                 element.entryDate = new Date(element.entryDate).toLocaleString();
             });
-            return { resources: response.data.resources, user: userId }
+            return response.data.materials;
         } catch (error) {
             return thunkAPI.rejectWithValue('Something went wrong!!');
         }
@@ -47,11 +47,11 @@ export const deleteResource = createAsyncThunk(
     }
 );
 
-const userSlice = createSlice({
+const materialSlice = createSlice({
     name: 'material',
     initialState,
     reducers: {
-        updateResources: (state, action) => {
+        updateResource: (state, action) => {
             state.selectedResource = action.payload;
             let resources = state.listOfProjectResources;
 
@@ -75,11 +75,9 @@ const userSlice = createSlice({
         },
         [getProjectResources.fulfilled] : (state, action) => {
             state.isLoading = false;
-            let listOfProjectResources = action.payload.resources.sort((a,b) => new Date(a.creationDate) - new Date(b.creationDate));
+            let listOfProjectResources = action.payload.sort((a,b) => new Date(a.creationDate) - new Date(b.creationDate));
             state.listOfProjectResources = listOfProjectResources;
-            state.listOfConsultantsResources = action.payload.resources.filter(resource => resource.consultantId === action.payload.user);
-            state.listOfOwnerResources = action.payload.resources.filter(resource => resource.ownerId === action.payload.user);
-            state.numberOfResources = state.listOfConsultantsResources.length + state.listOfOwnerResources.length;
+            state.numberOfProjectResources = listOfProjectResources.length; 
         },
         [getProjectResources.rejected] : (state) => {
             state.isLoading = false;
@@ -100,5 +98,5 @@ const userSlice = createSlice({
     }
 });
 
-export const { updateResources, dynamicSearch, manualSearch } = userSlice.actions;
-export default userSlice.reducer;
+export const { updateResource, dynamicSearch, manualSearch } = materialSlice.actions;
+export default materialSlice.reducer;

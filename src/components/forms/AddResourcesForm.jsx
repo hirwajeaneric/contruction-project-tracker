@@ -4,52 +4,45 @@ import { useForm } from "react-hook-form";
 import { GeneralContext } from "../../App";
 import { FormElement, HorizontallyFlexGapContainer, HorizontallyFlexSpaceBetweenContainer, VerticallyFlexGapContainer, VerticallyFlexGapForm } from "../styles/GenericStyles";
 const serverUrl = import.meta.env.VITE_REACT_APP_SERVERURL;
-import { WorldCountries } from "../../utils/WorldCountries";
-import { ProjectTypes } from "../../utils/ProjectTypes";
-import { useCookies } from "react-cookie";
 import axios from "axios";
 import { useDispatch } from "react-redux";
-import { getAllProjects } from "../../redux/features/projectSlice";
+import { getProjectResources } from "../../redux/features/materialSlice";
+import { measurementUnits } from "../../utils/MeasurementUnits";
 
 export default function AddResourcesForm({projectId}) {
     const [isProcessing, setIsProcessing] = useState(false);
     const { register, handleSubmit, formState: { errors } } = useForm();
     const { setOpen, setResponseMessage } = useContext(GeneralContext);
-    const [ cookies, setCookie, removeCookie ] = useCookies(null);
-    const user = cookies.UserData;
     const dispatch = useDispatch();
     const [openForm, setOpenForm] = useState(true);
 
     const onSubmit = data => {
-        if (data.password !== data.confirmPassword) {
-          setResponseMessage({message:'Passwords do not match', severity: 'warning'});
-          setOpen(true);
-          return;
-        } else {
-          data.project = projectId;
-          data.totalPrice = Number(data.quantity) * Number(data.unitPrice)
+        data.project = projectId;
+        data.quantity = Number(data.quantity); 
+        data.unitPrice = Number(data.unitPrice);
 
-          setIsProcessing(true);
-    
-          axios.post(serverUrl+'/api/v1/cpta/material/add', data)
-          .then(response => {
+        setIsProcessing(true);
+        
+        console.log(data);
+
+        axios.post(serverUrl+'/api/v1/cpta/material/add', data)
+        .then(response => {
             setTimeout(() => {
-              if (response.status === 201) {
-                setIsProcessing(false);
-                setResponseMessage({ message: response.data.message, severity: 'success' });
-                setOpen(true);
-                // dispatch(getAllMaterials(user.id));
-              }
+                if (response.status === 201) {
+                    setIsProcessing(false);
+                    setResponseMessage({ message: response.data.message, severity: 'success' });
+                    setOpen(true);
+                    dispatch(getProjectResources(projectId));
+                }
             }, 3000)
-          })
-          .catch(error => {
+        })
+        .catch(error => {
             if (error.response && error.response.status >= 400 && error.response.status <= 500) {
-              setIsProcessing(false);
-              setResponseMessage({ message: error.response.data.msg, severity:'error'})
-              setOpen(true);
+                setIsProcessing(false);
+                setResponseMessage({ message: error.response.data.msg, severity:'error'})
+                setOpen(true);
             }
-          })
-        }
+        })
       };
 
     return (
@@ -65,7 +58,7 @@ export default function AddResourcesForm({projectId}) {
                         <input 
                             type="text" 
                             id="name"
-                            placeholder="Project name" 
+                            placeholder="Resource name" 
                             {...register("name", 
                             {required: true})} 
                             aria-invalid={errors.name ? "true" : "false"}
@@ -75,7 +68,7 @@ export default function AddResourcesForm({projectId}) {
                         )}
                     </FormElement>
                     <FormElement style={{ color: 'gray' }}>
-                        <label htmlFor="estimatedEndDate">Type *</label>
+                        <label htmlFor="type">Type *</label>
                         <input 
                             type="text" 
                             id="type"
@@ -119,35 +112,50 @@ export default function AddResourcesForm({projectId}) {
                         )}
                     </FormElement>
                     <FormElement style={{ color: 'gray' }}>
+                        <label htmlFor="measurementUnit">Measurement unit *</label>
+                        <select 
+                            {...register("measurementUnit", { required: true })}
+                            aria-invalid={errors.measurementUnit ? "true" : "false"}
+                        >
+                            <option value="">Select unit</option>
+                            {measurementUnits.map((measurementUnit, index) => (
+                                <option key={index} value={measurementUnit}>{measurementUnit}</option>
+                            ))}
+                        </select>
+                        {errors.measurementUnit?.type === "required" && (
+                        <p role="alert">Provide a measurement unit</p>
+                        )}
+                    </FormElement>
+                </HorizontallyFlexGapContainer>
+                
+                <HorizontallyFlexGapContainer style={{ gap: '20px' }}>
+                    <FormElement style={{ color: 'gray' }}>
                         <label htmlFor="unitPrice">Unit price *</label>
                         <input 
                             type="number" 
                             id="unitPrice"
                             placeholder="Price per unit" 
                             {...register("unitPrice", 
-                            {required: true})} 
-                            aria-invalid={errors.unitPrice ? "true" : "false"}
+                            {required: false})} 
                         />
                     </FormElement>
+                    {/* <FormElement style={{ color: 'gray' }}>
+                        <label htmlFor="picture">Picture</label>
+                        <input 
+                            type="file" 
+                            id="picture" 
+                            {...register("picture", 
+                            {required: false})} 
+                        />
+                    </FormElement> */}
                 </HorizontallyFlexGapContainer>
-
-                <FormElement style={{ color: 'gray' }}>
-                    <label htmlFor="picture">Picture</label>
-                    <input 
-                        type="file" 
-                        id="picture" 
-                        {...register("picture", 
-                        {required: true})} 
-                        aria-invalid={errors.picture ? "true" : "false"}
-                    />
-                </FormElement>
 
                 <FormElement style={{ flexDirection: 'row', gap: '60%' }}>
                     {isProcessing 
                     ? <Button disabled variant="contained" color="primary" size="small">PROCESSING...</Button> 
-                    : <Button variant="contained" color="primary" size="medium" type="submit">Add</Button>
+                    : <Button variant="contained" color="primary" size="small" type="submit">Add</Button>
                     }
-                    <Button variant="contained" color="secondary" size="medium" type="button" onClick={() => {window.location.reload()}}>Cancel</Button>
+                    <Button variant="contained" color="secondary" size="small" type="button" onClick={() => {window.location.reload()}}>Cancel</Button>
                 </FormElement>
             </VerticallyFlexGapContainer>}
         </VerticallyFlexGapForm>

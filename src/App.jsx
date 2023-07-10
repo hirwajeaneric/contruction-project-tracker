@@ -38,8 +38,8 @@ function App() {
   };
 
   useEffect(() => {  
-    if (user !== null) {
-      dispatch(getAllProjects(user.id))
+    if (user !== undefined) {
+      dispatch(getAllProjects(user.id));
     }
   },[dispatch]);
 
@@ -67,6 +67,8 @@ function App() {
           </Route>
         </Routes>
       </BrowserRouter>
+
+      
 
       {/* RESPONSE MESSAGE DISPLAYER ****************************************************************************************************************************** */}
       <ResponseComponent 

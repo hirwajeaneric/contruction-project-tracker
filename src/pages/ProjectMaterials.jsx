@@ -1,5 +1,5 @@
 import { Helmet } from "react-helmet-async";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import CreateProjectForm from "../components/forms/CreateProjectForm";
 import { HeaderTwo, HorizontallyFlexGapContainer, HorizontallyFlexSpaceBetweenContainer, VerticallyFlexGapContainer } from "../components/styles/GenericStyles"
 import { useContext, useEffect, useState } from "react";
@@ -9,11 +9,12 @@ import { useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
 import AddResourcesForm from "../components/forms/AddResourcesForm";
 import ResourcesTable from "../components/tables/ResourcesTable";
+import { getProjectResources } from "../redux/features/materialSlice";
 const serverUrl = import.meta.env.VITE_REACT_APP_SERVERURL;
 
 const ProjectMaterials = () => {
   const params = useParams();
-  const { isLoading, listOfConsultantsProjects, listOfOwnerProjects } = useSelector(state => state.project);
+  const dispatch = useDispatch();
   const { setOpen, setResponseMessage } = useContext(GeneralContext);
   const [isProcessing, setIsProcessing] = useState(false);
   const { register, handleSubmit, formState: { errors } } = useForm();  
@@ -23,10 +24,14 @@ const ProjectMaterials = () => {
   useEffect(() => {
     axios.get(`${serverUrl}/api/v1/cpta/project/findByCode?code=${params.code}`)
     .then((response) => {
-      setProject(response.data.project)
+      setProject(response.data.project);
+      dispatch(getProjectResources(response.data.project._id));
     })
     .catch(error => console.log(error))
   },[]);
+
+  const { isLoading: loadingProject, listOfConsultantsProjects, listOfOwnerProjects } = useSelector(state => state.project);
+  const { isLoading : loadingResources, listOfProjectResources, numberOfProjectResources } = useSelector(state => state.material);
 
   return (
     <VerticallyFlexGapContainer style={{ gap: '20px'}}>
@@ -36,21 +41,27 @@ const ProjectMaterials = () => {
       </Helmet>
 
       <VerticallyFlexGapContainer style={{ gap: '20px', backgroundColor: 'white', padding: '20px', borderRadius: '5px', boxShadow: '0 2px 4px 0 rgba(0, 0, 0, 0.1)' }}>
+        {loadingProject ? <p style={{ width: '100%', textAlign: 'left' }}>Loading...</p> :
         <HorizontallyFlexGapContainer>
           <HeaderTwo style={{ width: '100%', textAlign: 'left' }}>{project.name}</HeaderTwo>
           <p style={{ color: 'gray' }}>{project.code}</p>
-        </HorizontallyFlexGapContainer>
+        </HorizontallyFlexGapContainer>}
       </VerticallyFlexGapContainer>
 
       <HorizontallyFlexGapContainer style={{ gap: '20px', alignItems:'flex-start'}}>
         {/* List of resources  */}
         <VerticallyFlexGapContainer style={{ justifyContent:'flex-start', backgroundColor: 'white', padding: '20px', borderRadius: '5px', boxShadow: '0 2px 4px 0 rgba(0, 0, 0, 0.1)' }}>
           <p style={{ fontWeight: '600', width: '100%', textAlign:'left' }}>Resources</p>
-          <ResourcesTable data={[]}/>
+          {loadingProject ? <p style={{ width: '100%', textAlign: 'left' }}>Loading...</p> :
+            <>
+              {listOfProjectResources.length !== 0 && <ResourcesTable data={listOfProjectResources}/>}
+              {listOfProjectResources.length === 0 && <p style={{ color: 'gray', marginTop: '20px' }}>No resources available</p>}
+            </>
+          }
         </VerticallyFlexGapContainer>
         
         {/* Add resource form  */}
-        <AddResourcesForm />
+        <AddResourcesForm projectId={project._id}/>
       </HorizontallyFlexGapContainer>
 
     </VerticallyFlexGapContainer>

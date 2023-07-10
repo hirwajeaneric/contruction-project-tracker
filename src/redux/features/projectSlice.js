@@ -49,7 +49,7 @@ export const deleteProject = createAsyncThunk(
     }
 );
 
-const userSlice = createSlice({
+const projectSlice = createSlice({
     name: 'project',
     initialState,
     reducers: {
@@ -102,5 +102,5 @@ const userSlice = createSlice({
     }
 });
 
-export const { updateProjects, dynamicSearch, manualSearch } = userSlice.actions;
-export default userSlice.reducer;
+export const { updateProjects, dynamicSearch, manualSearch } = projectSlice.actions;
+export default projectSlice.reducer;

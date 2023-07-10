@@ -15,8 +15,8 @@ const columns = [
     width: 90,
   },
   {
-    field: 'unitPrice',
-    headerName: 'Unit Price',
+    field: 'measurementUnit',
+    headerName: 'Measurement',
     width: 100,
   },
   {
@@ -39,7 +39,7 @@ function CustomToolbar() {
 export const TableStyles = {
   padding: '0px',
   width: '100%',
-  minHeight: '300px',
+  height: '500px',
   background: 'white',
   marginTop: '20px' 
 }
@@ -56,7 +56,7 @@ export default function ResourcesTable({data}) {
         rows={rows}
         columns={columns}
         pageSize={5}
-        rowsPerPageOptions={[5]}
+        rowsPerPageOptions={[20]}
         disableSelectionOnClick
         experimentalFeatures={{newEditingApi: true}}
         components={{Toolbar: CustomToolbar}}
