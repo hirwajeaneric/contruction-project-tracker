@@ -3,8 +3,8 @@ import axios from "axios";
 const serverUrl = import.meta.env.VITE_REACT_APP_SERVERURL;
 
 const initialState = {
-    listOfAllProjectIssues: [],
-    numberOfAllProjectIssues: 0,
+    listOfProjectIssues: [],
+    numberOfProjectIssues: 0,
     listOfTodoIssues: [],
     listOfInProgressIssues: [],
     listOfCompletedIssues: [],

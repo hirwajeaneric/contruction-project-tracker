@@ -37,7 +37,7 @@ const ProjectMaterials = () => {
   return (
     <VerticallyFlexGapContainer style={{ gap: '20px'}}>
       <Helmet>
-        <title>{`Resources - ${project.code}`}</title>
+        <title>{`Resources - ${project.name}`}</title>
         <meta name="description" content={`A list of all resources associated to this project and a form to add more.`} /> 
       </Helmet>
 
