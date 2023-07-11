@@ -25,6 +25,7 @@ import ResourcesDetails from './components/forms/ResourcesDetails';
 import IssueDetails from './components/forms/IssueDetails';
 import SprintDetails from './components/forms/SprintDetails';
 import MoreProjectDetails from './components/forms/MoreProjectDetails';
+import MileStones from './pages/MileStones';
 
 const style = {
   position: 'absolute',
@@ -96,6 +97,7 @@ function App() {
             <Route path='/:code' element={<ProjectDetails />} />
             <Route path='/:code/activities' element={<Tasks />} />
             <Route path='/:code/resources' element={<ProjectMaterials />} />
+            <Route path='/:code/milestones' element={<MileStones />} />
             <Route path='report' element={<Reports />} />
             <Route path='settings' element={<Settings />} />
           </Route>

@@ -35,20 +35,6 @@ export const getAllProjects = createAsyncThunk(
     }
 );
 
-export const deleteProject = createAsyncThunk(
-    'project/deleteProject',
-    async (id, thunkAPI) => { 
-        try {
-            const response = await axios.delete(Endpoints.APIS.jobApis.delete+id)
-            if (response.status === 204) {
-                return id;
-            }
-        } catch (error) {
-            return thunkAPI.rejectWithValue('Something went wrong!!');
-        }
-    }
-);
-
 const projectSlice = createSlice({
     name: 'project',
     initialState,
@@ -84,19 +70,6 @@ const projectSlice = createSlice({
             state.numberOfProjects = state.listOfConsultantsProjects.length + state.listOfOwnerProjects.length;
         },
         [getAllProjects.rejected] : (state) => {
-            state.isLoading = false;
-        },
-        [deleteProject.pending] : (state) => {
-            state.isLoading = true;
-        },
-        [deleteProject.fulfilled] : (state, action) => {
-            state.isLoading = false;
-            let projects = state.listOfProjects;
-            projects.filter(project => project._id !== action.payload)
-            state.listOfProjects = projects;
-            state.responseMessage = 'Project deleted';
-        },
-        [deleteProject.rejected] : (state) => {
             state.isLoading = false;
         }
     }

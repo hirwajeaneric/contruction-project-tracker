@@ -111,7 +111,7 @@ const ProjectDetails = () => {
             <HorizontallyFlexGapContainer style={{ gap: '20px' }}>
               <Button variant="contained" color="success" size="small" type="button" onClick={() => { setOpenAddOwnerForm(!openAddOwnerForm) }}><PersonIcon /> Add Owner</Button>
               <Button variant="contained" color="primary" size="small" type="button" onClick={() => {navigate(`/${project.code}/resources`)}}><ConstructionIcon /> Add / View Resources</Button>
-              <Button variant="contained" color="secondary" size="small" type=" button" onClick={() => {navigate(`/${project.code}/activities`)}}><SportsScoreIcon /> Add Millestones</Button>
+              <Button variant="contained" color="secondary" size="small" type=" button" onClick={() => {navigate(`/${project.code}/milestones`)}}><SportsScoreIcon /> Add Millestones</Button>
             </HorizontallyFlexGapContainer>
           </VerticallyFlexGapContainer>
         }

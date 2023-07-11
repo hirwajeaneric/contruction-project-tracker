@@ -33,20 +33,6 @@ export const getProjectResources = createAsyncThunk(
     }
 );
 
-export const deleteResource = createAsyncThunk(
-    'resource/deleteResource',
-    async (id, thunkAPI) => { 
-        try {
-            const response = await axios.delete(Endpoints.APIS.jobApis.delete+id)
-            if (response.status === 204) {
-                return id;
-            }
-        } catch (error) {
-            return thunkAPI.rejectWithValue('Something went wrong!!');
-        }
-    }
-);
-
 const materialSlice = createSlice({
     name: 'material',
     initialState,
@@ -80,19 +66,6 @@ const materialSlice = createSlice({
             state.numberOfProjectResources = listOfProjectResources.length; 
         },
         [getProjectResources.rejected] : (state) => {
-            state.isLoading = false;
-        },
-        [deleteResource.pending] : (state) => {
-            state.isLoading = true;
-        },
-        [deleteResource.fulfilled] : (state, action) => {
-            state.isLoading = false;
-            let resources = state.listOfProjectResources;
-            resources.filter(resource => resource._id !== action.payload)
-            state.listOfProjectResources = resources;
-            state.responseMessage = 'Resource deleted';
-        },
-        [deleteResource.rejected] : (state) => {
             state.isLoading = false;
         }
     }
