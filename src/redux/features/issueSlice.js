@@ -26,9 +26,6 @@ export const getProjectIssues = createAsyncThunk(
                 element.id = element._id;
                 delete element._id;
                 delete element.__v;
-                element.creationDate = new Date(element.creationDate).toLocaleString();
-                element.startDate = new Date(element.startDate).toLocaleString();
-                element.endDate = new Date(element.endDate).toLocaleString();
             });
             return response.data.issues;
         } catch (error) {

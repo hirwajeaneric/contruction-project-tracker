@@ -160,6 +160,32 @@ export const HorizontallyFlexGapContainer = styled.div`
     }
 `;
 
+export const StatusButtonGroupContainer = styled.div`
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    flex-wrap: nowrap;
+    gap: 10px;
+    
+    button {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        flex-wrap: nowrap;
+        gap: 10px;
+        background: #e6f2ff;
+        color: black;
+        border: none;
+        padding: 5px 10px;
+        cursor: pointer;
+
+        &:hover {
+            border: 1px solid black;
+            padding: 4px 9px;
+        }
+    }
+`; 
+
 export const ProjectItemContainer = styled.div`
     width: 100%;
     display: flex;

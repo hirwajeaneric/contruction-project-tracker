@@ -34,7 +34,7 @@ const MileStones = () => {
         listOfProjectIssues, 
         numberOfProjectIssues, 
         listOfTodoIssues, 
-        listOfInProgressIssue, 
+        listOfInProgressIssues, 
         listOfCompletedIssues, 
         numberOfTodoIssues, 
         numberOfInProgressIssues, 
@@ -60,11 +60,9 @@ const MileStones = () => {
             if (response.status === 201) {
                 setIsProcessing(false);
                 setIssue({});
-                setTimeout(() => {
-                    setResponseMessage({ message: response.data.message, severity: 'success' });
-                    setOpen(true);
-                    dispatch(getProjectIssues(project._id));
-                }, 1000)
+                setResponseMessage({ message: response.data.message, severity: 'success' });
+                setOpen(true);
+                dispatch(getProjectIssues(project._id));
             }
         })
         .catch(error => {
@@ -111,7 +109,7 @@ const MileStones = () => {
                     <VerticallyFlexGapContainer style={{ padding: '7px', gap: '7px', minHeight: '70%', overflowY:'auto', justifyContent:'flex-start', alignItems:'flex-start' }}>
                         {numberOfTodoIssues === 0 && <p style={{ width: '100%',textAlign: 'center', color:'GrayText' }}>No tasks.<br/>Add new items here.</p>}
                         {listOfTodoIssues.map((issue, index) => {
-                            return (<TodoItem data={issue} />)
+                            return (<TodoItem key={index} data={issue} />)
                         })}
                     </VerticallyFlexGapContainer>
                     <HorizontallyFlexGapContainer style={{ borderTop: "1px solid rgba(0,0,0,.2)" }}>
@@ -136,6 +134,9 @@ const MileStones = () => {
                     </HorizontallyFlexGapContainer>
                     <VerticallyFlexGapContainer style={{ padding: '7px', gap: '7px', minHeight: '70%', overflowY:'auto', justifyContent:'flex-start', alignItems:'flex-start' }}>
                         {numberOfInProgressIssues === 0 && <p style={{ width: '100%', textAlign: 'center', color:'GrayText' }}>No tasks.<br/>Add new items here.</p>}
+                        {listOfInProgressIssues && listOfInProgressIssues.map((issue, index) => {
+                            return (<TodoItem key={index} data={issue} />)
+                        })}
                     </VerticallyFlexGapContainer>
                 </VerticallyFlexSpaceBetweenForm>
                 
@@ -146,7 +147,10 @@ const MileStones = () => {
                         <p style={{ color: 'white', background: 'black', padding: '2px 3px', fontSize:'90%', borderRadius: '5px'}}>{numberOfCompletedIssues}</p>
                     </HorizontallyFlexGapContainer>
                     <VerticallyFlexGapContainer style={{ padding: '7px', gap: '7px', minHeight: '70%', overflowY:'auto', justifyContent:'flex-start', alignItems:'flex-start' }}>
-                        {numberOfCompletedIssues === 0 && <p style={{ textAlign: 'center',width: '100%', color:'GrayText' }}>No tasks.<br/>Add new items here.</p>}
+                        {numberOfCompletedIssues === 0 && <p stlistOfInProgressIssueyle={{ textAlign: 'center',width: '100%', color:'GrayText' }}>No tasks.<br/>Add new items here.</p>}
+                        {listOfCompletedIssues && listOfCompletedIssues.map((issue, index) => {
+                            return (<TodoItem key={index} data={issue} />)
+                        })}
                     </VerticallyFlexGapContainer>
                 </VerticallyFlexSpaceBetweenForm>
             </HorizontallyFlexGapContainer>
