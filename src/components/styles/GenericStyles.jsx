@@ -267,4 +267,75 @@ export const FormElement = styled.div`
     button {
         width: 100%;
     }
+
+    .input-with-icon {
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        align-items: center;
+        gap: 10px;
+
+        svg {
+            font-size: 200%;
+            color: black;
+        }
+
+        div {
+            border-top: 1px solid #b3cccc;
+            border-bottom: 0px;
+            border-left: 0px;
+            border-right: 0px;
+            border-radius: 3px;
+            width:100%;
+                
+            input, textarea, select, option {
+                padding: 12px 12px;
+                font-size: 100%;
+                border-top: 0px;
+                border-bottom: 0px;
+                border-left: 0px;
+                border-right: 0px;
+            }
+
+            label {
+                padding-left: 12px;
+            }
+        }
+    }
+`;
+
+export const FormElement2 = styled.div`
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 10px;
+
+    label {
+        font-size: 90%;
+    }
+
+    p {
+        font-size: 90%;
+        color: tomato;
+    }
+
+    textarea {
+        font-size: 110%;
+        font-family: 'Trebuchet MS', Arial, sans-serif;
+    }
+
+    input, textarea, select, option {
+        width: 100%;
+        padding: 12px 12px;
+        border: none;
+        border-radius: 3px;
+        font-size: 100%;
+    }
+
+    button {
+        width: 100%;
+    }
 `;

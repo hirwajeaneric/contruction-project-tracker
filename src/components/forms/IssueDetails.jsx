@@ -1,5 +1,5 @@
 import React from 'react'
-import { FormElement, HorizontallyFlexGapContainer, HorizontallyFlexSpaceBetweenContainer, VerticallyFlexGapContainer, VerticallyFlexGapForm } from '../styles/GenericStyles'
+import { FormElement, FormElement2, HorizontallyFlexGapContainer, HorizontallyFlexSpaceBetweenContainer, VerticallyFlexGapContainer, VerticallyFlexGapForm } from '../styles/GenericStyles'
 import { useContext, useState } from "react";
 import { GeneralContext } from "../../App";
 const serverUrl = import.meta.env.VITE_REACT_APP_SERVERURL;
@@ -10,7 +10,9 @@ import { useEffect } from 'react';
 import { Button } from '@mui/material';
 import { Label } from '@mui/icons-material';
 import StatusButtonGroup from '../StatusButtonGroup';
-import { MdDelete } from 'react-icons/md';
+import { MdDelete, MdNotes, MdOutlineDriveFileRenameOutline } from 'react-icons/md';
+import { BiCalendar } from 'react-icons/bi';
+import { LuSend } from 'react-icons/lu';
 
 const IssueDetails = ({data}) => {
   const [issue, setIssue] = useState({});
@@ -19,10 +21,22 @@ const IssueDetails = ({data}) => {
   const { setOpen, setResponseMessage, handleOpenModal } = useContext(GeneralContext);
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(true);
+  const [comment, setComment] = useState({});
+  const [sprint, setSprint] = useState({});
+
+  // Handle activity/sprint input changes
+  const handleActivityInput = ({ currentTarget: input }) => {
+    setSprint({ ...sprint, [input.name]: input.value });
+  }
 
   // Handle input changes
   const handleChange = ({ currentTarget: input }) => {
     setIssue({ ...issue, [input.name]: input.value });
+  }
+
+  // Handle comment changes
+  const handleComment = ({ currentTarget: input }) => {
+    setComment(input.value);
   }
 
   // Fetch resouce information
@@ -48,6 +62,10 @@ const IssueDetails = ({data}) => {
   // Update issue 
   const updateIssue = (e) => {
     e.preventDefault();
+
+    console.log(serverUrl+'/api/v1/cpta/issue/update?id='+issue._id);
+    console.log(issue);
+
     setIsProcessing(true); 
     axios.put(serverUrl+'/api/v1/cpta/issue/update?id='+issue._id, issue)
     .then(response => {
@@ -103,17 +121,82 @@ const IssueDetails = ({data}) => {
         <h2>{issue.name}</h2>
         <Button variant='contained' size='small' color='error' onClick={deleteIssue}>Delete &nbsp;<MdDelete /></Button>
       </HorizontallyFlexSpaceBetweenContainer>
-      <VerticallyFlexGapForm onSubmit={updateIssue} style={{ gap: '20px', color: 'gray', fontSize:'90%',borderBottom: '1px solid #94b8b8', paddingBottom: '10px' }}>
+      <VerticallyFlexGapForm onSubmit={updateIssue} style={{ gap: '20px', color: 'gray', fontSize:'90%' }}>
         <HorizontallyFlexGapContainer style={{ gap: '20px' }}>
           <Label style={{ color: 'black' }}/> 
           <StatusButtonGroup data={issue} />
         </HorizontallyFlexGapContainer>
+        <VerticallyFlexGapContainer>
+          <VerticallyFlexGapContainer style={{ overflowY: 'auto' }}>
+            <FormElement style={{ gap: '0px' }}>
+              <div className="input-with-icon">
+                <MdOutlineDriveFileRenameOutline />
+                <div>
+                  <input type={'text'} placeholder='Change name' value={issue.name} name='name' onChange={handleChange} />
+                </div>
+              </div>
+            </FormElement>
+            <FormElement style={{ gap: '0px' }}>
+              <div className="input-with-icon">
+                <MdNotes />
+                <div>
+                  <input type={'text'} placeholder='Notes' value={issue.description} name='description' onChange={handleChange} />
+                </div>
+              </div>
+            </FormElement>
+            <FormElement style={{ gap: '0px' }}>
+              <div className="input-with-icon">
+                <BiCalendar/>
+                <div>
+                  <label htmlFor="endDate">Start date</label>
+                  <input type={'date'} value={issue.startDate} name='startDate' onChange={handleChange} />
+                </div>
+              </div>
+            </FormElement>
+            <FormElement style={{ gap: '0px' }}>
+              <div className="input-with-icon">
+                <BiCalendar/>
+                <div>
+                  <label htmlFor="endDate">Due date</label>
+                  <input type={'date'} value={issue.endDate || ''} name='endDate' onChange={handleChange} />
+                </div>
+              </div>
+            </FormElement>
+            <HorizontallyFlexGapContainer style={{ marginTop: '20px' }}>
+              {isProcessing 
+                ? <Button disabled variant="contained" color="primary" size="small">PROCESSING...</Button> 
+                : <Button variant="contained" color="primary" size="small" type="submit">Save changes</Button>
+              }
+            </HorizontallyFlexGapContainer>
+            <VerticallyFlexGapContainer style={{ marginTop: '20px', background: '#e0ebeb', padding: '20px', borderRadius: '5px' }}>
+              <h3 style={{ width: '100%', textAlign: 'left', color: 'black' }}>Add activities</h3>
+
+              <HorizontallyFlexGapContainer style={{ borderTop: "1px solid rgba(0,0,0,.2)" }}>
+                  <input id="name" name="name" value={sprint.name || ''} placeholder="Add activity..." type={'text'} onChange={handleActivityInput} style={{ width: '80%', padding: '8px 12px', border: 'none', color:"gray", fontSize:'100%',borderRadius: '0 0 0 5px' }} />
+                  {sprint.name && 
+                      <>
+                          {isProcessing ? 
+                              <button type="button" disabled style={{ width: '20%', padding: '8px 12px', border: 'none', background: 'gray', color: 'white', fontSize:'100%', borderRadius: '0 0 5px' }}>...</button>
+                              :
+                              <button type="submit" style={{ width: '20%', padding: '8px 12px', border: 'none', background: 'blue', color: 'white', fontSize:'100%', borderRadius: '0 0 5px' }}>Create</button>
+                          }
+                      </>
+                  }
+              </HorizontallyFlexGapContainer>
+            </VerticallyFlexGapContainer>
+            
+          </VerticallyFlexGapContainer>
+          <HorizontallyFlexGapContainer>
+            <FormElement>
+              <input name='comment' value={comment.text} placeholder='Add comment...' onChange={handleComment} />
+            </FormElement>
+            {isProcessing 
+              ? <Button disabled variant="contained" color="primary" size="medium">...</Button> 
+              : <Button variant="contained" color="primary" size="medium" type="submit"><LuSend style={{ fontSize: '150%' }}/></Button>
+            }
+          </HorizontallyFlexGapContainer>
+        </VerticallyFlexGapContainer>
         <FormElement style={{ flexDirection: 'row', gap: '30%' }}>
-          {isProcessing 
-          ? <Button disabled variant="contained" color="primary" size="small">PROCESSING...</Button> 
-          : <Button variant="contained" color="primary" size="small" type="submit">Confirm Updates</Button>
-          }
-          <Button variant="contained" color="secondary" size="small" type="button" onClick={() => {window.location.reload()}}>Cancel</Button>
         </FormElement>
       </VerticallyFlexGapForm>
     </VerticallyFlexGapContainer>
