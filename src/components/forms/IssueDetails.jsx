@@ -4,7 +4,7 @@ import { useContext, useState } from "react";
 import { GeneralContext } from "../../App";
 const serverUrl = import.meta.env.VITE_REACT_APP_SERVERURL;
 import axios from "axios";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { getProjectIssues } from '../../redux/features/issueSlice';
 import { useEffect } from 'react';
 import { Button } from '@mui/material';
@@ -13,11 +13,15 @@ import StatusButtonGroup from '../StatusButtonGroup';
 import { MdDelete, MdNotes, MdOutlineDriveFileRenameOutline } from 'react-icons/md';
 import { BiCalendar } from 'react-icons/bi';
 import { LuSend } from 'react-icons/lu';
+import { getIssueComments } from '../../redux/features/commentSlice';
+import CommentComponent from '../CommentComponent';
 
 const IssueDetails = ({data}) => {
   const [issue, setIssue] = useState({});
   const [project, setProject] = useState({});
   const [isProcessing, setIsProcessing] = useState(false);
+  const [isProcessingSprint, setIsProcessingSprint] = useState(false);
+  const [isProcessingComment, setIsProcessingComment] = useState(false);
   const { setOpen, setResponseMessage, handleOpenModal } = useContext(GeneralContext);
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(true);
@@ -41,20 +45,27 @@ const IssueDetails = ({data}) => {
 
   // Fetch resouce information
   useEffect(() => {
+    // Set up a loader
     setTimeout(() => {
       setLoading(false);
     }, 1000);
 
+    // Fetch issue details 
     axios.get(serverUrl+'/api/v1/cpta/issue/findById?id='+data.id)
     .then(response => {
       response.data.issue.creationDate = new Date(response.data.issue.creationDate).toUTCString();
       setIssue(response.data.issue);
 
+      // Fetch issue related comments 
+      dispatch(getIssueComments(response.data.issue._id));
+
+      // Fetch project
       axios.get(serverUrl+'/api/v1/cpta/project/findById?id='+response.data.issue.project)
       .then(response => {
         setProject(response.data.project)
       })
       .catch(error => console.error(error));
+
     })
     .catch(error => console.error(error));
   },[]);
@@ -62,9 +73,6 @@ const IssueDetails = ({data}) => {
   // Update issue 
   const updateIssue = (e) => {
     e.preventDefault();
-
-    console.log(serverUrl+'/api/v1/cpta/issue/update?id='+issue._id);
-    console.log(issue);
 
     setIsProcessing(true); 
     axios.put(serverUrl+'/api/v1/cpta/issue/update?id='+issue._id, issue)
@@ -88,6 +96,32 @@ const IssueDetails = ({data}) => {
     })
   };
 
+  // Add comment 
+  const addComment = () => {
+    if (comment.message === '') {
+      setResponseMessage({ message: 'Provide a message', severity:'warning'})
+      setOpen(true);
+      return;
+    } else {
+
+      comment.senderName = 
+
+      setIsProcessingComment(true); 
+      axios.post(serverUrl+'/api/v1/cpta/comment/add', comment)
+      .then(response => {
+        if (response.status === 201) {
+          dispatch(getIssueComments(response.data.comment.issue));
+          setIsProcessingComment(false);
+        }
+      })
+      .catch(error => {
+        if (error.response && error.response.status >= 400 && error.response.status <= 500) {
+          setIsProcessing(false);
+        }
+      })
+    }
+  };
+  
   // Delete issue
   const deleteIssue = (e) => {
     e.preventDefault();
@@ -106,6 +140,8 @@ const IssueDetails = ({data}) => {
     })
   }
 
+  const { isLoading, listOfIssueComments } = useSelector(state => state.comment);
+
   if (loading) {
     return (
       <p>Loading...</p>
@@ -113,15 +149,18 @@ const IssueDetails = ({data}) => {
   }
 
   return (
-    <VerticallyFlexGapContainer style={{ gap: '10px' }}>
+    <VerticallyFlexGapContainer style={{ gap: '10px', position: 'relative' }}>
+      
       <HorizontallyFlexSpaceBetweenContainer style={{ borderBottom: '1px solid #94b8b8', paddingBottom: '10px' }}>
         <p>{project.name}</p>
       </HorizontallyFlexSpaceBetweenContainer>
+      
       <HorizontallyFlexSpaceBetweenContainer style={{ flexWrap:'wrap', borderBottom: '1px solid #94b8b8', paddingBottom: '10px' }}>
         <h2>{issue.name}</h2>
         <Button variant='contained' size='small' color='error' onClick={deleteIssue}>Delete &nbsp;<MdDelete /></Button>
       </HorizontallyFlexSpaceBetweenContainer>
-      <VerticallyFlexGapForm onSubmit={updateIssue} style={{ gap: '20px', color: 'gray', fontSize:'90%' }}>
+      
+      <VerticallyFlexGapForm onSubmit={updateIssue} style={{ gap: '20px', color: 'gray', fontSize:'90%', position: 'relative' }}>
         <HorizontallyFlexGapContainer style={{ gap: '20px' }}>
           <Label style={{ color: 'black' }}/> 
           <StatusButtonGroup data={issue} />
@@ -148,8 +187,8 @@ const IssueDetails = ({data}) => {
               <div className="input-with-icon">
                 <BiCalendar/>
                 <div>
-                  <label htmlFor="endDate">Start date</label>
-                  <input type={'date'} value={issue.startDate} name='startDate' onChange={handleChange} />
+                  <label htmlFor="startDate">Start Date {issue.startDate && <span style={{ color: 'black' }}>{new Date(issue.startDate).toLocaleString()}</span>}</label>
+                  <input type={'date'} id='startDate' value={issue.startDate} name='startDate' onChange={handleChange} />
                 </div>
               </div>
             </FormElement>
@@ -157,8 +196,8 @@ const IssueDetails = ({data}) => {
               <div className="input-with-icon">
                 <BiCalendar/>
                 <div>
-                  <label htmlFor="endDate">Due date</label>
-                  <input type={'date'} value={issue.endDate || ''} name='endDate' onChange={handleChange} />
+                  <label htmlFor="endDate">Due Date {issue.endDate && <span style={{ color: 'black' }}>{new Date(issue.endDate).toLocaleString()}</span>}</label>
+                  <input type={'date'} id='endDate' value={issue.endDate || ''} name='endDate' onChange={handleChange} />
                 </div>
               </div>
             </FormElement>
@@ -175,7 +214,7 @@ const IssueDetails = ({data}) => {
                   <input id="name" name="name" value={sprint.name || ''} placeholder="Add activity..." type={'text'} onChange={handleActivityInput} style={{ width: '80%', padding: '8px 12px', border: 'none', color:"gray", fontSize:'100%',borderRadius: '0 0 0 5px' }} />
                   {sprint.name && 
                       <>
-                          {isProcessing ? 
+                          {isProcessingSprint ? 
                               <button type="button" disabled style={{ width: '20%', padding: '8px 12px', border: 'none', background: 'gray', color: 'white', fontSize:'100%', borderRadius: '0 0 5px' }}>...</button>
                               :
                               <button type="submit" style={{ width: '20%', padding: '8px 12px', border: 'none', background: 'blue', color: 'white', fontSize:'100%', borderRadius: '0 0 5px' }}>Create</button>
@@ -186,18 +225,30 @@ const IssueDetails = ({data}) => {
             </VerticallyFlexGapContainer>
             
           </VerticallyFlexGapContainer>
-          <HorizontallyFlexGapContainer>
+          
+          {/* List of comment */}
+          <VerticallyFlexGapContainer style={{ padding: '20px 0' }}>
+            <h4 style={{ padding: '5px', color: 'white', background:'black', borderRadius:'5px' }}>Comments</h4>
+            <VerticallyFlexGapContainer style={{ gap: '10px', padding: '20px 0' }}>
+              {listOfIssueComments && listOfIssueComments.map((comment,index) => {
+                <CommentComponent data={comment} key={index}/>
+              })}
+              {listOfIssueComments.length === 0 && <p>No comments yet</p>}
+            </VerticallyFlexGapContainer>
+          </VerticallyFlexGapContainer>
+
+          {/* Comment form  */}
+          <HorizontallyFlexGapContainer style={{ background:'yellow', padding:'10px', position: 'sticky', bottom: '20px', left: '0%', right: '0%', }}>
             <FormElement>
-              <input name='comment' value={comment.text} placeholder='Add comment...' onChange={handleComment} />
+              <input name='message' value={comment.message || ''} placeholder='Add comment...' onChange={handleComment} />
             </FormElement>
-            {isProcessing 
+            {isProcessingComment 
               ? <Button disabled variant="contained" color="primary" size="medium">...</Button> 
-              : <Button variant="contained" color="primary" size="medium" type="submit"><LuSend style={{ fontSize: '150%' }}/></Button>
+              : <Button variant="contained" color="primary" size="medium" type="button" onClick={(e) => {e.preventDefault(); addComment();}}><LuSend style={{ fontSize: '150%' }}/></Button>
             }
           </HorizontallyFlexGapContainer>
         </VerticallyFlexGapContainer>
-        <FormElement style={{ flexDirection: 'row', gap: '30%' }}>
-        </FormElement>
+
       </VerticallyFlexGapForm>
     </VerticallyFlexGapContainer>
   )

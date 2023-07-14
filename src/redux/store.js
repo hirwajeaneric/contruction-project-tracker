@@ -1,16 +1,18 @@
 import { configureStore } from '@reduxjs/toolkit';
-// import userReducer from './features/userSlice';
 import projectReducer  from './features/projectSlice';
 import issueReducer from './features/issueSlice';
-// import sprintReducer from './features/sprintSlice';
 import materialReducer from './features/materialSlice';
+import commentReducer from './features/commentSlice';
+// import sprintReducer from './features/sprintSlice';
+// import userReducer from './features/userSlice';
 
 export const store = configureStore({
     reducer: {
-        // user: userReducer,
         project: projectReducer, 
         issue: issueReducer,
+        material: materialReducer,
+        comment: commentReducer,
         // sprint: sprintReducer,
-        material: materialReducer 
+        // user: userReducer, 
     }
 })

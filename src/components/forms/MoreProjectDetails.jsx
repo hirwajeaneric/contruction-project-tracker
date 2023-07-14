@@ -92,7 +92,7 @@ const MoreProjectDetails = ({data}) => {
         <Button variant='contained' size='small' color='error' onClick={deleteResource}>Delete</Button>
       </HorizontallyFlexSpaceBetweenContainer>
       <VerticallyFlexGapForm onSubmit={updateResouce} style={{ gap: '20px', color: 'gray', fontSize:'90%' }}>
-        <HorizontallyFlexSpaceBetweenContainer style={{ fontSize: '100%', color: 'black', textAlign: 'left', paddingBottom:'20px', borderBottom:'1px solid #a3c2c2' }}>
+        <HorizontallyFlexSpaceBetweenContainer style={{ fontSize: '100%', color: 'black', textAlign: 'left', }}>
           <VerticallyFlexGapContainer style={{ alignItems: 'flex-start', gap: '10px' }}>
             <p>Create on: <span style={{ color: 'gray', textAlign: 'left' }}>{new Date(project.creationDate).toLocaleString()}</span></p>
             <p>Status: <span style={{ color: 'gray', textAlign: 'left' }}>{project.status}</span></p>
@@ -101,6 +101,10 @@ const MoreProjectDetails = ({data}) => {
             <p>Owner: <span style={{ color: 'gray', textAlign: 'left' }}>{project.ownerName}</span></p>
             <p>Progress: <span style={{ color: 'gray', textAlign: 'left' }}>{project.progress} %</span></p>
           </VerticallyFlexGapContainer>
+        </HorizontallyFlexSpaceBetweenContainer>
+        <HorizontallyFlexSpaceBetweenContainer style={{ fontSize: '100%', color: 'black', textAlign: 'left', paddingBottom:'20px', borderBottom:'1px solid #a3c2c2' }}>
+          <Button variant='text' type='button' size='small' color='primary' onClick={() => { window.location.replace(`/${project.code}/resources`) }}>Add/View Resources</Button>
+          <Button variant='text' type='button' size='small' color='secondary' onClick={() => { window.location.replace(`/${project.code}/milestones`) }}>Add/View Milestones</Button>
         </HorizontallyFlexSpaceBetweenContainer>
         <HorizontallyFlexGapContainer style={{ gap: '20px' }}>
           <FormElement>

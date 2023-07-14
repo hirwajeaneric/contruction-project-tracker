@@ -62,13 +62,17 @@ const issueSlice = createSlice({
         },
         [getProjectIssues.fulfilled] : (state, action) => {
             state.isLoading = false;
+            
             let listOfProjectIssues = action.payload.sort((a,b) => new Date(a.creationDate) - new Date(b.creationDate));
+            
             state.listOfProjectIssues = listOfProjectIssues;
             state.numberOfProjectIssues = listOfProjectIssues.length;
+            
             state.listOfTodoIssues = action.payload.filter(element => element.progress === 'Todo');
             state.listOfInProgressIssues = action.payload.filter(element => element.progress === 'In Progress');
             state.listOfCompletedIssues = action.payload.filter(element => element.progress === 'Completed');
-            state.numberOfTodoIssues = state.listOfProjectIssues.length;
+            
+            state.numberOfTodoIssues = state.listOfTodoIssues.length;
             state.numberOfInProgressIssues = state.listOfInProgressIssues.length;
             state.numberOfCompletedIssues = state.listOfCompletedIssues.length;
         },
