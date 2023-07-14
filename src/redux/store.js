@@ -3,8 +3,7 @@ import projectReducer  from './features/projectSlice';
 import issueReducer from './features/issueSlice';
 import materialReducer from './features/materialSlice';
 import commentReducer from './features/commentSlice';
-// import sprintReducer from './features/sprintSlice';
-// import userReducer from './features/userSlice';
+import sprintReducer from './features/sprintSlice';
 
 export const store = configureStore({
     reducer: {
@@ -12,7 +11,6 @@ export const store = configureStore({
         issue: issueReducer,
         material: materialReducer,
         comment: commentReducer,
-        // sprint: sprintReducer,
-        // user: userReducer, 
+        sprint: sprintReducer,
     }
 })

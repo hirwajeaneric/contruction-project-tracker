@@ -101,7 +101,7 @@ const MileStones = () => {
 
             <HorizontallyFlexGapContainer style={{ gap: '20px', alignItems:'flex-start'}}>
                 {/* Todos  */}
-                <VerticallyFlexSpaceBetweenForm onSubmit={addIssue} style={{ backgroundColor: 'white', borderRadius: '5px', border: "1px solid rgba(0,0,0,0.2)", width: '32%', minHeight:'70vh', height:'70vh'}}>
+                <VerticallyFlexSpaceBetweenForm onSubmit={addIssue} style={{ possition: 'relative', backgroundColor: 'white', borderRadius: '5px', border: "1px solid rgba(0,0,0,0.2)", width: '32%', minHeight:'70vh', height:'70vh'}}>
                     <HorizontallyFlexGapContainer style={{ alignItems: 'center', gap: '10px', padding: '10px 20px', borderBottom: "1px solid rgba(0,0,0,0.2)" }}>
                         <h3 style={{ fontWeight:'400'}}>To-Do</h3>
                         <p style={{ color: 'white', background: 'black', padding: '2px 3px', fontSize:'90%', borderRadius: '5px'}}>{numberOfTodoIssues}</p>
@@ -109,10 +109,11 @@ const MileStones = () => {
                     <VerticallyFlexGapContainer style={{ padding: '7px', gap: '7px', minHeight: '70%', overflowY:'auto', justifyContent:'flex-start', alignItems:'flex-start' }}>
                         {numberOfTodoIssues === 0 && <p style={{ width: '100%',textAlign: 'center', color:'GrayText' }}>No tasks.<br/>Add new items here.</p>}
                         {listOfTodoIssues.map((issue, index) => {
-                            return (<TodoItem key={index} data={issue} />)
+                            return (<TodoItem key={index} type='issue' data={issue} />)
                         })}
                     </VerticallyFlexGapContainer>
-                    <HorizontallyFlexGapContainer style={{ borderTop: "1px solid rgba(0,0,0,.2)" }}>
+                    {/* Add form  */}
+                    <HorizontallyFlexGapContainer style={{ borderTop: "1px solid rgba(0,0,0,.2)", position: 'sticky' }}>
                         <input id="name" name="name" value={issue.name || ''} placeholder="Add Task..." type={'text'} onChange={handleInput} style={{ width: '80%', padding: '8px 12px', border: 'none', color:"gray", fontSize:'100%',borderRadius: '0 0 0 5px' }} />
                         {issue.name && 
                             <>
@@ -135,7 +136,7 @@ const MileStones = () => {
                     <VerticallyFlexGapContainer style={{ padding: '7px', gap: '7px', minHeight: '70%', overflowY:'auto', justifyContent:'flex-start', alignItems:'flex-start' }}>
                         {numberOfInProgressIssues === 0 && <p style={{ width: '100%', textAlign: 'center', color:'GrayText' }}>No tasks.<br/>Add new items here.</p>}
                         {listOfInProgressIssues && listOfInProgressIssues.map((issue, index) => {
-                            return (<TodoItem key={index} data={issue} />)
+                            return (<TodoItem key={index} type='issue' data={issue} />)
                         })}
                     </VerticallyFlexGapContainer>
                 </VerticallyFlexSpaceBetweenForm>
@@ -147,9 +148,9 @@ const MileStones = () => {
                         <p style={{ color: 'white', background: 'black', padding: '2px 3px', fontSize:'90%', borderRadius: '5px'}}>{numberOfCompletedIssues}</p>
                     </HorizontallyFlexGapContainer>
                     <VerticallyFlexGapContainer style={{ padding: '7px', gap: '7px', minHeight: '70%', overflowY:'auto', justifyContent:'flex-start', alignItems:'flex-start' }}>
-                        {numberOfCompletedIssues === 0 && <p stlistOfInProgressIssueyle={{ textAlign: 'center',width: '100%', color:'GrayText' }}>No tasks.<br/>Add new items here.</p>}
+                        {numberOfCompletedIssues === 0 && <p style={{ textAlign: 'center',width: '100%', color:'GrayText' }}>No tasks.<br/>Add new items here.</p>}
                         {listOfCompletedIssues && listOfCompletedIssues.map((issue, index) => {
-                            return (<TodoItem key={index} data={issue} />)
+                            return (<TodoItem key={index} type='issue' data={issue} />)
                         })}
                     </VerticallyFlexGapContainer>
                 </VerticallyFlexSpaceBetweenForm>

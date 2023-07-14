@@ -37,7 +37,7 @@ const nameStyles = {
 }
 
 const TodoItem = (props) => {
-    const { data } = props;
+    const { type ,data } = props;
     const { setOpen, setResponseMessage,handleOpenModal, setDetailsFormType, setDetailsData } = useContext(GeneralContext);
     const dispatch = useDispatch();
     const [isProcessing, setIsProcessing] = useState(false);

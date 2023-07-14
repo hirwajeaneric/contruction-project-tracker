@@ -160,6 +160,50 @@ export const HorizontallyFlexGapContainer = styled.div`
     }
 `;
 
+export const HorizontallyFlexGapForm = styled.form`
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    flex-wrap: nowrap;
+
+    div.left {
+        display: flex;
+        
+    }
+
+    div.right {
+        display: flex;
+        
+    }
+
+    @media (max-width: 768px) {
+        div.left {
+            display: flex;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+    
+        div.right {
+            display: flex;
+            width: 100%;
+        }
+    }
+
+    @media (max-width: 480px) {
+        div.left {
+            display: flex;
+            width: 100%;
+            margin-bottom: 15px;
+        }
+    
+        div.right {
+            display: flex;
+            width: 100%;
+        }
+    }
+`;
+
 export const StatusButtonGroupContainer = styled.div`
     display: flex;
     flex-direction: row;
