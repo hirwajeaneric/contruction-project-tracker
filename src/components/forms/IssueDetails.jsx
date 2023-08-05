@@ -50,7 +50,7 @@ const IssueDetails = (props) => {
   }
 
 
-
+  // FETCHING INFORMATION ON COMPONENT LOADING
   useEffect(() => {
     // Set up a loader
     setTimeout(() => {
@@ -65,6 +65,9 @@ const IssueDetails = (props) => {
 
       // Fetch issue related comments 
       dispatch(getIssueComments(response.data.issue._id));
+
+      // Fetch sprints for an issue
+      dispatch(getIssueSprints(response.data.issue._id));
 
       // Fetch project
       axios.get(serverUrl+'/api/v1/cpta/project/findById?id='+response.data.issue.project)
@@ -115,13 +118,15 @@ const IssueDetails = (props) => {
     e.preventDefault();
   
     setIsProcessingSprint(true); 
+    sprint.issue = issue._id;
+    sprint.project = issue.project;
     
     axios.post(serverUrl+'/api/v1/cpta/sprint/add', sprint)
     .then(response => {
       if (response.status === 201) {
         dispatch(getIssueSprints(issue._id));
         setIsProcessingSprint(false);
-        handleActivityInput({});
+        setSprint({});
       }
     })
     .catch(error => {
@@ -130,6 +135,7 @@ const IssueDetails = (props) => {
       }
     })
   }
+
 
 
 
@@ -195,8 +201,12 @@ const IssueDetails = (props) => {
     })
   }
 
+
+  // Calling store data
   const { isLoading, listOfIssueComments } = useSelector(state => state.comment);
-  const { isLoading: loadingIssueSprints, listOfIssueSprints } = useSelector(state => state.sprint);
+  const { isLoading: loadingIssueSprints, listOfIssueSprints, numberOfIssueSprints } = useSelector(state => state.sprint);
+
+
 
   if (loading) {
     return (
@@ -204,6 +214,8 @@ const IssueDetails = (props) => {
     );
   }
 
+  
+  
   return (
     <VerticallyFlexGapContainer style={{ gap: '10px', position: 'relative' }}>
       
@@ -279,7 +291,7 @@ const IssueDetails = (props) => {
                         {isProcessingSprint ? 
                             <button type="button" disabled style={{ width: '20%', padding: '8px 12px', border: 'none', background: 'gray', color: 'white', fontSize:'100%', borderRadius: '0 0 5px' }}>...</button>
                             :
-                            <button type="submit" style={{ width: '20%', padding: '8px 12px', border: 'none', background: 'green', color: 'white', fontSize:'100%', borderRadius: '0 0 5px' }}>Add</button>
+                            <button type="submit" style={{ width: '20%', cursor: 'pointer', padding: '8px 12px', border: 'none', background: 'green', color: 'white', fontSize:'100%', borderRadius: '0 0 5px' }}>Add</button>
                         }
                     </>
                 }
@@ -291,7 +303,7 @@ const IssueDetails = (props) => {
                     <p>Loading...</p>
                   :
                   <>
-                    {listOfIssueSprints.length > 0 && <></>}
+                    {numberOfIssueSprints > 0 && <></>}
                     {listOfIssueSprints.map((sprint, index) => {
                       return (
                         <TodoItem key={index} type='sprint' data={sprint} />
