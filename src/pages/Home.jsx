@@ -1,4 +1,4 @@
-import { Avatar, Button } from "@mui/material"
+import { Avatar, Button, Tooltip } from "@mui/material"
 import { HeaderOne, HeaderTwo, HorizontallyFlexGapContainer, HorizontallyFlexSpaceBetweenContainer, VerticallyFlexGapContainer } from "../components/styles/GenericStyles"
 import AddIcon from '@mui/icons-material/Add';
 import { ProjectProgressBar, StepToGetStarted } from "../components/styles/DashboardStructureStyles";
@@ -11,14 +11,14 @@ import { useCookies } from "react-cookie";
 import { useDispatch, useSelector } from "react-redux";
 import { getSimpleCapitalizedChars } from "../utils/HelperFunctions";
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import DeleteIcon from '@mui/icons-material/Delete';
+import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import { useContext, useState } from "react";
 import axios from "axios";
 import { GeneralContext } from "../App";
 
 const Home = () => {
   const navigate = useNavigate();
-  const [ cookies, setCookie, removeCookie ] = useCookies(null);
+  const [ cookies ] = useCookies(null);
   const user = cookies.UserData;
   const [isProcessing, setIsProcessing] = useState(false);
   const { setOpen, setResponseMessage } = useContext(GeneralContext);
@@ -123,7 +123,9 @@ const Home = () => {
                   <HorizontallyFlexSpaceBetweenContainer style={{ width: '100%'}}>
                     <HeaderTwo style={{ width:'70%', }}>{`Project ${project.name}`}</HeaderTwo>
                     <HorizontallyFlexGapContainer style={{ width:'30%', gap: '40px', justifyContent:'flex-end' }}>
-                      <Button variant="contained" color="primary" size="small" type="button" onClick={(e) => {navigate(`/${project.code}`)}}><VisibilityIcon /></Button>
+                      <Tooltip title='View more'>
+                        <Button variant="text" color="primary" size="small" type="button" onClick={(e) => {navigate(`/${project.code}`)}}><MoreHorizIcon /></Button>
+                      </Tooltip>
                     </HorizontallyFlexGapContainer>
                   </HorizontallyFlexSpaceBetweenContainer>
                   <p style={{ fontSize: '90%', color: 'gray' }}>{project.description}</p>
@@ -146,7 +148,9 @@ const Home = () => {
                   <HorizontallyFlexSpaceBetweenContainer style={{ width: '100%'}}>
                     <HeaderTwo style={{ width:'70%', }}>{`Project ${project.name}`}</HeaderTwo>
                     <HorizontallyFlexGapContainer style={{ width:'30%', gap: '40px', justifyContent:'flex-end' }}>
-                      <Button variant="contained" color="primary" size="small" type="button" onClick={(e) => {navigate(`/${project.code}`)}}><VisibilityIcon /></Button>
+                      <Tooltip title='View more'>
+                        <Button variant="text" color="primary" size="small" type="button" onClick={() => {navigate(`/${project.code}`)}}><MoreHorizIcon /></Button>
+                      </Tooltip>
                     </HorizontallyFlexGapContainer>
                   </HorizontallyFlexSpaceBetweenContainer>
                   <p style={{ fontSize: '90%', color: 'gray' }}>{project.description}</p>

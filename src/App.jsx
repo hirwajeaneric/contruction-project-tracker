@@ -52,6 +52,7 @@ function App() {
   const [detailsFormType, setDetailsFormType] = useState('');
   const [detailsData, setDetailsData] = useState({});
   const [sprintDetails, setSprintDetails] = useState({});
+  const [selectedMaterial, setSelectedMaterial] = useState({});
 
   const [openModal, setOpenModal] = useState(false);
   const handleOpenModal = () => setOpenModal(!openModal);
@@ -82,7 +83,9 @@ function App() {
         setDetailsData, 
         detailsData, 
         sprintDetails,
-        setSprintDetails
+        setSprintDetails,
+        selectedMaterial,
+        setSelectedMaterial
       }}>
       <BrowserRouter>
         <Routes>

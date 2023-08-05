@@ -16,7 +16,7 @@ const initialState = {
 }
 
 export const getProjectResources = createAsyncThunk(
-    'resource/getProjectResources',
+    'material/getProjectResources',
     async (project, thunkAPI) => {
         try {
             const response = await axios.get(`${serverUrl}/api/v1/cpta/material/findByProjectId?project=${project}`);

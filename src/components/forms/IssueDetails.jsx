@@ -231,8 +231,10 @@ const IssueDetails = (props) => {
       <VerticallyFlexGapContainer style={{ gap: '20px', color: 'gray', fontSize:'90%', position: 'relative' }}>
         <HorizontallyFlexGapContainer style={{ gap: '20px' }}>
           <Label style={{ color: 'black' }}/> 
-          <StatusButtonGroup data={issue} />
+          <StatusButtonGroup type='issue' data={issue} />
         </HorizontallyFlexGapContainer>
+
+
         <VerticallyFlexGapContainer>
           <VerticallyFlexGapForm onSubmit={updateIssue} style={{ overflowY: 'auto' }}>
             <FormElement style={{ gap: '0px' }}>

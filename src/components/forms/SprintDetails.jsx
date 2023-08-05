@@ -12,10 +12,13 @@ import StatusButtonGroup from '../StatusButtonGroup';
 import { MdDelete, MdNotes, MdOutlineDriveFileRenameOutline } from 'react-icons/md';
 import { BiCalendar } from 'react-icons/bi';
 import { LuSend } from 'react-icons/lu';
-import { getIssueComments, getSprintComments } from '../../redux/features/commentSlice';
+import { getSprintComments } from '../../redux/features/commentSlice';
 import CommentComponent from '../CommentComponent';
 import { useCookies } from 'react-cookie';
 import { getIssueSprints } from '../../redux/features/sprintSlice';
+import { useForm } from 'react-hook-form';
+import { getProjectResources } from '../../redux/features/materialSlice';
+import SprintResourcesTable from '../tables/SprintResourcesTable';
 
 const SprintDetails = (props) => {
   const { data } = props;
@@ -25,12 +28,13 @@ const SprintDetails = (props) => {
   const [project, setProject] = useState({});
   const [isProcessing, setIsProcessing] = useState(false);
   const [isProcessingComment, setIsProcessingComment] = useState(false);
-  const { setOpen, setResponseMessage, handleOpenModal } = useContext(GeneralContext);
+  const [isProcessingMaterials, setIsProcessingMaterials] = useState(false);
+  const { register, handleSubmit, formState: { errors } } = useForm();
+  const { setOpen, setResponseMessage, handleOpenModal, selectedMaterial, setSelectedMaterial } = useContext(GeneralContext);
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(true);
   const [comment, setComment] = useState({});
   const [issue, setIssue] = useState({});
-
 
   // Handle input changes
   const handleChange = ({ currentTarget: input }) => {
@@ -42,6 +46,10 @@ const SprintDetails = (props) => {
     setComment({...comment, [input.name]: input.value });
   }
 
+  const handleMaterialUpdates = ({ currentTarget: input }) => {
+    setSelectedMaterial({...selectedMaterial, [input.name]: input.value });
+  }
+
 
   // FETCHING INFORMATION ON COMPONENT LOADING
   useEffect(() => {
@@ -50,8 +58,6 @@ const SprintDetails = (props) => {
       setLoading(false);
     }, 1000);
 
-    console.log(data);
-
     // Fetch sprint details 
     axios.get(serverUrl+'/api/v1/cpta/sprint/findById?id='+data.id)
     .then(response => {
@@ -59,7 +65,10 @@ const SprintDetails = (props) => {
       setSprint(response.data.sprint);
 
       // Fetch sprint related comments 
-      dispatch(getSprintComments(response.data.sprint._id));
+      dispatch(getSprintComments(response.data.sprint.id));
+
+      // Fetch project resources
+      dispatch(getProjectResources(response.data.sprint.project));
 
       // Fetch project
       axios.get(serverUrl+'/api/v1/cpta/project/findById?id='+response.data.sprint.project)
@@ -81,11 +90,12 @@ const SprintDetails = (props) => {
 
 
 
-
-
   // Update issue 
   const updateSprint = (e) => {
     e.preventDefault();
+
+    console.log(sprint);
+    console.log(serverUrl+'/api/v1/cpta/sprint/update?id='+sprint._id);
 
     setIsProcessing(true); 
     axios.put(serverUrl+'/api/v1/cpta/sprint/update?id='+sprint._id, sprint)
@@ -113,27 +123,63 @@ const SprintDetails = (props) => {
 
 
   // Add sprint to issue 
-  const assignMaterials = (e) => {
-    e.preventDefault();
+  const onSubmit = data => {
   
-    // setIsProcessingSprint(true); 
-    // sprint.issue = issue._id;
-    // sprint.project = issue.project;
-    
-    // axios.post(serverUrl+'/api/v1/cpta/sprint/add', sprint)
-    // .then(response => {
-    //   if (response.status === 201) {
-    //     dispatch(getIssueSprints(issue._id));
-    //     setIsProcessingSprint(false);
-    //     setSprint({});
-    //   }
-    // })
-    // .catch(error => {
-    //   if (error.response && error.response.status >= 400 && error.response.status <= 500) {
-    //     setIsProcessingSprint(false);
-    //   }
-    // })
-  }
+    sprint.materials.push({
+      id: data.name.split(" - ")[0],
+      name: data.name.split(" - ")[1],
+      quantity: Number(data.quantity),
+      used: 0
+    });
+
+    console.log(sprint);
+
+    setIsProcessingMaterials(true);
+
+    axios.put(serverUrl+'/api/v1/cpta/sprint/update?id='+sprint._id, sprint)
+    .then(response => {
+        setTimeout(() => {
+            if (response.status === 200) {
+                setIsProcessingMaterials(false);
+                setResponseMessage({ message: response.data.message, severity: 'success' });
+                setOpen(true);
+            }
+        }, 3000)
+    })
+    .catch(error => {
+        if (error.response && error.response.status >= 400 && error.response.status <= 500) {
+          setIsProcessingMaterials(false);
+          setResponseMessage({ message: error.response.data.msg, severity:'error'})
+          setOpen(true);
+        }
+    })
+  };
+
+
+  // Update material status
+  const updateMaterialStatus = () => {
+
+
+    setIsProcessingMaterials(true);
+
+    axios.put(serverUrl+'/api/v1/cpta/sprint/update?id='+sprint._id, sprint)
+    .then(response => {
+        setTimeout(() => {
+            if (response.status === 200) {
+                setIsProcessingMaterials(false);
+                setResponseMessage({ message: response.data.message, severity: 'success' });
+                setOpen(true);
+            }
+        }, 3000)
+    })
+    .catch(error => {
+        if (error.response && error.response.status >= 400 && error.response.status <= 500) {
+          setIsProcessingMaterials(false);
+          setResponseMessage({ message: error.response.data.msg, severity:'error'})
+          setOpen(true);
+        }
+    })
+  };
 
 
 
@@ -149,14 +195,14 @@ const SprintDetails = (props) => {
     } else {
       comment.senderName = user.fullName;
       comment.senderId = user.id;
-      comment.issue = issue._id;
+      comment.sprint = sprint._id;
 
       setIsProcessingComment(true); 
       
       axios.post(serverUrl+'/api/v1/cpta/comment/add', comment)
       .then(response => {
         if (response.status === 201) {
-          dispatch(getIssueComments(response.data.comment.issue));
+          dispatch(getSprintComments(response.data.comment.sprint));
           setIsProcessingComment(false);
           setComment({});
         }
@@ -177,10 +223,10 @@ const SprintDetails = (props) => {
     axios.delete(serverUrl+'/api/v1/cpta/comment/deleteBySprint?sprint='+sprint._id)
     .then(response => {
       if (response.status === 200) {
-        axios.delete(serverUrl+'/api/v1/cpta/sprint/delete?id='+issue._id)
+        axios.delete(serverUrl+'/api/v1/cpta/sprint/delete?id='+sprint._id)
         .then(response => {
           if (response.status === 200) {
-            dispatch(getIssueSprints(issue._id));
+            dispatch(getIssueSprints(sprint._id));
             handleOpenModal();
           }
         })
@@ -203,7 +249,7 @@ const SprintDetails = (props) => {
 
   // Calling store data
   const { isLoading, numberOfSprintComments, listOfSprintComments } = useSelector(state => state.comment);
-
+  const { listOfProjectResources } = useSelector(state => state.material);
 
 
   if (loading) {
@@ -220,7 +266,7 @@ const SprintDetails = (props) => {
       <HorizontallyFlexSpaceBetweenContainer style={{ borderBottom: '1px solid #94b8b8', paddingBottom: '10px' }}>
         <p>
           <strong>{project.name}</strong>
-          <span> / {issue.name}</span> / Activities</p>
+          <span> / {issue.name}</span> / activity</p>
       </HorizontallyFlexSpaceBetweenContainer>
       
       <HorizontallyFlexSpaceBetweenContainer style={{ flexWrap:'wrap', borderBottom: '1px solid #94b8b8', paddingBottom: '10px' }}>
@@ -228,11 +274,14 @@ const SprintDetails = (props) => {
         <Button variant='contained' size='small' color='error' onClick={deleteSprint}>Delete &nbsp;<MdDelete /></Button>
       </HorizontallyFlexSpaceBetweenContainer>
       
+
       <VerticallyFlexGapContainer style={{ gap: '20px', color: 'gray', fontSize:'90%', position: 'relative' }}>
+        
         <HorizontallyFlexGapContainer style={{ gap: '20px' }}>
           <Label style={{ color: 'black' }}/> 
-          <StatusButtonGroup data={sprint} />
+          <StatusButtonGroup type='sprint' data={sprint} />
         </HorizontallyFlexGapContainer>
+        
         <VerticallyFlexGapContainer>
           <VerticallyFlexGapForm onSubmit={updateSprint} style={{ overflowY: 'auto' }}>
             <FormElement style={{ gap: '0px' }}>
@@ -255,7 +304,7 @@ const SprintDetails = (props) => {
               <div className="input-with-icon">
                 <BiCalendar/>
                 <div>
-                  <label htmlFor="startDate">Start Date {sprint.startDate && <span style={{ color: 'black' }}>{new Date(issue.startDate).toLocaleString()}</span>}</label>
+                  <label htmlFor="startDate">Start Date {sprint.startDate && <span style={{ color: 'black' }}>{new Date(sprint.startDate).toLocaleString()}</span>}</label>
                   <input type={'date'} id='startDate' value={sprint.startDate} name='startDate' onChange={handleChange} />
                 </div>
               </div>
@@ -264,7 +313,7 @@ const SprintDetails = (props) => {
               <div className="input-with-icon">
                 <BiCalendar/>
                 <div>
-                  <label htmlFor="endDate">Due Date {sprint.endDate && <span style={{ color: 'black' }}>{new Date(issue.endDate).toLocaleString()}</span>}</label>
+                  <label htmlFor="endDate">Due Date {sprint.endDate && <span style={{ color: 'black' }}>{new Date(sprint.endDate).toLocaleString()}</span>}</label>
                   <input type={'date'} id='endDate' value={sprint.endDate || ''} name='endDate' onChange={handleChange} />
                 </div>
               </div>
@@ -281,37 +330,99 @@ const SprintDetails = (props) => {
 
 
           {/* MATERIAL MANAGEMENT ****************************************************************************************************************************/}
-          <VerticallyFlexGapForm onSubmit={assignMaterials} style={{ marginTop: '20px', background: '#e6f2ff', padding: '20px', borderRadius: '5px', gap: '10px' }}>
-            {/* <h3 style={{ width: '100%', textAlign: 'left', color: 'black' }}>Add activities</h3>
+          <VerticallyFlexGapForm 
+            onSubmit={(e) => {
+              e.preventDefault();
+              console.log(selectedMaterial.id);
+              !selectedMaterial.id ? handleSubmit(onSubmit) : updateMaterialStatus()
+            }} 
+            style={{ marginTop: '20px', background: '#c6ecd9', padding: '20px', borderRadius: '5px', gap: '10px' }}
+          >  
+            <h3 style={{ width: '100%', textAlign: 'left', color: 'black' }}>Assign materials</h3>
 
-            <HorizontallyFlexGapContainer style={{ borderTop: "1px solid rgba(0,0,0,.2)" }}>
-                <input id="name" name="name" value={sprint.name || ''} placeholder="Add activity..." type={'text'} onChange={handleActivityInput} style={{ width: '80%', padding: '8px 12px', border: 'none', color:"black", background: 'transparent', fontSize:'100%',borderRadius: '0 0 0 5px' }} />
-                {sprint.name && 
-                    <>
-                        {isProcessingSprint ? 
-                            <button type="button" disabled style={{ width: '20%', padding: '8px 12px', border: 'none', background: 'gray', color: 'white', fontSize:'100%', borderRadius: '0 0 5px' }}>...</button>
-                            :
-                            <button type="submit" style={{ width: '20%', cursor: 'pointer', padding: '8px 12px', border: 'none', background: 'green', color: 'white', fontSize:'100%', borderRadius: '0 0 5px' }}>Add</button>
-                        }
-                    </>
+            <HorizontallyFlexGapContainer style={{ gap: '20px', width: '100%', alignItems: 'flex-end' }}>
+              {selectedMaterial.id
+              ?  
+              <HorizontallyFlexGapContainer style={{ gap: '20px', width: '100%' }}>
+                <FormElement style={{ color: 'gray' }}>
+                  <label htmlFor='name' style={{ color: 'black' }}>Name</label>
+                  <select style={{ padding: '8px 12px' }} name='name'>
+                    <option value={selectedMaterial.name || ''}>{selectedMaterial.name}</option>
+                    {listOfProjectResources.map((resource, index) => (
+                      <option key={index} value={`${resource.id} - ${resource.name}`}>{resource.name}  :  {resource.quantity} {resource.measurementUnit}</option>
+                    ))}
+                  </select>
+                </FormElement>
+                <FormElement style={{ color: 'gray' }}>
+                  <label htmlFor='quantity' style={{ color: 'black' }}>Quantity</label>
+                  <input 
+                    style={{ padding: '8px 12px' }}
+                    type="number" 
+                    id="quantity"
+                    placeholder="Quantity" 
+                    name='quantity'
+                    value={selectedMaterial.quantity || ''}
+                    onChange={handleMaterialUpdates}
+                  />
+                </FormElement>
+                <FormElement style={{ color: 'gray' }}>
+                  <label htmlFor='used' style={{ color: 'black'}}>Used quantity</label>
+                  <input 
+                    style={{ padding: '8px 12px' }}
+                    type="number" 
+                    id="used"
+                    name='used'
+                    placeholder="Used" 
+                    value={selectedMaterial.used || ''}
+                    onChange={handleMaterialUpdates}
+                  />
+                </FormElement>
+              </HorizontallyFlexGapContainer>
+              :
+              <HorizontallyFlexGapContainer style={{ gap: '20px', width: '100%' }}>
+                <FormElement style={{ color: 'gray' }}>
+                  <select
+                    style={{ padding: '8px 12px' }} 
+                    {...register("name", { required: true })}
+                    aria-invalid={errors.name ? "true" : "false"}
+                  >
+                    <option value="">Select material</option>
+                    {listOfProjectResources.map((resource, index) => (
+                      <option key={index} value={`${resource.id} - ${resource.name}`}>{resource.name}  :  {resource.quantity} {resource.measurementUnit}</option>
+                    ))}
+                  </select>
+                  {errors.name?.type === "required" && (
+                    <p role="alert">Required</p>
+                  )}
+                </FormElement>
+                <FormElement style={{ color: 'gray' }}>
+                  <input 
+                    style={{ padding: '8px 12px' }}
+                    type="number" 
+                    id="quantity"
+                    placeholder="Quantity" 
+                    {...register("quantity", 
+                    {required: true})} 
+                    aria-invalid={errors.quantity ? "true" : "false"}
+                  />
+                  {errors.quantity?.type === "required" && (
+                    <p role="alert">Required</p>
+                  )}
+                </FormElement>
+              </HorizontallyFlexGapContainer>}
+                
+                {isProcessingMaterials ? 
+                  <Button type="button" disabled variant='contained' color='success' size='small'>...</Button>
+                  :
+                  <Button type="submit" variant='contained' color='success' size='small'>{selectedMaterial.id ? 'Update' : 'Add'}</Button>
                 }
             </HorizontallyFlexGapContainer>
+            
             <VerticallyFlexGapContainer style={{ gap: '10px'}}>
-                {
-                  loadingIssueSprints 
-                  ?
-                    <p>Loading...</p>
-                  :
-                  <>
-                    {numberOfIssueSprints > 0 && <></>}
-                    {listOfIssueSprints.map((sprint, index) => {
-                      return (
-                        <TodoItem key={index} type='sprint' data={sprint} />
-                      )
-                    })}
-                  </>
-                }
-            </VerticallyFlexGapContainer> */}
+              {sprint.materials.length > 0 && <></>}
+              <SprintResourcesTable data={sprint.materials}/>
+            </VerticallyFlexGapContainer>
+
           </VerticallyFlexGapForm>
 
 

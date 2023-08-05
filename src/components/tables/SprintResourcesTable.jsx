@@ -9,7 +9,7 @@ const columns = [
   {
     field: 'name',
     headerName: 'Name',
-    width: 200,
+    width: 300,
   },
   {
     field: 'quantity',
@@ -17,9 +17,9 @@ const columns = [
     width: 90,
   },
   {
-    field: 'measurementUnit',
-    headerName: 'Measurement',
-    width: 100,
+    field: 'used',
+    headerName: 'used',
+    width: 90,
   },
   {
     field: 'actions',
@@ -41,20 +41,21 @@ function CustomToolbar() {
 export const TableStyles = {
   padding: '0px',
   width: '100%',
-  height: '500px',
+  height: '300px',
   background: 'white',
   marginTop: '20px' 
 }
 
 var rows = [];
 
-export default function ResourcesTable({data}) {
+export default function SprintResourcesTable(props) {
+  const { data } = props;
   rows = data;
 
   return (
     <Box sx={TableStyles}>
       <DataGrid
-        rowHeight={38}
+        rowHeight={30}
         rows={rows}
         columns={columns}
         pageSize={5}
@@ -69,15 +70,13 @@ export default function ResourcesTable({data}) {
 
 // Table actions
 const TableActions = ({parameters}) => {
-  const { handleOpenModal, setDetailsFormType, setDetailsData } = useContext(GeneralContext);
+  const { setSelectedMaterial } = useContext(GeneralContext);
 
   return (
     <Box>
       <Tooltip title='View / Edit'>
         <IconButton onClick={() => {
-            handleOpenModal(); 
-            setDetailsFormType('resource');
-            setDetailsData(parameters.row);
+            setSelectedMaterial(parameters.row);
           }}>
           <MoreHorizIcon />
         </IconButton>

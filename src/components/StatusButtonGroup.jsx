@@ -1,24 +1,26 @@
+/* eslint-disable react/prop-types */
 import axios from 'axios';
-import React, { useContext, useState } from 'react'
+import { useContext } from 'react'
 import { AiOutlineCheckCircle } from 'react-icons/ai';
 import { useDispatch } from 'react-redux';
 import { GeneralContext } from '../App';
-import { getProjectIssues } from '../redux/features/issueSlice';
 import { StatusButtonGroupContainer } from './styles/GenericStyles';
+import { getIssueSprints } from '../redux/features/sprintSlice';
 const serverUrl = import.meta.env.VITE_REACT_APP_SERVERURL;
 
 const StatusButtonGroup = (props) => {
-    const { data } = props;
+    // eslint-disable-next-line react/prop-types
+    const { type, data } = props;
     const { setOpen, setResponseMessage, handleOpenModal } = useContext(GeneralContext);
     const dispatch = useDispatch();
     
 
     // Update issue 
-    const updateIssue = (updates) => {
-        axios.put(serverUrl+'/api/v1/cpta/issue/update?id='+data._id, updates)
+    const update = (updates) => {
+        axios.put(`${serverUrl}/api/v1/cpta/${type}/update?id=${data._id}`, updates)
         .then(response => {
             if (response.status === 200) {
-                dispatch(getProjectIssues(response.data.issue.project));
+                dispatch(getIssueSprints(response.data.sprint.issue));
                 handleOpenModal(); 
                 setResponseMessage({ message: response.data.message, severity: 'success' });
                 setOpen(true);
@@ -38,7 +40,7 @@ const StatusButtonGroup = (props) => {
                 type='button'
                 onClick={(e) => {
                     e.preventDefault();
-                    updateIssue({progress: 'Todo'});
+                    update({ progress: 'Todo' });
                 }} 
                 style={{ 
                     background: data.progress === 'Todo' ? 'green' : '#e6f2ff', 
@@ -51,7 +53,7 @@ const StatusButtonGroup = (props) => {
                 type='button'
                 onClick={(e) => {
                     e.preventDefault();
-                    updateIssue({progress: 'In Progress'});
+                    update({ progress: 'In Progress' });
                 }}  
                 style={{ 
                     background: data.progress === 'In Progress' ? 'green' : '#e6f2ff', 
@@ -64,7 +66,7 @@ const StatusButtonGroup = (props) => {
                 type='button'
                 onClick={(e) => {
                     e.preventDefault();
-                    updateIssue({progress: 'Completed'});
+                    update({ progress: 'Completed' });
                 }}  
                 style={{ 
                     background: data.progress === 'Completed' ? 'green' : '#e6f2ff', 
