@@ -4,7 +4,9 @@ const serverUrl = import.meta.env.VITE_REACT_APP_SERVERURL;
 
 const initialState = {
     listOfIssueComments: [],
+    numberOfIssueComments: 0,
     listOfSprintComments: [],
+    numberOfSprintComments: 0,
     isLoading: false,
 }
 
@@ -41,8 +43,9 @@ const commentSlice = createSlice({
         },
         [getIssueComments.fulfilled] : (state, action) => {
             state.isLoading = false;
-            let listOfIssueComments = action.payload.sort((a,b) => new Date(a.addDate) - new Date(b.addDate));
+            // let listOfIssueComments = action.payload.sort((a,b) => new Date(a.addDate) - new Date(b.addDate));
             state.listOfIssueComments = action.payload.filter(element => element.issue);
+            state.numberOfIssueComments = state.listOfIssueComments.length;
         },
         [getIssueComments.rejected] : (state) => {
             state.isLoading = false;
@@ -52,8 +55,9 @@ const commentSlice = createSlice({
         },
         [getSprintComments.fulfilled] : (state, action) => {
             state.isLoading = false;
-            let listOfSprintComments = action.payload.sort((a,b) => new Date(a.addDate) - new Date(b.addDate));
+            // let listOfSprintComments = action.payload.sort((a,b) => new Date(a.addDate) - new Date(b.addDate));
             state.listOfSprintComments = action.payload.filter(element => element.sprint);
+            state.numberOfSprintComments = state.listOfSprintComments.length;
         },
         [getSprintComments.rejected] : (state) => {
             state.isLoading = false;
@@ -61,5 +65,6 @@ const commentSlice = createSlice({
     }
 });
 
+// eslint-disable-next-line no-empty-pattern
 export const { } = commentSlice.actions;
 export default commentSlice.reducer;

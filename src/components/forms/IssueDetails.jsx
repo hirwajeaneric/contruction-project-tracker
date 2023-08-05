@@ -220,7 +220,7 @@ const IssueDetails = (props) => {
     <VerticallyFlexGapContainer style={{ gap: '10px', position: 'relative' }}>
       
       <HorizontallyFlexSpaceBetweenContainer style={{ borderBottom: '1px solid #94b8b8', paddingBottom: '10px' }}>
-        <p>{project.name}</p>
+        <p><strong>{project.name}</strong> / Milestones</p>
       </HorizontallyFlexSpaceBetweenContainer>
       
       <HorizontallyFlexSpaceBetweenContainer style={{ flexWrap:'wrap', borderBottom: '1px solid #94b8b8', paddingBottom: '10px' }}>
@@ -281,7 +281,7 @@ const IssueDetails = (props) => {
 
 
           {/* Activities / Sprints ****************************************************************************************************************************/}
-          <VerticallyFlexGapForm onSubmit={addSprint} style={{ marginTop: '20px', background: '#e0ebeb', padding: '20px', borderRadius: '5px', gap: '10px' }}>
+          <VerticallyFlexGapForm onSubmit={addSprint} style={{ marginTop: '20px', background: '#e6f2ff', padding: '20px', borderRadius: '5px', gap: '10px' }}>
             <h3 style={{ width: '100%', textAlign: 'left', color: 'black' }}>Add activities</h3>
 
             <HorizontallyFlexGapContainer style={{ borderTop: "1px solid rgba(0,0,0,.2)" }}>
@@ -296,7 +296,7 @@ const IssueDetails = (props) => {
                     </>
                 }
             </HorizontallyFlexGapContainer>
-            <VerticallyFlexGapContainer>
+            <VerticallyFlexGapContainer style={{ gap: '10px'}}>
                 {
                   loadingIssueSprints 
                   ?
@@ -338,13 +338,13 @@ const IssueDetails = (props) => {
           </VerticallyFlexGapContainer>
 
           {/* Comment form  */}
-          <HorizontallyFlexGapForm onSubmit={addComment} style={{ background:'yellow', padding:'10px', position: 'sticky', bottom: '20px', left: '0%', right: '0%', }}>
+          <HorizontallyFlexGapForm onSubmit={addComment} style={{ background:'white', padding:'10px', position: 'sticky', bottom: '0px', left: '0%', right: '0%', borderTop: '1px solid gray', borderBottom: '1px solid gray', }}>
             <FormElement>
-              <input name='message' value={comment.message || ''} placeholder='Add comment...' onChange={handleComment} />
+              <input style={{ border: 'none', padding: '5px' }} name='message' value={comment.message || ''} placeholder='Add comment...' onChange={handleComment} />
             </FormElement>
             {isProcessingComment 
               ? <Button disabled variant="contained" color="primary" size="medium">...</Button> 
-              : <Button variant="contained" color="primary" size="medium" type="submit"><LuSend style={{ fontSize: '150%' }}/></Button>
+              : <Button variant="text" color="primary" size="medium" type="submit"><LuSend style={{ fontSize: '150%' }}/></Button>
             }
           </HorizontallyFlexGapForm>
         </VerticallyFlexGapContainer>

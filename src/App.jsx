@@ -33,7 +33,9 @@ const style = {
   width: '40%',
   bgcolor: 'background.paper',
   boxShadow: 24,
-  p: 4,
+  pt: 4,
+  px: 4,
+  pb: 1,
   overflowY: 'auto',
   height: '100vh'
 };
@@ -48,7 +50,8 @@ function App() {
   const authToken = cookies.AuthToken;
   const user = cookies.UserData;
   const [detailsFormType, setDetailsFormType] = useState('');
-  const [detailsData, setDetailsData] = useState('');
+  const [detailsData, setDetailsData] = useState({});
+  const [sprintDetails, setSprintDetails] = useState({});
 
   const [openModal, setOpenModal] = useState(false);
   const handleOpenModal = () => setOpenModal(!openModal);
@@ -65,7 +68,7 @@ function App() {
     if (user !== undefined) {
       dispatch(getAllProjects(user.id));
     }
-  },[dispatch]);
+  },[dispatch, user]);
 
   return (
     <GeneralContext.Provider 
@@ -78,6 +81,8 @@ function App() {
         detailsFormType,
         setDetailsData, 
         detailsData, 
+        sprintDetails,
+        setSprintDetails
       }}>
       <BrowserRouter>
         <Routes>
@@ -112,8 +117,6 @@ function App() {
           {detailsFormType === 'resource' && <ResourcesDetails data={detailsData}/>}
           {/* Issue details display  */}
           {detailsFormType === 'issue' && <IssueDetails data={detailsData}/>}
-          {/* Spring details display  */}
-          {/* {detailsFormType === 'sprint' && <SprintDetails data={detailsData} />} */}
         </Box>
       </Modal>
 

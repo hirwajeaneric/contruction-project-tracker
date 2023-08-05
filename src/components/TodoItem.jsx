@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import { useContext } from 'react';
+import { Fragment, useContext, useState } from 'react';
 import { HorizontallyFlexGapContainer } from './styles/GenericStyles';
 import { AiFillCheckCircle } from 'react-icons/ai';
 import { MdOutlineCircle } from 'react-icons/md';
@@ -7,6 +7,10 @@ import { GeneralContext } from '../App';
 import { useDispatch } from 'react-redux';
 import axios from 'axios';
 import { getProjectIssues } from '../redux/features/issueSlice';
+import { getIssueSprints } from '../redux/features/sprintSlice';
+import { Box, Button, Modal } from '@mui/material';
+import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
+import SprintDetails from './forms/SprintDetails';
 const serverUrl = import.meta.env.VITE_REACT_APP_SERVERURL;
 
 const generalStyles = {
@@ -14,7 +18,7 @@ const generalStyles = {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-start',
-    background: '#e6f2ff',
+    background: '#b3d9ff',
     border: '1px solid #b3d9ff',
     borderRadius: '5px'
 }
@@ -37,14 +41,21 @@ const nameStyles = {
     fontSize: '100%',
 }
 
-const TodoItem = (props) => {
-    const { data } = props;
+const sprintNameStyles = {
+    width: '100%',
+    textAlign: 'left',
+    fontSize: '100%',
+    color: 'black'
+}
+
+export default function TodoItem(props) {
+    const { type, data } = props;
     const { setOpen, setResponseMessage,handleOpenModal, setDetailsFormType, setDetailsData } = useContext(GeneralContext);
     const dispatch = useDispatch();
 
     const viewIssueDetails = () => {
         handleOpenModal(); 
-        setDetailsFormType('issue');
+        setDetailsFormType(type);
         setDetailsData(data);
     }
 
@@ -58,10 +69,14 @@ const TodoItem = (props) => {
             progress = 'Todo'
         }
 
-        axios.put(serverUrl+'/api/v1/cpta/issue/update?id='+data.id, {progress : progress})
+        axios.put(`${serverUrl}/api/v1/cpta/${type}/update?id=${data.id}`, { progress : progress })
         .then(response => {
             if (response.status === 200) {
-                dispatch(getProjectIssues(response.data.issue.project));
+                if (type === 'issue') {
+                    dispatch(getProjectIssues(response.data.issue.project));
+                } else if (type === 'sprint') {
+                    dispatch(getIssueSprints(response.data.sprint.issue));
+                }
                 setResponseMessage({ message: response.data.message, severity: 'success' });
                 setOpen(true);
             }
@@ -77,9 +92,50 @@ const TodoItem = (props) => {
     return (
         <HorizontallyFlexGapContainer style={generalStyles}>
             <button type='button' onClick={updateIssueProgress} style={checkButtonStyles}>{(data.progress=== 'Todo' || data.progress=== 'In Progress') ? <MdOutlineCircle /> : <AiFillCheckCircle />}</button>
-            <button type='button' onClick={viewIssueDetails} style={nameStyles}>{data.name}</button>
+            {type === 'issue' && <button type='button' onClick={viewIssueDetails} style={nameStyles}>{data.name}</button>}
+            {type === 'sprint' && <p style={sprintNameStyles}>{data.name}</p>}
+            {type === 'sprint' && <ChildModal sprint={data} />}
         </HorizontallyFlexGapContainer>
     )
 }
 
-export default TodoItem
+
+// Styles for the child model -> SPRINT DETAILS
+const style = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: '50%',
+    bgcolor: 'background.paper',
+    boxShadow: 24,
+    pt: 4,
+    px: 4,
+    pb: 4,
+    overflowY: 'auto',
+    height: '80vh',
+};
+  
+// SPRINT DETAILS MODEL
+function ChildModal(props) {
+    const { sprint } = props;
+    const [open, setOpen] = useState(false);
+    const handleOpen = () => {
+      setOpen(true);
+    };
+    const handleClose = () => {
+      setOpen(false);
+    };
+
+    return (
+      <Fragment>
+        <Button onClick={handleOpen}><MoreHorizIcon /></Button>
+        <Modal open={open} onClose={handleClose} aria-labelledby="child-modal-title" aria-describedby="child-modal-description">
+          <Box sx={style}>
+            <SprintDetails data={sprint}/>
+          </Box>
+        </Modal>
+      </Fragment>
+    );
+}
+  
