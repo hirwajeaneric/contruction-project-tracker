@@ -27,11 +27,9 @@ const MileStones = () => {
             dispatch(getProjectIssues(response.data.project._id));
         })
         .catch(error => console.log(error))
-    },[]);
+    },[dispatch, params.code]);
 
     const { 
-        isLoading : loadingIssues, 
-        listOfProjectIssues, 
         numberOfProjectIssues, 
         listOfTodoIssues, 
         listOfInProgressIssues, 
@@ -90,7 +88,7 @@ const MileStones = () => {
             <VerticallyFlexGapContainer style={{ gap: '20px', backgroundColor: 'white', padding: '20px', borderRadius: '5px', boxShadow: '0 2px 4px 0 rgba(0, 0, 0, 0.1)' }}>
                 {loadingProject ? <p style={{ width: '100%', textAlign: 'left' }}>Loading...</p> :
                 <HorizontallyFlexSpaceBetweenContainer>
-                    <HeaderTwo style={{ width: '100%', textAlign: 'left' }}>{project.name}</HeaderTwo>
+                    <HeaderTwo style={{ width: '100%', textAlign: 'left' }}>{`${project.name} major Milestones`}</HeaderTwo>
                     <HorizontallyFlexGapContainer style={{ gap: '20px', justifyContent: 'flex-end' }}>
                         <p style={{ color: 'black' }}>Code: <span style={{ color: 'gray' }}>{project.code}</span></p>
                         <Button variant='contained' size='small' color='info' onClick={displayProjectInfo}>Edit/View Project</Button>

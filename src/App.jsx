@@ -2,7 +2,7 @@ import { createContext, useEffect, useState } from 'react';
 import { useCookies } from 'react-cookie';
 import Auth from './pages/auth/Auth';
 import DashboardMain from './pages/DashboardMain';
-import { BrowserRouter, Navigate, Route, Router, Routes } from 'react-router-dom';
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import Home from './pages/Home';
 import Materials from './pages/Materials';
 import Project from './pages/Project';
@@ -18,12 +18,11 @@ import { getAllProjects } from './redux/features/projectSlice';
 import ProjectDetails from './pages/ProjectDetails';
 import Tasks from './pages/Tasks';
 import ProjectMaterials from './pages/ProjectMaterials';
-const serverUrl = import.meta.env.VITE_REACT_APP_SERVERURL;
 import Modal from '@mui/material/Modal';
-import { Box, Typography } from '@mui/material';
+import { Box } from '@mui/material';
 import ResourcesDetails from './components/forms/ResourcesDetails';
 import IssueDetails from './components/forms/IssueDetails';
-import SprintDetails from './components/forms/SprintDetails';
+// import SprintDetails from './components/forms/SprintDetails';
 import MoreProjectDetails from './components/forms/MoreProjectDetails';
 import MileStones from './pages/MileStones';
 
@@ -45,7 +44,7 @@ function App() {
   const dispatch = useDispatch();
   const [responseMessage, setResponseMessage] = useState({ message: '', severity: ''});
   const [open, setOpen] = useState(false);
-  const [ cookies, setCookie, removeCookie ] = useCookies(null);
+  const [ cookies ] = useCookies(null);
   const authToken = cookies.AuthToken;
   const user = cookies.UserData;
   const [detailsFormType, setDetailsFormType] = useState('');
@@ -114,7 +113,7 @@ function App() {
           {/* Issue details display  */}
           {detailsFormType === 'issue' && <IssueDetails data={detailsData}/>}
           {/* Spring details display  */}
-          {detailsFormType === 'sprint' && <SprintDetails data={detailsData} />}
+          {/* {detailsFormType === 'sprint' && <SprintDetails data={detailsData} />} */}
         </Box>
       </Modal>
 

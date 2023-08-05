@@ -22,7 +22,7 @@ export const getIssueSprints = createAsyncThunk(
     async (issue, thunkAPI) => {
         try {
             const response = await axios.get(`${serverUrl}/api/v1/cpta/sprint/findByIssueId?issue=${issue}`);
-            response.data.sprints.forEach((element, index) => {
+            response.data.sprints.forEach(element => {
                 element.id = element._id;
                 delete element._id;
                 delete element.__v;

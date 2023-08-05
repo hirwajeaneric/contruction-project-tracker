@@ -1,5 +1,5 @@
-import React from 'react'
-import { FormElement, FormElement2, HorizontallyFlexGapContainer, HorizontallyFlexGapForm, HorizontallyFlexSpaceBetweenContainer, VerticallyFlexGapContainer, VerticallyFlexGapForm } from '../styles/GenericStyles'
+/* eslint-disable react/prop-types */
+import { FormElement, HorizontallyFlexGapContainer, HorizontallyFlexGapForm, HorizontallyFlexSpaceBetweenContainer, VerticallyFlexGapContainer, VerticallyFlexGapForm } from '../styles/GenericStyles'
 import { useContext, useState } from "react";
 import { GeneralContext } from "../../App";
 const serverUrl = import.meta.env.VITE_REACT_APP_SERVERURL;
@@ -16,9 +16,12 @@ import { LuSend } from 'react-icons/lu';
 import { getIssueComments } from '../../redux/features/commentSlice';
 import CommentComponent from '../CommentComponent';
 import { useCookies } from 'react-cookie';
+import TodoItem from '../TodoItem';
+import { getIssueSprints } from '../../redux/features/sprintSlice';
 
-const IssueDetails = ({data}) => {
-  const [ cookies, setCookie, removeCookie ] = useCookies(null);
+const IssueDetails = (props) => {
+  const { data } = props;
+  const [ cookies ] = useCookies(null);
   const user = cookies.UserData;
   const [issue, setIssue] = useState({});
   const [project, setProject] = useState({});
@@ -46,6 +49,8 @@ const IssueDetails = ({data}) => {
     setComment({...comment, [input.name]: input.value });
   }
 
+
+
   useEffect(() => {
     // Set up a loader
     setTimeout(() => {
@@ -70,7 +75,11 @@ const IssueDetails = ({data}) => {
 
     })
     .catch(error => console.error(error));
-  },[]);
+  },[data.id, dispatch]);
+
+
+
+
 
   // Update issue 
   const updateIssue = (e) => {
@@ -97,6 +106,32 @@ const IssueDetails = ({data}) => {
       }
     })
   };
+
+
+
+
+  // Add sprint to issue 
+  const addSprint = (e) => {
+    e.preventDefault();
+  
+    setIsProcessingSprint(true); 
+    
+    axios.post(serverUrl+'/api/v1/cpta/sprint/add', sprint)
+    .then(response => {
+      if (response.status === 201) {
+        dispatch(getIssueSprints(issue._id));
+        setIsProcessingSprint(false);
+        handleActivityInput({});
+      }
+    })
+    .catch(error => {
+      if (error.response && error.response.status >= 400 && error.response.status <= 500) {
+        setIsProcessingSprint(false);
+      }
+    })
+  }
+
+
 
   // Add comment 
   const addComment = (e) => {
@@ -129,6 +164,8 @@ const IssueDetails = ({data}) => {
     }
   };
   
+
+
   // Delete issue
   const deleteIssue = (e) => {
     e.preventDefault();
@@ -159,6 +196,7 @@ const IssueDetails = ({data}) => {
   }
 
   const { isLoading, listOfIssueComments } = useSelector(state => state.comment);
+  const { isLoading: loadingIssueSprints, listOfIssueSprints } = useSelector(state => state.sprint);
 
   if (loading) {
     return (
@@ -229,36 +267,61 @@ const IssueDetails = ({data}) => {
 
 
 
-          {/* Activities / Sprints */}
-          <VerticallyFlexGapForm style={{ marginTop: '20px', background: '#e0ebeb', padding: '20px', borderRadius: '5px' }}>
+
+          {/* Activities / Sprints ****************************************************************************************************************************/}
+          <VerticallyFlexGapForm onSubmit={addSprint} style={{ marginTop: '20px', background: '#e0ebeb', padding: '20px', borderRadius: '5px', gap: '10px' }}>
             <h3 style={{ width: '100%', textAlign: 'left', color: 'black' }}>Add activities</h3>
 
             <HorizontallyFlexGapContainer style={{ borderTop: "1px solid rgba(0,0,0,.2)" }}>
-                <input id="name" name="name" value={sprint.name || ''} placeholder="Add activity..." type={'text'} onChange={handleActivityInput} style={{ width: '80%', padding: '8px 12px', border: 'none', color:"gray", fontSize:'100%',borderRadius: '0 0 0 5px' }} />
+                <input id="name" name="name" value={sprint.name || ''} placeholder="Add activity..." type={'text'} onChange={handleActivityInput} style={{ width: '80%', padding: '8px 12px', border: 'none', color:"black", background: 'transparent', fontSize:'100%',borderRadius: '0 0 0 5px' }} />
                 {sprint.name && 
                     <>
                         {isProcessingSprint ? 
                             <button type="button" disabled style={{ width: '20%', padding: '8px 12px', border: 'none', background: 'gray', color: 'white', fontSize:'100%', borderRadius: '0 0 5px' }}>...</button>
                             :
-                            <button type="submit" style={{ width: '20%', padding: '8px 12px', border: 'none', background: 'blue', color: 'white', fontSize:'100%', borderRadius: '0 0 5px' }}>Create</button>
+                            <button type="submit" style={{ width: '20%', padding: '8px 12px', border: 'none', background: 'green', color: 'white', fontSize:'100%', borderRadius: '0 0 5px' }}>Add</button>
                         }
                     </>
                 }
             </HorizontallyFlexGapContainer>
+            <VerticallyFlexGapContainer>
+                {
+                  loadingIssueSprints 
+                  ?
+                    <p>Loading...</p>
+                  :
+                  <>
+                    {listOfIssueSprints.length > 0 && <></>}
+                    {listOfIssueSprints.map((sprint, index) => {
+                      return (
+                        <TodoItem key={index} type='sprint' data={sprint} />
+                      )
+                    })}
+                  </>
+                }
+            </VerticallyFlexGapContainer>
           </VerticallyFlexGapForm>
 
 
-          {/* COMMENTS  */}
+
+
+          {/* COMMENTS  *************************************************************************************************************************** */}
           {/* List of comment */}
           <VerticallyFlexGapContainer style={{ padding: '20px 0' }}>
             <h4 style={{ padding: '5px', color: 'white', background:'black', borderRadius:'5px' }}>Comments</h4>
             <VerticallyFlexGapContainer style={{ gap: '10px', padding: '20px 0' }}>
-              {listOfIssueComments.length !== 0 && listOfIssueComments.map((comment,index) => {
-                return (
-                  <CommentComponent data={comment} user={user} key={index}/>
-                )
-              })}
-              {listOfIssueComments.length === 0 && <p>No comments yet</p>}
+              {isLoading 
+              ?
+              <p>Loading...</p>
+              : 
+              <>
+                {listOfIssueComments.length !== 0 && listOfIssueComments.map((comment,index) => {
+                  return (
+                    <CommentComponent data={comment} user={user} key={index}/>
+                  )
+                })}
+                {listOfIssueComments.length === 0 && <p>No comments yet</p>}
+              </>}
             </VerticallyFlexGapContainer>
           </VerticallyFlexGapContainer>
 

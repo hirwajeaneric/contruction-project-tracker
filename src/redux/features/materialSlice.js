@@ -20,12 +20,13 @@ export const getProjectResources = createAsyncThunk(
     async (project, thunkAPI) => {
         try {
             const response = await axios.get(`${serverUrl}/api/v1/cpta/material/findByProjectId?project=${project}`);
-            response.data.materials.forEach((element, index) => {
+            response.data.materials.forEach(element => {
                 element.id = element._id;
                 delete element._id;
                 delete element.__v;
                 element.entryDate = new Date(element.entryDate).toLocaleString();
             });
+            response.data.materials.sort((a, b) => new Date(b.entryDate) - new Date(a.entryDate))
             return response.data.materials;
         } catch (error) {
             return thunkAPI.rejectWithValue('Something went wrong!!');

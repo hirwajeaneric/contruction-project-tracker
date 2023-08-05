@@ -1,4 +1,5 @@
-import React, { useContext, useState } from 'react';
+/* eslint-disable react/prop-types */
+import { useContext } from 'react';
 import { HorizontallyFlexGapContainer } from './styles/GenericStyles';
 import { AiFillCheckCircle } from 'react-icons/ai';
 import { MdOutlineCircle } from 'react-icons/md';
@@ -37,10 +38,9 @@ const nameStyles = {
 }
 
 const TodoItem = (props) => {
-    const { type ,data } = props;
+    const { data } = props;
     const { setOpen, setResponseMessage,handleOpenModal, setDetailsFormType, setDetailsData } = useContext(GeneralContext);
     const dispatch = useDispatch();
-    const [isProcessing, setIsProcessing] = useState(false);
 
     const viewIssueDetails = () => {
         handleOpenModal(); 
@@ -58,12 +58,9 @@ const TodoItem = (props) => {
             progress = 'Todo'
         }
 
-        setIsProcessing(true);
-
         axios.put(serverUrl+'/api/v1/cpta/issue/update?id='+data.id, {progress : progress})
         .then(response => {
             if (response.status === 200) {
-                setIsProcessing(false);
                 dispatch(getProjectIssues(response.data.issue.project));
                 setResponseMessage({ message: response.data.message, severity: 'success' });
                 setOpen(true);
@@ -71,7 +68,6 @@ const TodoItem = (props) => {
         })
         .catch(error => {
             if (error.response && error.response.status >= 400 && error.response.status <= 500) {
-                setIsProcessing(false);
                 setResponseMessage({ message: error.response.data.msg, severity:'error'})
                 setOpen(true);
             }
