@@ -1,5 +1,4 @@
 import { Button } from '@mui/material'
-import React from 'react'
 import { FormElement, HorizontallyFlexGapContainer, HorizontallyFlexSpaceBetweenContainer, VerticallyFlexGapContainer, VerticallyFlexGapForm } from '../styles/GenericStyles'
 import { useContext, useState } from "react";
 import { GeneralContext } from "../../App";
@@ -88,19 +87,26 @@ const ResourcesDetails = ({data}) => {
 
   return (
     <VerticallyFlexGapContainer style={{ gap: '20px' }}>
-      <HorizontallyFlexSpaceBetweenContainer>
-        <h2>Resource Info</h2>
+      <HorizontallyFlexSpaceBetweenContainer style={{ alignItems: 'flex-start' }}>
+        <div className='left' style={{ flexDirection: 'column', gap: '10px' }}>
+          <h2>Resource Info</h2>
+          <p style={{ color: 'gray' }}>Entry date: <strong>{resource.entryDate}</strong></p>
+        </div>
         <Button variant='contained' size='small' color='error' onClick={deleteResource}>Delete</Button>
       </HorizontallyFlexSpaceBetweenContainer>
       <VerticallyFlexGapForm onSubmit={updateResouce} style={{ gap: '20px', color: 'gray', fontSize:'90%' }}>
-        <HorizontallyFlexGapContainer style={{ gap: '20px' }}>
-          <FormElement>
-            <label htmlFor="quantity">Quantity: <div>{resource.quantity}</div></label>
-          </FormElement>
-          <FormElement>
-            <label htmlFor="assigned">Assigned: <div>{resource.assigned}</div></label>
-          </FormElement>
-        </HorizontallyFlexGapContainer>
+        <HorizontallyFlexSpaceBetweenContainer style={{ color: 'black', alignItems: 'flex-start' }}>
+          <div className='left' style={{ flexDirection: 'column', gap: '10px' }}>
+            <p>Quantity: <strong>{resource.quantity}</strong></p>
+            <p>Assigned: <strong>{resource.assigned}</strong></p>
+            <p>Used: <strong>{resource.used}</strong></p>
+          </div>
+          <div className='right' style={{ flexDirection: 'column', gap: '10px' }}>
+            <p>Measurement unit: <strong>{resource.measurementUnit}</strong></p>
+            <p>Currency: <strong>{resource.currency}</strong></p>
+            <p>Total price: <strong>{resource.totalPrice}</strong></p>
+          </div>
+        </HorizontallyFlexSpaceBetweenContainer>
         <HorizontallyFlexGapContainer style={{ gap: '20px' }}>
           <FormElement>
             <label htmlFor="name">Name</label>
@@ -121,10 +127,6 @@ const ResourcesDetails = ({data}) => {
             <input type="number" name="quantity" id="quantity" onChange={handleChange} value={resource.quantity} />
           </FormElement>
           <FormElement>
-          <label htmlFor="assigned">{`Assigned in ${resource.measurementUnit}`}</label>
-            <input type="text" disabled name="assigned" id="assigned" onChange={handleChange} value={resource.assigned} />
-          </FormElement>
-          <FormElement>
             <label htmlFor="measurementUnit">Change Unit</label>
             <select name="measurementUnit" id="measurementUnit">
               <option value="">Select unit</option>
@@ -140,10 +142,6 @@ const ResourcesDetails = ({data}) => {
             <input type="text" name="unitPrice" id="unitPrice" onChange={handleChange} value={resource.unitPrice} />
           </FormElement>
           <FormElement>
-            <label htmlFor="currency">Unit price</label>
-            <input type="text" disabled name="currency" id="currency" onChange={handleChange} value={resource.currency} />
-          </FormElement>
-          <FormElement>
             <label htmlFor="unitPrice">Change currency</label>
             <select name="currency" id="currency">
               <option value="">Select current</option>
@@ -151,16 +149,6 @@ const ResourcesDetails = ({data}) => {
                   <option key={index} value={currency}>{currency}</option>
               ))}
             </select>
-          </FormElement>
-        </HorizontallyFlexGapContainer>
-        <HorizontallyFlexGapContainer style={{ gap: '20px' }}>
-          <FormElement>
-            <label htmlFor="totalPrice">Total price</label>
-            <input type="text" name="totalPrice" id="totalPrice" onChange={handleChange} value={resource.totalPrice} />
-          </FormElement>
-          <FormElement>
-            <label htmlFor="unitPrice">Entry Date</label>
-            <input disabled type="text" name="entryDate" id="entryDate" onChange={handleChange} value={resource.entryDate} />
           </FormElement>
         </HorizontallyFlexGapContainer>
         <FormElement style={{ flexDirection: 'row', gap: '30%' }}>

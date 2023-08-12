@@ -9,11 +9,16 @@ const columns = [
   {
     field: 'name',
     headerName: 'Name',
-    width: 300,
+    width: 200,
   },
   {
     field: 'quantity',
     headerName: 'Quantity',
+    width: 90,
+  },
+  {
+    field: 'assigned',
+    headerName: 'Assigned',
     width: 90,
   },
   {

@@ -127,12 +127,12 @@ const SprintDetails = (props) => {
       id: data.name.split(" - ")[0],
       name: data.name.split(" - ")[1],
       quantity: Number(data.quantity),
-      used: 0
+      used: 0,
+      date: new Date().toUTCString()
     }
 
     sprint.material = newMaterial;
 
-    console.log(sprint);
 
     setIsProcessingMaterials(true);
 
