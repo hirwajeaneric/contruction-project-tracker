@@ -6,6 +6,7 @@ import { useDispatch } from 'react-redux';
 import { GeneralContext } from '../App';
 import { StatusButtonGroupContainer } from './styles/GenericStyles';
 import { getIssueSprints } from '../redux/features/sprintSlice';
+import { getProjectIssues } from '../redux/features/issueSlice';
 const serverUrl = import.meta.env.VITE_REACT_APP_SERVERURL;
 
 const StatusButtonGroup = (props) => {
@@ -20,7 +21,15 @@ const StatusButtonGroup = (props) => {
         axios.put(`${serverUrl}/api/v1/cpta/${type}/update?id=${data._id}`, updates)
         .then(response => {
             if (response.status === 200) {
-                dispatch(getIssueSprints(response.data.sprint.issue));
+                if (type==='sprint') {
+                    dispatch(getIssueSprints(response.data.sprint.issue));
+                }
+                console.log('sprint passed');
+                if (type==='issue') {
+                    dispatch(getProjectIssues(response.data.issue.project));
+                }
+                console.log('sprint passed');
+
                 handleOpenModal(); 
                 setResponseMessage({ message: response.data.message, severity: 'success' });
                 setOpen(true);

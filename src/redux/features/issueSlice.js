@@ -22,7 +22,7 @@ export const getProjectIssues = createAsyncThunk(
     async (project, thunkAPI) => {
         try {
             const response = await axios.get(`${serverUrl}/api/v1/cpta/issue/findByProjectId?project=${project}`);
-            response.data.issues.forEach((element, index) => {
+            response.data.issues.forEach((element) => {
                 element.id = element._id;
                 delete element._id;
                 delete element.__v;
