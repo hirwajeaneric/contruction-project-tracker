@@ -95,6 +95,14 @@ const ResourcesDetails = ({data}) => {
       <VerticallyFlexGapForm onSubmit={updateResouce} style={{ gap: '20px', color: 'gray', fontSize:'90%' }}>
         <HorizontallyFlexGapContainer style={{ gap: '20px' }}>
           <FormElement>
+            <label htmlFor="quantity">Quantity: <div>{resource.quantity}</div></label>
+          </FormElement>
+          <FormElement>
+            <label htmlFor="assigned">Assigned: <div>{resource.assigned}</div></label>
+          </FormElement>
+        </HorizontallyFlexGapContainer>
+        <HorizontallyFlexGapContainer style={{ gap: '20px' }}>
+          <FormElement>
             <label htmlFor="name">Name</label>
             <input type="text" name="name" id="name" onChange={handleChange} value={resource.name} />
           </FormElement>
@@ -109,12 +117,12 @@ const ResourcesDetails = ({data}) => {
         </FormElement>
         <HorizontallyFlexGapContainer style={{ gap: '20px' }}>
           <FormElement>
-            <label htmlFor="quantity">Quantity</label>
+            <label htmlFor="quantity">{`Quantity in ${resource.measurementUnit}`}</label>
             <input type="number" name="quantity" id="quantity" onChange={handleChange} value={resource.quantity} />
           </FormElement>
           <FormElement>
-            <label htmlFor="measurementUnit">Measurement Unit</label>
-            <input type="text" disabled name="measurementUnit" id="measurementUnit" onChange={handleChange} value={resource.measurementUnit} />
+          <label htmlFor="assigned">{`Assigned in ${resource.measurementUnit}`}</label>
+            <input type="text" disabled name="assigned" id="assigned" onChange={handleChange} value={resource.assigned} />
           </FormElement>
           <FormElement>
             <label htmlFor="measurementUnit">Change Unit</label>

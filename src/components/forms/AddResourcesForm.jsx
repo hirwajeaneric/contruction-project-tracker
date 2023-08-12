@@ -16,6 +16,7 @@ export default function AddResourcesForm({projectId}) {
     const { register, handleSubmit, formState: { errors } } = useForm();
     const { setOpen, setResponseMessage } = useContext(GeneralContext);
     const dispatch = useDispatch();
+    // eslint-disable-next-line no-unused-vars
     const [openForm, setOpenForm] = useState(true);
 
     const onSubmit = data => {
