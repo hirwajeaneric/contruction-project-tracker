@@ -14,17 +14,12 @@ const columns = [
   {
     field: 'quantity',
     headerName: 'Quantity',
-    width: 90,
-  },
-  {
-    field: 'assigned',
-    headerName: 'Assigned',
-    width: 90,
+    width: 130,
   },
   {
     field: 'used',
-    headerName: 'used',
-    width: 90,
+    headerName: 'Used',
+    width: 130,
   },
   {
     field: 'actions',

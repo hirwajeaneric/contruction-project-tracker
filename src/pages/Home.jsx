@@ -15,6 +15,8 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import { useContext, useState } from "react";
 import axios from "axios";
 import { GeneralContext } from "../App";
+import { getAllProjects } from "../redux/features/projectSlice";
+const serverUrl = import.meta.env.VITE_REACT_APP_SERVERURL;
 
 const Home = () => {
   const navigate = useNavigate();
@@ -124,7 +126,7 @@ const Home = () => {
                     <HeaderTwo style={{ width:'70%', }}>{`Project ${project.name}`}</HeaderTwo>
                     <HorizontallyFlexGapContainer style={{ width:'30%', gap: '40px', justifyContent:'flex-end' }}>
                       <Tooltip title='View more'>
-                        <Button variant="text" color="primary" size="small" type="button" onClick={(e) => {navigate(`/${project.code}`)}}><MoreHorizIcon /></Button>
+                        <Button variant="text" color="primary" size="small" type="button" onClick={(e) => { e.preventDefault(); navigate(`/${project.code}`)}}><MoreHorizIcon /></Button>
                       </Tooltip>
                     </HorizontallyFlexGapContainer>
                   </HorizontallyFlexSpaceBetweenContainer>

@@ -63,6 +63,9 @@ const materialSlice = createSlice({
         [getProjectResources.fulfilled] : (state, action) => {
             state.isLoading = false;
             let listOfProjectResources = action.payload.sort((a,b) => new Date(a.creationDate) - new Date(b.creationDate));
+            listOfProjectResources.forEach(element => {
+                element.remaining = element.quantity - element.used;
+            });
             state.listOfProjectResources = listOfProjectResources;
             state.numberOfProjectResources = listOfProjectResources.length; 
         },

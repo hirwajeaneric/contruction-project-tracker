@@ -104,6 +104,7 @@ const SprintDetails = (props) => {
           setResponseMessage({ message: response.data.message, severity: 'success' });
           setOpen(true);
           handleOpenModal();
+          setSelectedMaterial({});
         }, 2000);
       }
     })
@@ -133,17 +134,19 @@ const SprintDetails = (props) => {
 
     sprint.material = newMaterial;
 
-
     setIsProcessingMaterials(true);
 
     try {
       const response = await axios.put(serverUrl+'/api/v1/cpta/sprint/update?id='+sprint._id, sprint)
       if (response.status === 200) {
         const resp = await axios.put(serverUrl+'/api/v1/cpta/material/update?id='+materialId, { assigned: Number(data.quantity) });
+        
         if (resp.status === 200) {
           setIsProcessingMaterials(false);
           setResponseMessage({ message: response.data.message, severity: 'success' });
           setOpen(true);
+          handleOpenModal();
+          setSelectedMaterial({});
         }
       }  
     } catch (error) {
@@ -156,31 +159,53 @@ const SprintDetails = (props) => {
   };
 
 
+
   // Update material status
-  const updateMaterialStatus = (e) => {
+  const updateMaterialStatus = async (e) => {
     e.preventDefault();
 
-    setIsProcessingMaterials(true);
+    var material = {};
+    material.id = selectedMaterial.id;
+    material.used = Number(selectedMaterial.used);
+    material.quantity = Number(selectedMaterial.quantity);
 
-    axios.put(serverUrl+'/api/v1/cpta/material/add?id='+selectedMaterial._id, sprint)
-    .then(response => {
-      setTimeout(() => {
-        if (response.status === 200) {
+    let sprintId = sprint._id;
+
+    delete sprint._id;
+    delete sprint.__v;
+    sprint.material = material;
+
+    setIsProcessingMaterials(true);
+    try {
+      console.log(sprint.material);
+      const sprintResponse = await axios.put(serverUrl+'/api/v1/cpta/sprint/update?id='+sprintId, sprint);
+
+      if (sprintResponse.status === 200 && material.used > 0) {
+        const materialResponse = await axios.put(serverUrl+'/api/v1/cpta/material/update?id='+selectedMaterial.id, { used: Number(selectedMaterial.used)});
+      
+        if (materialResponse.status === 200) {
           setIsProcessingMaterials(false);
-          setResponseMessage({ message: response.data.message, severity: 'success' });
+          setResponseMessage({ message: materialResponse.data.message, severity: 'success' });
           setOpen(true);
-        }
-      }, 3000)
-    })
-    .catch(error => {
-        if (error.response && error.response.status >= 400 && error.response.status <= 500) {
-          setIsProcessingMaterials(false);
-          setResponseMessage({ message: error.response.data.msg, severity:'error'})
-          setOpen(true);
-        }
-    })
+          handleOpenModal();
+          setSelectedMaterial({});
+        }        
+      }
+    } catch (error) {
+      if (error.response && error.response.status >= 400 && error.response.status <= 500) {
+        setIsProcessingMaterials(false);
+        setResponseMessage({ message: error.response.data.msg, severity:'error'})
+        setOpen(true);
+      }
+    }
   };
 
+
+  // Cancel material update
+  const cancelMaterialUpdate = () => {
+    // handleOpenModal();
+    setSelectedMaterial({});
+  }
 
 
   // Add comment 
@@ -332,7 +357,13 @@ const SprintDetails = (props) => {
 
           {/* MATERIAL MANAGEMENT ****************************************************************************************************************************/}
           <VerticallyFlexGapContainer style={{ marginTop: '20px', background: '#c6ecd9', padding: '20px', borderRadius: '5px', gap: '10px' }}>  
-            <h3 style={{ width: '100%', textAlign: 'left', color: 'black' }}>Assign materials</h3>
+            <HorizontallyFlexSpaceBetweenContainer>
+              <div className='left' style={{ gap: '10px', flexDirection: 'column' }}>
+                <h3 style={{ width: '100%', textAlign: 'left', color: 'black' }}>Assign materials</h3>
+                {selectedMaterial.date && <p style={{ color: 'black' }}>{`Assigned on: ${new Date(selectedMaterial.date).toDateString()}`}</p>}
+              </div>
+              <Button type="button" variant='text' color='secondary' size='small' onClick={cancelMaterialUpdate}>Cancel</Button>
+            </HorizontallyFlexSpaceBetweenContainer>
 
             <HorizontallyFlexGapContainer style={{ gap: '20px', width: '100%', alignItems: 'flex-end' }}>
               {selectedMaterial.id
@@ -341,12 +372,15 @@ const SprintDetails = (props) => {
               <HorizontallyFlexGapForm onSubmit={updateMaterialStatus} style={{ gap: '20px', width: '100%' }}>
                 <FormElement style={{ color: 'gray' }}>
                   <label htmlFor='name' style={{ color: 'black' }}>Name</label>
-                  <select style={{ padding: '8px 12px' }} name='name'>
-                    <option value={selectedMaterial.name || ''}>{selectedMaterial.name}</option>
-                    {listOfProjectResources.map((resource, index) => (
-                      <option key={index} value={`${resource.id} - ${resource.name}`}>{resource.name}  :  {resource.quantity} {resource.measurementUnit}</option>
-                    ))}
-                  </select>
+                  <input 
+                    style={{ padding: '8px 12px' }}
+                    type="name" 
+                    id="name" 
+                    disabled
+                    name='name'
+                    value={selectedMaterial.name || ''}
+                    onChange={handleMaterialUpdates}
+                  />
                 </FormElement>
                 <FormElement style={{ color: 'gray' }}>
                   <label htmlFor='quantity' style={{ color: 'black' }}>Quantity</label>

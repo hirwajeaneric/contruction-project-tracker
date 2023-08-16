@@ -14,17 +14,22 @@ const columns = [
   {
     field: 'quantity',
     headerName: 'Quantity',
-    width: 90,
+    width: 80,
   },
   {
     field: 'assigned',
     headerName: 'Assigned',
-    width: 90,
+    width: 80,
   },
   {
-    field: 'measurementUnit',
-    headerName: 'Measurement',
-    width: 100,
+    field: 'used',
+    headerName: 'Used',
+    width: 80,
+  },
+  {
+    field: 'remaining',
+    headerName: 'Remaining',
+    width: 80,
   },
   {
     field: 'actions',
