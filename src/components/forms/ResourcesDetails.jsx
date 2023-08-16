@@ -31,6 +31,7 @@ const ResourcesDetails = ({data}) => {
     axios.get(serverUrl+'/api/v1/cpta/material/findById?id='+data.id)
     .then(response => {
       response.data.material.entryDate = new Date(response.data.material.entryDate).toUTCString();
+      response.data.material.remaining = Number(response.data.material.quantity) - Number(response.data.material.used);
       setResource(response.data.material);
     })
     .catch(error => console.log(error));
@@ -100,6 +101,7 @@ const ResourcesDetails = ({data}) => {
             <p>Quantity: <strong>{resource.quantity}</strong></p>
             <p>Assigned: <strong>{resource.assigned}</strong></p>
             <p>Used: <strong>{resource.used}</strong></p>
+            <p>Remaining: <strong>{resource.remaining}</strong></p>
           </div>
           <div className='right' style={{ flexDirection: 'column', gap: '10px' }}>
             <p>Measurement unit: <strong>{resource.measurementUnit}</strong></p>

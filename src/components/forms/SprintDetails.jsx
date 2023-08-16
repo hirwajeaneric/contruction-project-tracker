@@ -422,9 +422,13 @@ const SprintDetails = (props) => {
                     aria-invalid={errors.name ? "true" : "false"}
                   >
                     <option value="">Select material</option>
-                    {listOfProjectResources.map((resource, index) => (
-                      <option key={index} value={`${resource.id} - ${resource.name}`}>{resource.name}  :  {resource.quantity} {resource.measurementUnit}</option>
-                    ))}
+                    {listOfProjectResources.map((resource, index) => {
+                      if (resource.quantity !== resource.used) {
+                        return(
+                          <option key={index} value={`${resource.id} - ${resource.name}`}>{resource.name}  :  {resource.quantity} {resource.measurementUnit}</option>
+                        );
+                      } 
+                    })}
                   </select>
                   {errors.name?.type === "required" && (
                     <p role="alert">Required</p>
