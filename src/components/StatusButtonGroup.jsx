@@ -7,6 +7,8 @@ import { GeneralContext } from '../App';
 import { StatusButtonGroupContainer } from './styles/GenericStyles';
 import { getIssueSprints } from '../redux/features/sprintSlice';
 import { getProjectIssues } from '../redux/features/issueSlice';
+import { getAllProjects } from '../redux/features/projectSlice';
+import { useCookies } from 'react-cookie';
 const serverUrl = import.meta.env.VITE_REACT_APP_SERVERURL;
 
 const StatusButtonGroup = (props) => {
@@ -14,10 +16,14 @@ const StatusButtonGroup = (props) => {
     const { type, data } = props;
     const { setOpen, setResponseMessage, handleOpenModal } = useContext(GeneralContext);
     const dispatch = useDispatch();
+    const [ cookies ] = useCookies(null);
+    const user = cookies.UserData;
     
 
     // Update issue 
     const update = (updates) => {
+        console.log(updates);
+        
         axios.put(`${serverUrl}/api/v1/cpta/${type}/update?id=${data._id}`, updates)
         .then(response => {
             if (response.status === 200) {
@@ -27,6 +33,8 @@ const StatusButtonGroup = (props) => {
                 console.log('sprint passed');
                 if (type==='issue') {
                     dispatch(getProjectIssues(response.data.issue.project));
+                    console.log(user.id);
+                    dispatch(getAllProjects(user.id));
                 }
                 console.log('sprint passed');
 

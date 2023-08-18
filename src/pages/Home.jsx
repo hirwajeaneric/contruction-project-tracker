@@ -35,7 +35,7 @@ const Home = () => {
           setIsProcessing(false);
           setResponseMessage({ message: response.data.message, severity: 'success' });
           setOpen(true);
-          dispatch(getAllProjects(user.id));
+          dispatch(getAllProjects({id: user.id, email: user.email}));
         }
       }, 3000)
     })
@@ -62,13 +62,14 @@ const Home = () => {
         <HorizontallyFlexSpaceBetweenContainer>
           <div className="left49width" style={{ flexDirection: 'column'}}>
             <HeaderOne style={{ color: '#0080ff' }}>{`Welcome ${user.fullName}`}</HeaderOne>
-            <p style={{ color: '#476b6b'}}>Here are some quick steps to get you started</p>
+            {user.role === 'Consultant' && <p style={{ color: '#476b6b'}}>Here are some quick steps to get you started</p>}
+            {user.role === 'Owner' && <p style={{ color: '#476b6b'}}>Get overview of your projects</p>}
           </div>
-          <div className="right49width" style={{ justifyContent: "flex-end" }}>
+          {user.role === 'Consultant' && <div className="right49width" style={{ justifyContent: "flex-end" }}>
             <Button variant="text" color='primary' startIcon={<AddIcon />} onClick={() => navigate('projects')}>Create Project</Button>
-          </div>
+          </div>}
         </HorizontallyFlexSpaceBetweenContainer>
-        <HorizontallyFlexSpaceBetweenContainer>
+        {user.role === 'Consultant' && <HorizontallyFlexSpaceBetweenContainer>
           <div className="left49width" style={{ gap: '15px', flexDirection: 'column'}}>
             <StepToGetStarted>
               <AddIcon style={{ color: 'green' }}/>
@@ -101,7 +102,7 @@ const Home = () => {
               </div>
             </StepToGetStarted>
           </div>
-        </HorizontallyFlexSpaceBetweenContainer>
+        </HorizontallyFlexSpaceBetweenContainer>}
       </VerticallyFlexGapContainer>
 
       {/* Second dashboard section  */}
@@ -132,10 +133,10 @@ const Home = () => {
                   </HorizontallyFlexSpaceBetweenContainer>
                   <p style={{ fontSize: '90%', color: 'gray' }}>{project.description}</p>
                   <ProjectProgressBar>
-                    <div style={{ width: `${project.progress}`}}>
-                        {project.progress !== 0 && <p>{`${project.progress}%`}</p>}
+                    <div style={{ width: `${project.progress.toFixed(1)}%`}}>
+                        {project.progress !== 0 && <p>{`${project.progress.toFixed(1)}%`}</p>}
                     </div>
-                    {project.progress === 0 && <p>{`${project.progress}%`}</p>}
+                    {project.progress === 0 && <p>{`${project.progress.toFixed(1)}%`}</p>}
                 </ProjectProgressBar>
                 </VerticallyFlexGapContainer>
               </HorizontallyFlexGapContainer>
@@ -157,10 +158,10 @@ const Home = () => {
                   </HorizontallyFlexSpaceBetweenContainer>
                   <p style={{ fontSize: '90%', color: 'gray' }}>{project.description}</p>
                   <ProjectProgressBar>
-                    <div style={{ width: `${project.progress}`}}>
-                        {project.progress !== 0 && <p>{`${project.progress}%`}</p>}
+                    <div style={{ width: `${project.progress.toFixed(1)}%`}}>
+                        {project.progress !== 0 && <p>{`${project.progress.toFixed(1)}%`}</p>}
                     </div>
-                    {project.progress === 0 && <p>{`${project.progress}%`}</p>}
+                    {project.progress === 0 && <p>{`${project.progress.toFixed(1)}%`}</p>}
                   </ProjectProgressBar>
                 </VerticallyFlexGapContainer>
               </HorizontallyFlexGapContainer>

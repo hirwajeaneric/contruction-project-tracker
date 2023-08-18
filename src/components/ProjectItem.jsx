@@ -55,8 +55,8 @@ const ProjectItem = ({ project }) => {
                 </HorizontallyFlexSpaceBetweenContainer>
                 <p style={{ fontSize: '90%', color: 'gray' }}>{project.description}</p>
                 <ProjectProgressBar>
-                    <div style={{ width: `${project.progress}`}}>
-                        {project.progress !== 0 && <p>{`${project.progress}%`}</p>}
+                    <div style={{ width: `${project.progress.toFixed(1)}%`}}>
+                        {project.progress !== 0 && <p>{`${project.progress.toFixed(1)}%`}</p>}
                     </div>
                     {project.progress === 0 && <p>{`${project.progress}%`}</p>}
                 </ProjectProgressBar>

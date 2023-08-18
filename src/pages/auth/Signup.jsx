@@ -25,8 +25,6 @@ const Signup = () => {
       setOpen(true);
       return;
     } else {
-
-      data.role = 'Consultant';
       setIsProcessing(true);
 
       axios.post(serverUrl+'/api/v1/cpta/user/signup', data)
@@ -36,10 +34,7 @@ const Signup = () => {
             setIsProcessing(false);
             setCookie('AuthToken', response.data.user.token);
             setCookie('UserData', JSON.stringify(response.data.user));
-            
-            console.log(response.data.user);
-
-            // window.location.replace('/');
+            window.location.replace('/');
           }
         }, 3000)
       })
@@ -91,20 +86,36 @@ const Signup = () => {
               <p role="alert">Full name is required</p>
             )}
           </FormElement>
-          <FormElement style={{ color: 'gray' }}>
-            <label htmlFor="email">Email address</label>
-            <input 
-              type="email" 
-              id="email"
-              placeholder="email" 
-              {...register("email", 
-              {required: true})} 
-              aria-invalid={errors.email ? "true" : "false"}
-            />
-            {errors.email?.type === "required" && (
-              <p role="alert">Email is required</p>
-            )}
-          </FormElement>  
+          <HorizontallyFlexGapContainer style={{ gap: '10px' }}>
+            <FormElement style={{ color: 'gray' }}>
+              <label htmlFor="email">Email address</label>
+              <input 
+                type="email" 
+                id="email"
+                placeholder="email" 
+                {...register("email", 
+                {required: true})} 
+                aria-invalid={errors.email ? "true" : "false"}
+              />
+              {errors.email?.type === "required" && (
+                <p role="alert">Email is required</p>
+              )}
+            </FormElement>  
+            <FormElement style={{ color: 'gray' }}>
+              <label htmlFor="role">Role</label>
+              <select 
+                {...register("role", { required: true })}
+                aria-invalid={errors.role ? "true" : "false"}
+              >
+                <option value="">Choose role</option>
+                <option value="Consultant">Consultant</option>
+                <option value="Owner">Owner</option>
+              </select>
+              {errors.role?.type === "required" && (
+                <p role="alert">Role is required</p>
+              )}
+            </FormElement>
+          </HorizontallyFlexGapContainer>
           <HorizontallyFlexGapContainer style={{ gap: '10px' }}>
             <FormElement style={{ color: 'gray' }}>
               <label htmlFor="password">Password</label>

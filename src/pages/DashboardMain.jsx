@@ -3,14 +3,13 @@ import { DashboardInnerContainer, DashboardMainContainer, SideBarMenuItem, SideB
 import { HorizontallyFlexGapContainer, VerticallyFlexGapContainer, VerticallyFlexSpaceBetweenContainer } from "../components/styles/GenericStyles"
 import { MdHome, MdMenu, MdNotifications } from 'react-icons/md';
 import { AiFillBuild } from 'react-icons/ai';
-import { PiToolboxFill } from 'react-icons/pi';
 import { TiUser } from 'react-icons/ti';
 import Avatar from "@mui/material/Avatar"; 
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import { Divider, IconButton, ListItemIcon, Tooltip } from "@mui/material";
 import { useState } from "react";
-import { Logout, PersonAdd, Settings } from "@mui/icons-material";
+import { Logout, Settings } from "@mui/icons-material";
 import { useCookies } from "react-cookie";
 import { useSelector } from "react-redux";
 import { getSimpleCapitalizedChars } from "../utils/HelperFunctions";
@@ -21,6 +20,7 @@ const DashboardMain = () => {
     const navigate = useNavigate();
     const [fullSize, setFullSize] = useState(false);
     const open = Boolean(anchorEl);
+
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
     };
@@ -149,32 +149,36 @@ const DashboardMain = () => {
                         </SideBarMenuItem>
                         { 
                             listOfConsultantsProjects.map((project, index) => {
-                                return (<SideBarMenuItem key={index} onClick={()=>{window.location.replace(`/${project.code}`)}} to={`/${project.code}`} style={{ fontSize:'90%' }}>
-                                    <MdHome style={{ width: fullSize ? '100%' : '20%', color: "transparent"}}/>
-                                    <div style={{ width: fullSize ? '0%' : '80%'}} className="nav-data">
-                                        {!fullSize && 
-                                            <>
-                                                <span className="text">{project.name}</span>
-                                                <span className="number">{project.progress} %</span>
-                                            </>    
-                                        }
-                                    </div>
-                                </SideBarMenuItem>)
+                                return (
+                                    <SideBarMenuItem key={index} onClick={()=>{window.location.replace(`/${project.code}`)}} to={`/${project.code}`} style={{ fontSize:'90%' }}>
+                                        <MdHome style={{ width: fullSize ? '100%' : '20%', color: "transparent"}}/>
+                                        <div style={{ width: fullSize ? '0%' : '80%'}} className="nav-data">
+                                            {!fullSize && 
+                                                <>
+                                                    <span className="text">{project.name}</span>
+                                                    <span className="number">{`${Math.round(project.progress * 10) / 10} %`}</span>
+                                                </>    
+                                            }
+                                        </div>
+                                    </SideBarMenuItem>
+                                );
                             }) 
-                        }
+                        }   
                         {
                             listOfOwnerProjects.map((project, index) => {
-                                return (<SideBarMenuItem key={index} onClick={()=>{window.location.replace(`/${project.code}`)}} to={`/${project.code}`} style={{ fontSize:'90%' }}>
-                                    <MdHome style={{ width: fullSize ? '100%' : '20%', color: "transparent"}}/>
-                                    <div style={{ width: fullSize ? '0%' : '80%'}} className="nav-data">
-                                        {!fullSize && 
-                                            <>
-                                                <span className="text">{project.name}</span>
-                                                <span className="number">{project.progress} %</span>
-                                            </>    
-                                        }
-                                    </div>
-                                </SideBarMenuItem>)
+                                return (
+                                    <SideBarMenuItem key={index} onClick={()=>{window.location.replace(`/${project.code}`)}} to={`/${project.code}`} style={{ fontSize:'90%' }}>
+                                        <MdHome style={{ width: fullSize ? '100%' : '20%', color: "transparent"}}/>
+                                        <div style={{ width: fullSize ? '0%' : '80%'}} className="nav-data">
+                                            {!fullSize && 
+                                                <>
+                                                    <span className="text">{project.name}</span>
+                                                    <span className="number">{`${Math.round(project.progress * 10) / 10} %`}</span>
+                                                </>    
+                                            }
+                                        </div>
+                                    </SideBarMenuItem>
+                                )
                             }) 
                         }
                         {/* <SideBarMenuItem to={'resources'}>

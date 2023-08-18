@@ -67,7 +67,7 @@ function App() {
 
   useEffect(() => {  
     if (user !== undefined) {
-      dispatch(getAllProjects(user.id));
+      dispatch(getAllProjects({id: user.id, email: user.email}));
     }
   },[dispatch, user]);
 

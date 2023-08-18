@@ -105,7 +105,7 @@ const ProjectDetails = () => {
                 <p>Country: <span style={{ color: 'gray', textAlign: 'left' }}>{project.country}</span></p>
                 <p>Location: <span style={{ color: 'gray', textAlign: 'left' }}>{`${project.city}, ${project.district}, ${project.sector}, ${project.address}`}</span></p>
                 <p>Owner: <span style={{ color: 'gray', textAlign: 'left' }}>{project.ownerName}</span></p>
-                <p>Progress: <span style={{ color: 'gray', textAlign: 'left' }}>{project.progress} %</span></p>
+                <p>Progress: <span style={{ color: 'gray', textAlign: 'left' }}>{`${Math.round(project.progress * 10) / 10} %`}</span></p>
               </VerticallyFlexGapContainer>
             </HorizontallyFlexSpaceBetweenContainer>
             <HorizontallyFlexGapContainer style={{ gap: '20px' }}>
@@ -149,6 +149,20 @@ const ProjectDetails = () => {
                   <p role="alert">Owner email is required</p>
                 )}
               </FormElement>
+              {/* <FormElement style={{ color: 'gray' }}>
+                <label htmlFor="role">Role</label>
+                <select 
+                  {...register("role", { required: true })}
+                  aria-invalid={errors.role ? "true" : "false"}
+                >
+                  <option value="">Choose role</option>
+                  <option value="Stakeholder">Stakeholder</option>
+                  <option value="Owner">Owner</option>
+                </select>
+                {errors.role?.type === "required" && (
+                  <p role="alert">Role is required</p>
+                )}
+              </FormElement> */}
               <FormElement style={{ width: '20%' }}>
                 {isProcessing 
                   ? <Button disabled variant="contained" color="primary" size="small">PROCESSING...</Button> 

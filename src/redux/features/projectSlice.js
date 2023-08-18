@@ -16,7 +16,7 @@ const initialState = {
 
 export const getAllProjects = createAsyncThunk(
     'project/getAllProjects',
-    async (userId, thunkAPI) => {
+    async (filter, thunkAPI) => {
         try {
             const response = await axios.get(serverUrl+`/api/v1/cpta/project/list`);
             response.data.projects.forEach((element, index) => {
@@ -28,7 +28,7 @@ export const getAllProjects = createAsyncThunk(
                 element.estimatedEndDate = new Date(element.estimatedEndDate).toLocaleString();
                 element.number = index;
             });
-            return { projects: response.data.projects, user: userId }
+            return { projects: response.data.projects, filter }
         } catch (error) {
             return thunkAPI.rejectWithValue('Something went wrong!!');
         }
@@ -63,10 +63,11 @@ const projectSlice = createSlice({
         },
         [getAllProjects.fulfilled] : (state, action) => {
             state.isLoading = false;
+            const { id, email } = action.payload.filter;
             let listOfProjects = action.payload.projects.sort((a,b) => new Date(a.creationDate) - new Date(b.creationDate));
             state.listOfProjects = listOfProjects;
-            state.listOfConsultantsProjects = action.payload.projects.filter(project => project.consultantId === action.payload.user);
-            state.listOfOwnerProjects = action.payload.projects.filter(project => project.ownerId === action.payload.user);
+            state.listOfConsultantsProjects = action.payload.projects.filter(project => project.consultantId === id);
+            state.listOfOwnerProjects = action.payload.projects.filter(project => project.ownerEmail === email);
             state.numberOfProjects = state.listOfConsultantsProjects.length + state.listOfOwnerProjects.length;
         },
         [getAllProjects.rejected] : (state) => {

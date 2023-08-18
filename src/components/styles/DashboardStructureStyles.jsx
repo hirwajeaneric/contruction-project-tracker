@@ -136,11 +136,11 @@ export const SideBarMenuItem = styled(NavLink)`
         width: 80%;
 
         span.text {
-            width: 80%;
+            width: 75%;
         }
     
         span.number {
-            width: 20%;
+            width: 25%;
             font-size: 90%;
         }
     }

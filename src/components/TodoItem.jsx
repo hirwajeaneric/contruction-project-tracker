@@ -11,6 +11,8 @@ import { getIssueSprints } from '../redux/features/sprintSlice';
 import { Box, Button, Modal } from '@mui/material';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import SprintDetails from './forms/SprintDetails';
+import { getAllProjects } from '../redux/features/projectSlice';
+import { useCookies } from 'react-cookie';
 const serverUrl = import.meta.env.VITE_REACT_APP_SERVERURL;
 
 const generalStyles = {
@@ -52,6 +54,8 @@ export default function TodoItem(props) {
     const { type, data } = props;
     const { setOpen, setResponseMessage,handleOpenModal, setDetailsFormType, setDetailsData } = useContext(GeneralContext);
     const dispatch = useDispatch();
+    const [ cookies ] = useCookies(null);
+    const user = cookies.UserData;
 
     const viewIssueDetails = () => {
         handleOpenModal(); 
@@ -74,6 +78,7 @@ export default function TodoItem(props) {
             if (response.status === 200) {
                 if (type === 'issue') {
                     dispatch(getProjectIssues(response.data.issue.project));
+                    dispatch(getAllProjects(user.id));
                 } else if (type === 'sprint') {
                     dispatch(getIssueSprints(response.data.sprint.issue));
                 }
