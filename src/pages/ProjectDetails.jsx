@@ -74,12 +74,23 @@ const ProjectDetails = () => {
       <VerticallyFlexGapContainer style={{ gap: '20px', backgroundColor: 'white', padding: '20px', borderRadius: '5px', boxShadow: '0 2px 4px 0 rgba(0, 0, 0, 0.1)' }}>
         {isLoading ? <p>Loading...</p> :
           <VerticallyFlexGapContainer style={{ gap: '20px'}}>
+            
             <HorizontallyFlexGapContainer style={{ borderBottom: '1px solid #a3c2c2', paddingBottom: '10px' }}>
               <HeaderTwo style={{ width: '100%', textAlign: 'left' }}>{project.name}</HeaderTwo>
+              
               <HorizontallyFlexGapContainer style={{ gap: '20px', justifyContent: 'flex-end' }}>
                 <p style={{ color: 'black' }}>Code: <span style={{ color: 'gray' }}>{project.code}</span></p>
                 <Button 
-                  variant='contained' 
+                  variant='text' 
+                  size='small' 
+                  color='secondary' 
+                  onClick={() => { 
+                    navigate(`/${params.code}/report-preview`);
+                  }}>
+                    Report preview
+                </Button>
+                <Button 
+                  variant='text' 
                   size='small' 
                   color='info' 
                   onClick={() => { 
@@ -87,10 +98,11 @@ const ProjectDetails = () => {
                     setDetailsFormType('project');
                     setDetailsData(project);
                   }}>
-                    Edit/View Project
-                  </Button>
+                    Project Info
+                </Button>
               </HorizontallyFlexGapContainer>
             </HorizontallyFlexGapContainer>
+
             <p style={{ color: 'gray', textAlign:'left', lineHeight: '1.5rem', width: '100%' }}>{project.description}</p>
             <HorizontallyFlexSpaceBetweenContainer style={{ fontSize: '90%', textAlign: 'left' }}>
               <VerticallyFlexGapContainer style={{ alignItems: 'flex-start', gap: '10px' }}>

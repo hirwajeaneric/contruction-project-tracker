@@ -105,7 +105,7 @@ function App() {
             <Route path='/:code/activities' element={<Tasks />} />
             <Route path='/:code/resources' element={<ProjectMaterials />} />
             <Route path='/:code/milestones' element={<MileStones />} />
-            <Route path='report' element={<Reports />} />
+            <Route path='/:code/report-preview' element={<Reports />} />
             <Route path='settings' element={<Settings />} />
           </Route>
         </Routes>
