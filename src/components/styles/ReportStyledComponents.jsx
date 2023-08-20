@@ -18,7 +18,7 @@ export const TopBar = styled.div`
     align-items: flex-start;
 
     img {
-        width: 15%;
+        width: 35%;
     }
 
     h1 {
@@ -83,6 +83,7 @@ export const ReportHeader = styled.div`
 export const ReportFooter = styled.div`
     width: 100%;
     // padding: 50px;
+    margin-top: 30px;
     font-size: 85%;
     text-align: left;
 `;
@@ -103,6 +104,14 @@ export const ReportBody = styled.div`
         border-top: 1px solid gray;
     }
 
+`;
+
+export const GeneralProjectOverview = styled.div`
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 10px;
 `;
 
 export const InstitutionDetails = styled.div`
@@ -152,7 +161,6 @@ export const Table = styled.table`
 export const TableList = styled.table`
     border-collapse: collapse;
     width: 100%;
-    margin-top: 20px;
 
     thead {
         tr {

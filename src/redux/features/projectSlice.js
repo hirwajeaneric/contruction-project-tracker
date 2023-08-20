@@ -39,12 +39,13 @@ export const getSelectedProject = createAsyncThunk(
     'project/getSelectedProject',
     async (filter, thunkAPI) => {
         const { projectCode } = filter;
+        
         try {
             const response = await axios.get(`${serverUrl}/api/v1/cpta/project/findByCode?code=${projectCode}`);
             
-            response.project.startDate = new Date(response.project.startDate).toLocaleString();
-            response.project.endDate = new Date(response.project.endDate).toLocaleString();
-            response.project.estimatedEndDate = new Date(response.project.estimatedEndDate).toLocaleString();
+            response.data.project.startDate = new Date(response.data.project.startDate).toLocaleString();
+            response.data.project.endDate = new Date(response.data.project.endDate).toLocaleString();
+            response.data.project.estimatedEndDate = new Date(response.data.project.estimatedEndDate).toLocaleString();
             
             return { project: response.data.project }
         } catch (error) {

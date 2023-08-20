@@ -1,77 +1,110 @@
 /* eslint-disable react/display-name */
-import React, { useEffect, useState } from 'react'
-import { ReportHeader, TopBar, TableList, ReportBody, ReportFooter, InstitutionDetails, ReportPaperContainer } from './styles/ReportStyledComponents';
+import React from 'react'
+import { ReportHeader, TopBar, TableList, ReportBody, ReportFooter, InstitutionDetails, ReportPaperContainer, GeneralProjectOverview } from './styles/ReportStyledComponents';
+import { useCookies } from 'react-cookie';
+import { useSelector } from 'react-redux';
 
 export const ComponentToPrint = React.forwardRef((props, ref) => {
     // FORM PROCESSING AND RESPONSE PROVISION
-    const { project } = props;
+    const [ cookies ] = useCookies(null);
+    const user = cookies.UserData;
+
+    const { selectedProject } = useSelector(state => state.project);
+    const { listOfProjectIssues } = useSelector(state => state.issue);
+    const { listOfProjectResources } = useSelector(state => state.material);
 
     return (
         <ReportPaperContainer ref={ref}>
             <TopBar>
                 <img src='/construc-logo.png' alt='' />
                 <InstitutionDetails>
-                    <p>Location: Kigali, Rwanda</p>
-                    <p>Email: info@rab.gov.rw</p>
-                    <p>Phone: 0780599839</p>
+                    <p>Email: {user.email}</p>
+                    <p>{selectedProject.country}, {selectedProject.province}</p>
+                    {selectedProject.district && <p>{selectedProject.district} District</p>}
+                    {selectedProject.sector && <p>{selectedProject.sector} Sector</p>}
+                    {selectedProject.address && <p>Street address: {selectedProject.address}</p>}
                 </InstitutionDetails>
             </TopBar>
             <ReportHeader>
-                <h2>{project.name}</h2>
-                <h3>{project.code}</h3>
+                <h2>{selectedProject.name}</h2>
+                <h3>General Project Progress Report</h3>
                 
                 <div className='report-period'>
                     <div className='left'>
-                        <p>Report period: Year 2023</p>
+                        <p>Project code: {selectedProject.code}</p>
                     </div>
-                    <div right='right'>
+                    <div className='right'>
                         <p>Generated on: {new Date().toDateString()}</p>
-                        <p>By: Impuhwe Stella</p>
+                        <p>{`By: ${user.fullName}`}</p>
                     </div>
                 </div>
             </ReportHeader>
 
-            <ReportBody>
-                <p>The table bellow contains milk production data from all provinces in Rwanda</p>
+            <ReportBody style={{ gap: '20px' }}>
+                <strong>General project overview</strong>
+
+                <GeneralProjectOverview>
+                    <p>Created on: {new Date(selectedProject.creationDate).toDateString()}</p>
+                    <p>Progress: {selectedProject.progress.toFixed(1)} %</p>
+                </GeneralProjectOverview>
+
+                <p>This report is a summary of the progress of {selectedProject.name} major millestones, and resource (material) usage on the field.</p>
+                
+                <strong>Major Millestones</strong>
 
                 <TableList>
                     <thead>
                         <tr>
-                            <th>Province</th>
-                            <th>Quantity in Litres</th>
+                            <th>Millestone</th>
+                            <th>Created on</th>
+                            <th>Progress</th>
                         </tr>
                     </thead>
                     <tbody>
+                        {listOfProjectIssues && listOfProjectIssues.map((issue, index) => {
+                            return (
+                                <tr key={index}>
+                                    <td>{issue.name}</td>
+                                    <td>{new Date(issue.creationDate).toDateString()}</td>
+                                    <td>{issue.progress}</td>
+                                </tr>
+                            )
+                        })}
+                    </tbody>
+                </TableList>
+
+                <strong>Resource/Material usage</strong>
+
+                <TableList>
+                    <thead>
                         <tr>
-                            <td>Kigali City</td>
-                            <td>100000</td>
+                            <th>Name</th>
+                            <th>Entry date</th>
+                            <th>Quantity</th>
+                            <th>Assigned</th>
+                            <th>Used</th>
+                            <th>Remaining</th>
                         </tr>
-                        <tr>
-                            <td>Northern province</td>
-                            <td>470000</td>
-                        </tr>
-                        <tr>
-                            <td>Southern province</td>
-                            <td>500000</td>
-                        </tr>
-                        <tr>
-                            <td>Eastern province</td>
-                            <td>600000</td>
-                        </tr>
-                        <tr>
-                            <td>Western province</td>
-                            <td>440000</td>
-                        </tr>
-                        <tr>
-                            <td>Total</td>
-                            <td>2110000</td>
-                        </tr>
+                    </thead>
+                    <tbody>
+                        {listOfProjectResources && listOfProjectResources.map((resource, index) => {
+                            return (
+                                <tr key={index}>
+                                    <td>{resource.name}</td>
+                                    <td>{new Date(resource.entryDate).toDateString()}</td>
+                                    <td>{resource.quantity}</td>
+                                    <td>{resource.assigned}</td>
+                                    <td>{resource.used}</td>
+                                    <td>{resource.quantity - resource.used}</td>
+                                </tr>
+                            )
+                        })}
                     </tbody>
                 </TableList>
             </ReportBody>
 
             <ReportFooter>
-                <p>Copyright {new Date().getFullYear()} &copy; MMPAS. All Rights Reserved. </p>
+                <p>Copyright {new Date().getFullYear()} &copy; Construc. All Rights Reserved. </p>
             </ReportFooter>
         </ReportPaperContainer>
     )

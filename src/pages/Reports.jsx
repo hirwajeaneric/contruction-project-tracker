@@ -7,6 +7,10 @@ import { HeaderTwo, HorizontallyFlexSpaceBetweenContainer, VerticallyFlexGapCont
 import { getSelectedProject } from "../redux/features/projectSlice";
 import { ComponentToPrint } from "../components/ComponentToPrint";
 import { useReactToPrint } from 'react-to-print';
+import { getProjectIssues } from "../redux/features/issueSlice";
+const serverUrl = import.meta.env.VITE_REACT_APP_SERVERURL;
+import axios from "axios";
+import { getProjectResources } from "../redux/features/materialSlice";
 
 export default function Reports() {
   const dispatch = useDispatch();
@@ -18,8 +22,20 @@ export default function Reports() {
 
   // Fetching project 
   useEffect(() => {
-    dispatch(getSelectedProject({ projectCode: params.code }))
-  },[dispatch]);  
+    // Get project info
+    dispatch(getSelectedProject({ projectCode: params.code }));
+    
+    axios.get(`${serverUrl}/api/v1/cpta/project/findByCode?code=${params.code}`)
+    .then(response => {
+      // Get project issues
+      dispatch(getProjectIssues(response.data.project._id));
+
+      // Get project materials
+      dispatch(getProjectResources(response.data.project._id))
+    })
+    .catch(error => console.error(error))
+
+  },[dispatch, params.code]);  
 
   const { selectedProject } = useSelector(state => state.project);
 
@@ -35,7 +51,7 @@ export default function Reports() {
       </HorizontallyFlexSpaceBetweenContainer>
 
       <VerticallyFlexGapContainer style={{ gap: '20px', alignItems: 'flex-start' }}>
-        <ComponentToPrint ref={componentRef} project={selectedProject} />      
+        <ComponentToPrint ref={componentRef} />      
       </VerticallyFlexGapContainer>
     </VerticallyFlexGapContainer>
   )
