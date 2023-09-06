@@ -1,4 +1,4 @@
-import { Avatar, Button } from "@mui/material";
+import {  Button } from "@mui/material";
 import axios from "axios";
 import { useContext, useState } from "react";
 import { useEffect } from "react";
@@ -12,16 +12,20 @@ import ConstructionIcon from '@mui/icons-material/Construction';
 import SportsScoreIcon from '@mui/icons-material/SportsScore';
 import { useForm } from "react-hook-form";
 import { GeneralContext } from "../App";
+import { useCookies } from "react-cookie";
 
 const ProjectDetails = () => {
   const navigate = useNavigate();
   const params = useParams();
-  const { isLoading, listOfConsultantsProjects, listOfOwnerProjects } = useSelector(state => state.project);
-  const [openAddOwnerForm, setOpenAddOwnerForm] = useState(false);
+  const { isLoading } = useSelector(state => state.project);
+  const [ cookies ] = useCookies(null);
+  const user = cookies.UserData;
+
+  const [ openAddOwnerForm, setOpenAddOwnerForm ] = useState(false);
   const { setOpen, setResponseMessage, handleOpenModal, setDetailsFormType, setDetailsData } = useContext(GeneralContext);
-  const [isProcessing, setIsProcessing] = useState(false);
+  const [ isProcessing, setIsProcessing ] = useState(false);
   const { register, handleSubmit, formState: { errors } } = useForm();
-  const [project, setProject] = useState({});
+  const [ project, setProject ] = useState({});
   
   // Fetching project 
   useEffect(() => {
@@ -30,10 +34,10 @@ const ProjectDetails = () => {
       setProject(response.data.project)
     })
     .catch(error => console.log(error))
-  },[]);
+  },[params.code]);
 
   const sendEmail = (email) => {
-    const response = axios.post(`${serverUrl}/api/v1/cpta/email/`, email)
+    axios.post(`${serverUrl}/api/v1/cpta/email/`, email)
   }
 
   // Adding owner function 
@@ -121,9 +125,19 @@ const ProjectDetails = () => {
               </VerticallyFlexGapContainer>
             </HorizontallyFlexSpaceBetweenContainer>
             <HorizontallyFlexGapContainer style={{ gap: '20px' }}>
-              <Button variant="contained" color="success" size="small" type="button" onClick={() => { setOpenAddOwnerForm(!openAddOwnerForm) }}><PersonIcon /> Add Owner</Button>
-              <Button variant="contained" color="primary" size="small" type="button" onClick={() => {navigate(`/${project.code}/resources`)}}><ConstructionIcon /> Add / View Resources</Button>
-              <Button variant="contained" color="secondary" size="small" type=" button" onClick={() => {navigate(`/${project.code}/milestones`)}}><SportsScoreIcon /> Add / View Millestones</Button>
+              {user.role === 'Consultant' && <Button variant="contained" color="success" size="small" type="button" onClick={() => { setOpenAddOwnerForm(!openAddOwnerForm) }}><PersonIcon /> Add Owner</Button>}
+              {user.role === 'Consultant' && 
+                <>
+                  <Button variant="contained" color="primary" size="small" type="button" onClick={() => {navigate(`/${project.code}/resources`)}}><ConstructionIcon /> Add / View Resources</Button>
+                  <Button variant="contained" color="secondary" size="small" type=" button" onClick={() => {navigate(`/${project.code}/milestones`)}}><SportsScoreIcon /> Add / View Millestones</Button>
+                </>
+              }
+              {user.role === 'Owner' && 
+                <>
+                  <Button variant="contained" color="primary" size="small" type="button" onClick={() => {navigate(`/${project.code}/resources`)}}><ConstructionIcon />View Resources</Button>
+                  <Button variant="contained" color="secondary" size="small" type=" button" onClick={() => {navigate(`/${project.code}/milestones`)}}><SportsScoreIcon />View Millestones</Button>
+                </>
+              }
             </HorizontallyFlexGapContainer>
           </VerticallyFlexGapContainer>
         }

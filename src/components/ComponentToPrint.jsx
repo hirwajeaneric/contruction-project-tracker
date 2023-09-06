@@ -45,7 +45,7 @@ export const ComponentToPrint = React.forwardRef((props, ref) => {
 
                 <GeneralProjectOverview>
                     <p>Created on: {new Date(selectedProject.creationDate).toDateString()}</p>
-                    <p>Progress: {selectedProject.progress.toFixed(1)} %</p>
+                    <p>Progress: {Math.round(selectedProject.progress * 10) / 10} %</p>
                 </GeneralProjectOverview>
 
                 <p>This report is a summary of the progress of {selectedProject.name} major millestones, and resource (material) usage on the field.</p>
