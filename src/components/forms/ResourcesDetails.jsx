@@ -9,6 +9,7 @@ import { getProjectResources } from "../../redux/features/materialSlice";
 import { measurementUnits } from "../../utils/MeasurementUnits";
 import { useEffect } from 'react';
 import { currencies } from '../../utils/Currencies';
+import { useCookies } from 'react-cookie';
 
 const ResourcesDetails = ({data}) => {
   const [isProcessing, setIsProcessing] = useState(false);
@@ -16,6 +17,8 @@ const ResourcesDetails = ({data}) => {
   const { setOpen, setResponseMessage, handleOpenModal } = useContext(GeneralContext);
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(true);
+  const [ cookies ] = useCookies(null);
+  const user = cookies.UserData;
 
   // Handle input changes
   const handleChange = ({ currentTarget: input }) => {
@@ -112,54 +115,92 @@ const ResourcesDetails = ({data}) => {
         <HorizontallyFlexGapContainer style={{ gap: '20px' }}>
           <FormElement>
             <label htmlFor="name">Name</label>
-            <input type="text" name="name" id="name" onChange={handleChange} value={resource.name} />
+            {user.role === 'Consultant' ? 
+              <input name="type" id="type" onChange={handleChange} value={resource.type} />
+            :
+              <strong>{resource.name}</strong>
+            }
           </FormElement>
           <FormElement>
             <label htmlFor="type">Type</label>
-            <input name="type" id="type" onChange={handleChange} value={resource.type} />
+            {user.role === 'Consultant' ? 
+              <input name="type" id="type" onChange={handleChange} value={resource.type} />
+            :
+              <strong>{resource.type}</strong>
+            }
           </FormElement>
         </HorizontallyFlexGapContainer>
         <FormElement>
           <label htmlFor="description">Description</label>
-          <textarea type="text" name="description" id="description" onChange={handleChange} value={resource.description}></textarea>
+          {user.role === 'Consultant' ? 
+            <textarea type="text" name="description" id="description" onChange={handleChange} value={resource.description}></textarea>
+          :
+            <strong>{resource.description}</strong>
+          }
         </FormElement>
         <HorizontallyFlexGapContainer style={{ gap: '20px' }}>
           <FormElement>
             <label htmlFor="quantity">{`Quantity in ${resource.measurementUnit}`}</label>
-            <input type="number" name="quantity" id="quantity" onChange={handleChange} value={resource.quantity} />
+            {user.role === 'Consultant' ? 
+              <input type="number" name="quantity" id="quantity" onChange={handleChange} value={resource.quantity} />
+            :
+              <strong>{resource.quantity}</strong>
+            }
           </FormElement>
           <FormElement>
-            <label htmlFor="measurementUnit">Change Unit</label>
-            <select name="measurementUnit" id="measurementUnit">
-              <option value="">Select unit</option>
-              {measurementUnits.map((measurementUnit, index) => (
-                  <option key={index} value={measurementUnit}>{measurementUnit}</option>
-              ))}
-            </select>
+            {user.role === 'Consultant' ? 
+              <>
+                <label htmlFor="measurementUnit">Change Unit</label>
+                <select name="measurementUnit" id="measurementUnit">
+                  <option value="">Select unit</option>
+                  {measurementUnits.map((measurementUnit, index) => (
+                      <option key={index} value={measurementUnit}>{measurementUnit}</option>
+                  ))}
+                </select>
+              </>
+            :
+              <>
+                <label htmlFor="measurementUnit">Measurement Unit</label>
+                <strong>{resource.measurementUnit}</strong>
+              </>
+            }
           </FormElement>
         </HorizontallyFlexGapContainer>
         <HorizontallyFlexGapContainer style={{ gap: '20px' }}>
           <FormElement>
             <label htmlFor="unitPrice">Unit price</label>
-            <input type="text" name="unitPrice" id="unitPrice" onChange={handleChange} value={resource.unitPrice} />
+            {user.role === 'Consultant' ? 
+              <input type="text" name="unitPrice" id="unitPrice" onChange={handleChange} value={resource.unitPrice} />
+            :
+              <strong>{resource.unitPrice}</strong>
+            }
           </FormElement>
           <FormElement>
-            <label htmlFor="unitPrice">Change currency</label>
-            <select name="currency" id="currency">
-              <option value="">Select current</option>
-              {currencies.map((currency, index) => (
-                  <option key={index} value={currency}>{currency}</option>
-              ))}
-            </select>
+            {user.role === 'Consultant' ? 
+              <>
+                <label htmlFor="unitPrice">Change currency</label>
+                <select name="currency" id="currency">
+                  <option value="">Select current</option>
+                  {currencies.map((currency, index) => (
+                      <option key={index} value={currency}>{currency}</option>
+                  ))}
+                </select>
+              </>
+            :
+              <>
+                <label htmlFor="unitPrice">Currency</label>
+                <strong>{resource.currency}</strong>
+              </>
+            }
           </FormElement>
         </HorizontallyFlexGapContainer>
-        <FormElement style={{ flexDirection: 'row', gap: '30%' }}>
+        {user.role === 'Consultant' && <FormElement style={{ flexDirection: 'row', gap: '30%' }}>
           {isProcessing 
           ? <Button disabled variant="contained" color="primary" size="small">PROCESSING...</Button> 
           : <Button variant="contained" color="primary" size="small" type="submit">Confirm Updates</Button>
           }
           <Button variant="contained" color="secondary" size="small" type="button" onClick={() => {window.location.reload()}}>Cancel</Button>
-        </FormElement>
+        </FormElement>}
       </VerticallyFlexGapForm>
     </VerticallyFlexGapContainer>
   )

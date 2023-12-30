@@ -225,7 +225,7 @@ const IssueDetails = (props) => {
       
       <HorizontallyFlexSpaceBetweenContainer style={{ flexWrap:'wrap', borderBottom: '1px solid #94b8b8', paddingBottom: '10px' }}>
         <h2>{issue.name}</h2>
-        <Button variant='contained' size='small' color='error' onClick={deleteIssue}>Delete &nbsp;<MdDelete /></Button>
+        {user.role === 'Consultant' && <Button variant='contained' size='small' color='error' onClick={deleteIssue}>Delete &nbsp;<MdDelete /></Button>}
       </HorizontallyFlexSpaceBetweenContainer>
       
       <VerticallyFlexGapContainer style={{ gap: '20px', color: 'gray', fontSize:'90%', position: 'relative' }}>
@@ -241,7 +241,8 @@ const IssueDetails = (props) => {
               <div className="input-with-icon">
                 <MdOutlineDriveFileRenameOutline />
                 <div>
-                  <input type={'text'} placeholder='Change name' value={issue.name} name='name' onChange={handleChange} />
+                  {user.role === 'Consultant' && <input type={'text'} placeholder='Change name' value={issue.name} name='name' onChange={handleChange} />}
+                  {user.role === 'Owner' && <strong>{issue.name}</strong>}
                 </div>
               </div>
             </FormElement>
@@ -249,7 +250,8 @@ const IssueDetails = (props) => {
               <div className="input-with-icon">
                 <MdNotes />
                 <div>
-                  <input type={'text'} placeholder='Notes' value={issue.description} name='description' onChange={handleChange} />
+                  {user.role === 'Consultant' && <input type={'text'} placeholder='Notes' value={issue.description} name='description' onChange={handleChange} />}
+                  {user.role === 'Owner' && <strong>{issue.description}</strong>}
                 </div>
               </div>
             </FormElement>
@@ -258,7 +260,7 @@ const IssueDetails = (props) => {
                 <BiCalendar/>
                 <div>
                   <label htmlFor="startDate">Start Date {issue.startDate && <span style={{ color: 'black' }}>{new Date(issue.startDate).toLocaleString()}</span>}</label>
-                  <input type={'date'} id='startDate' value={issue.startDate} name='startDate' onChange={handleChange} />
+                  {user.role === 'Consultant' && <input type={'date'} id='startDate' value={issue.startDate} name='startDate' onChange={handleChange} />}
                 </div>
               </div>
             </FormElement>
@@ -267,16 +269,16 @@ const IssueDetails = (props) => {
                 <BiCalendar/>
                 <div>
                   <label htmlFor="endDate">Due Date {issue.endDate && <span style={{ color: 'black' }}>{new Date(issue.endDate).toLocaleString()}</span>}</label>
-                  <input type={'date'} id='endDate' value={issue.endDate || ''} name='endDate' onChange={handleChange} />
+                  {user.role === 'Consultant' && <input type={'date'} id='endDate' value={issue.endDate || ''} name='endDate' onChange={handleChange} />}
                 </div>
               </div>
             </FormElement>
-            <HorizontallyFlexGapContainer style={{ marginTop: '20px' }}>
+            {user.role === 'Consultant' && <HorizontallyFlexGapContainer style={{ marginTop: '20px' }}>
               {isProcessing 
                 ? <Button disabled variant="contained" color="primary" size="small">PROCESSING...</Button> 
                 : <Button variant="contained" color="primary" size="small" type="submit">Save changes</Button>
               }
-            </HorizontallyFlexGapContainer>
+            </HorizontallyFlexGapContainer>}
           </VerticallyFlexGapForm>
 
 
@@ -284,9 +286,11 @@ const IssueDetails = (props) => {
 
           {/* Activities / Sprints ****************************************************************************************************************************/}
           <VerticallyFlexGapForm onSubmit={addSprint} style={{ marginTop: '20px', background: '#e6f2ff', padding: '20px', borderRadius: '5px', gap: '10px' }}>
-            <h3 style={{ width: '100%', textAlign: 'left', color: 'black' }}>Add activities</h3>
+            {user.role === 'Consultant' && <h3 style={{ width: '100%', textAlign: 'left', color: 'black' }}>Add activities</h3>}
+            {user.role === 'Owner' && <h3 style={{ width: '100%', textAlign: 'left', color: 'black' }}>Activities</h3>}
 
-            <HorizontallyFlexGapContainer style={{ borderTop: "1px solid rgba(0,0,0,.2)" }}>
+            {user.role === 'Consultant' && 
+              <HorizontallyFlexGapContainer style={{ borderTop: "1px solid rgba(0,0,0,.2)" }}>
                 <input id="name" name="name" value={sprint.name || ''} placeholder="Add activity..." type={'text'} onChange={handleActivityInput} style={{ width: '80%', padding: '8px 12px', border: 'none', color:"black", background: 'transparent', fontSize:'100%',borderRadius: '0 0 0 5px' }} />
                 {sprint.name && 
                     <>
@@ -297,7 +301,8 @@ const IssueDetails = (props) => {
                         }
                     </>
                 }
-            </HorizontallyFlexGapContainer>
+              </HorizontallyFlexGapContainer>
+            }
             <VerticallyFlexGapContainer style={{ gap: '10px'}}>
                 {
                   loadingIssueSprints 

@@ -1,6 +1,5 @@
 import { Helmet } from "react-helmet-async";
 import { useDispatch, useSelector } from "react-redux";
-import CreateProjectForm from "../components/forms/CreateProjectForm";
 import { HeaderTwo, HorizontallyFlexGapContainer, HorizontallyFlexSpaceBetweenContainer, VerticallyFlexGapContainer } from "../components/styles/GenericStyles"
 import { useContext, useEffect, useState } from "react";
 import axios from "axios";
@@ -9,13 +8,17 @@ import { useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
 import AddResourcesForm from "../components/forms/AddResourcesForm";
 import ResourcesTable from "../components/tables/ResourcesTable";
+import OwnerResourcesTable from "../components/tables/OwnerResourcesTable";
 import { getProjectResources } from "../redux/features/materialSlice";
 import { Button } from "@mui/material";
+import { useCookies } from "react-cookie";
 const serverUrl = import.meta.env.VITE_REACT_APP_SERVERURL;
 
 const ProjectMaterials = () => {
   const params = useParams();
   const dispatch = useDispatch();
+  const [ cookies ] = useCookies(null);
+  const user = cookies.UserData;
   const { setOpen, setResponseMessage, handleOpenModal, setDetailsFormType, setDetailsData } = useContext(GeneralContext);
   const [isProcessing, setIsProcessing] = useState(false);
   const { register, handleSubmit, formState: { errors } } = useForm();  
@@ -69,7 +72,8 @@ const ProjectMaterials = () => {
           <p style={{ fontWeight: '600', width: '100%', textAlign:'left' }}>Resources</p>
           {loadingProject ? <p style={{ width: '100%', textAlign: 'left' }}>Loading...</p> :
             <>
-              {listOfProjectResources.length !== 0 && <ResourcesTable data={listOfProjectResources}/>}
+              {listOfProjectResources.length !== 0 && user.role === 'Consultant' && <ResourcesTable data={listOfProjectResources}/>}
+              {listOfProjectResources.length !== 0 && user.role === 'Owner' && <OwnerResourcesTable data={listOfProjectResources}/>}
               {listOfProjectResources.length === 0 && <p style={{ color: 'gray', marginTop: '20px' }}>No resources available</p>}
             </>
           }

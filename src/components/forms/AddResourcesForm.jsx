@@ -26,8 +26,6 @@ export default function AddResourcesForm({projectId}) {
 
         setIsProcessing(true);
         
-        console.log(data);
-
         axios.post(serverUrl+'/api/v1/cpta/material/add', data)
         .then(response => {
             setTimeout(() => {
@@ -36,6 +34,7 @@ export default function AddResourcesForm({projectId}) {
                     setResponseMessage({ message: response.data.message, severity: 'success' });
                     setOpen(true);
                     dispatch(getProjectResources(projectId));
+                    window.location.reload();
                 }
             }, 3000)
         })

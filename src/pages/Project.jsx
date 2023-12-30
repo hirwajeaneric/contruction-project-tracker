@@ -1,11 +1,14 @@
 import { Helmet } from "react-helmet-async";
 import { useSelector } from "react-redux";
 import CreateProjectForm from "../components/forms/CreateProjectForm";
-import { HeaderTwo, HorizontallyFlexGapContainer, HorizontallyFlexSpaceBetweenContainer, VerticallyFlexGapContainer } from "../components/styles/GenericStyles"
+import { HeaderTwo, HorizontallyFlexGapContainer, VerticallyFlexGapContainer } from "../components/styles/GenericStyles"
 import ProjectItem from "../components/ProjectItem";
+import { useCookies } from "react-cookie";
 
 const Project = () => {
   const { isLoading, listOfConsultantsProjects, listOfOwnerProjects } = useSelector(state => state.project);
+  const [ cookies ] = useCookies(null);
+  const user = cookies.UserData;
 
   return (
     <VerticallyFlexGapContainer style={{ gap: '20px'}}>
@@ -36,7 +39,7 @@ const Project = () => {
         </VerticallyFlexGapContainer>
 
         {/* Create project form  */}
-        <CreateProjectForm />
+        {user.role === 'Consultant' && <CreateProjectForm />}
       </HorizontallyFlexGapContainer>
 
     </VerticallyFlexGapContainer>

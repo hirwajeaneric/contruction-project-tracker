@@ -13,7 +13,7 @@ import { Helmet } from "react-helmet-async";
 const Signin = () => {
   const [ cookies, setCookie, removeCookie ] = useCookies(null);
   const { setOpen, setResponseMessage } = useContext(GeneralContext);
-    
+  const [visible, setVisible] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const { register, handleSubmit, formState: { errors } } = useForm();
 
@@ -78,12 +78,12 @@ const Signin = () => {
               <p role="alert">Email is required</p>
             )}
           </FormElement>  
-          <FormElement style={{ color: 'gray' }}>
-            <label htmlFor="password">Password</label>
+          <FormElement>
+            <label style={{ color: 'gray' }} htmlFor="password">Password</label>
             <input 
-              type="password"
+              type={visible ? "text" : "password"}
               id="password" 
-              placeholder="password" 
+              placeholder="Password" 
               {...register("password", {required: true})} 
               aria-invalid={errors.password ? "true" : "false"}
             />
@@ -91,6 +91,10 @@ const Signin = () => {
               <p role="alert">Password is required</p>
             )}
           </FormElement>
+          <div style={{ display: 'flex', flexDirection: 'row', gap: '20px', alignItems: 'center' }}>
+            <p style={{ color: 'gray' }}>Show password</p>
+            <input type='checkbox' name='visible' value={visible} onChange={() => setVisible(!visible)} />
+          </div>
           <Link style={{ color: 'blue' }} to={'/auth/forgot-password'}>Forgot Password?</Link>
           <FormElement>
             {isProcessing 

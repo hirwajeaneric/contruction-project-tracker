@@ -295,7 +295,7 @@ const SprintDetails = (props) => {
       
       <HorizontallyFlexSpaceBetweenContainer style={{ flexWrap:'wrap', borderBottom: '1px solid #94b8b8', paddingBottom: '10px' }}>
         <h2>{sprint.name}</h2>
-        <Button variant='contained' size='small' color='error' onClick={deleteSprint}>Delete &nbsp;<MdDelete /></Button>
+        {user.role === "Consultant" && <Button variant='contained' size='small' color='error' onClick={deleteSprint}>Delete &nbsp;<MdDelete /></Button>}
       </HorizontallyFlexSpaceBetweenContainer>
       
 
@@ -312,7 +312,8 @@ const SprintDetails = (props) => {
               <div className="input-with-icon">
                 <MdOutlineDriveFileRenameOutline />
                 <div>
-                  <input type={'text'} placeholder='Change name' value={sprint.name} name='name' onChange={handleChange} />
+                  {user.role === 'Consultant' && <input type={'text'} placeholder='Change name' value={sprint.name} name='name' onChange={handleChange} />}
+                  {user.role === 'Owner' && <span>{sprint.name}</span>}
                 </div>
               </div>
             </FormElement>
@@ -320,7 +321,8 @@ const SprintDetails = (props) => {
               <div className="input-with-icon">
                 <MdNotes />
                 <div>
-                  <input type={'text'} placeholder='Notes' value={sprint.description} name='description' onChange={handleChange} />
+                  {user.role === 'Consultant' && <input type={'text'} placeholder='Notes' value={sprint.description} name='description' onChange={handleChange} />}
+                  {user.role === 'Owner' && <span>{sprint.description}</span>}
                 </div>
               </div>
             </FormElement>
@@ -329,7 +331,7 @@ const SprintDetails = (props) => {
                 <BiCalendar/>
                 <div>
                   <label htmlFor="startDate">Start Date {sprint.startDate && <span style={{ color: 'black' }}>{new Date(sprint.startDate).toLocaleString()}</span>}</label>
-                  <input type={'date'} id='startDate' value={sprint.startDate} name='startDate' onChange={handleChange} />
+                  {user.role === 'Consultant' && <input type={'date'} id='startDate' value={sprint.startDate} name='startDate' onChange={handleChange} />}
                 </div>
               </div>
             </FormElement>
@@ -338,16 +340,16 @@ const SprintDetails = (props) => {
                 <BiCalendar/>
                 <div>
                   <label htmlFor="endDate">Due Date {sprint.endDate && <span style={{ color: 'black' }}>{new Date(sprint.endDate).toLocaleString()}</span>}</label>
-                  <input type={'date'} id='endDate' value={sprint.endDate || ''} name='endDate' onChange={handleChange} />
+                  {user.role === 'Consultant' && <input type={'date'} id='endDate' value={sprint.endDate || ''} name='endDate' onChange={handleChange} />}
                 </div>
               </div>
             </FormElement>
-            <HorizontallyFlexGapContainer style={{ marginTop: '20px' }}>
+            {user.role === 'Consultant' && <HorizontallyFlexGapContainer style={{ marginTop: '20px' }}>
               {isProcessing 
                 ? <Button disabled variant="contained" color="primary" size="small">PROCESSING...</Button> 
                 : <Button variant="contained" color="primary" size="small" type="submit">Save changes</Button>
               }
-            </HorizontallyFlexGapContainer>
+            </HorizontallyFlexGapContainer>}
           </VerticallyFlexGapForm>
 
 
@@ -359,13 +361,14 @@ const SprintDetails = (props) => {
           <VerticallyFlexGapContainer style={{ marginTop: '20px', background: '#c6ecd9', padding: '20px', borderRadius: '5px', gap: '10px' }}>  
             <HorizontallyFlexSpaceBetweenContainer>
               <div className='left' style={{ gap: '10px', flexDirection: 'column' }}>
-                <h3 style={{ width: '100%', textAlign: 'left', color: 'black' }}>Assign materials</h3>
+                {user.role === 'Consultant' && <h3 style={{ width: '100%', textAlign: 'left', color: 'black' }}>Assign materials</h3>}
+                {user.role === 'Owner' && <h3 style={{ width: '100%', textAlign: 'left', color: 'black' }}>Materials</h3>}
                 {selectedMaterial.date && <p style={{ color: 'black' }}>{`Assigned on: ${new Date(selectedMaterial.date).toDateString()}`}</p>}
               </div>
-              <Button type="button" variant='text' color='secondary' size='small' onClick={cancelMaterialUpdate}>Cancel</Button>
+              {user.role === 'Consultant' && <Button type="button" variant='text' color='secondary' size='small' onClick={cancelMaterialUpdate}>Cancel</Button>}
             </HorizontallyFlexSpaceBetweenContainer>
 
-            <HorizontallyFlexGapContainer style={{ gap: '20px', width: '100%', alignItems: 'flex-end' }}>
+            {user.role === 'Consultant' && <HorizontallyFlexGapContainer style={{ gap: '20px', width: '100%', alignItems: 'flex-end' }}>
               {selectedMaterial.id
               ?  
               // FORM TO UPDATE ASSIGNED MATERIALS 
@@ -454,7 +457,7 @@ const SprintDetails = (props) => {
                   <Button type="submit" variant='contained' color='success' size='small'>Add</Button>
                 }
               </HorizontallyFlexGapForm>}
-            </HorizontallyFlexGapContainer>
+            </HorizontallyFlexGapContainer>}
             
             <VerticallyFlexGapContainer style={{ gap: '10px'}}>
               {sprint.materials.length > 0 && <></>}

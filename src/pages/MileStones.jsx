@@ -8,6 +8,7 @@ import { useParams } from "react-router-dom";
 import { Button } from "@mui/material";
 import { getProjectIssues } from "../redux/features/issueSlice";
 import TodoItem from "../components/TodoItem";
+import { useCookies } from "react-cookie";
 const serverUrl = import.meta.env.VITE_REACT_APP_SERVERURL;
 
 const MileStones = () => {
@@ -17,8 +18,9 @@ const MileStones = () => {
     const [isProcessing, setIsProcessing] = useState(false);
     const [project, setProject] = useState({});
     const [issue, setIssue] = useState({});
+    const [ cookies ] = useCookies(null);
+    const user = cookies.UserData;
     
-
     // Fetching project 
     useEffect(() => {
         axios.get(`${serverUrl}/api/v1/cpta/project/findByCode?code=${params.code}`)
@@ -91,7 +93,10 @@ const MileStones = () => {
                     <HeaderTwo style={{ width: '100%', textAlign: 'left' }}>{`${project.name} major Milestones`}</HeaderTwo>
                     <HorizontallyFlexGapContainer style={{ gap: '20px', justifyContent: 'flex-end' }}>
                         <p style={{ color: 'black' }}>Code: <span style={{ color: 'gray' }}>{project.code}</span></p>
-                        <Button variant='contained' size='small' color='info' onClick={displayProjectInfo}>Edit/View Project</Button>
+                        <Button variant='contained' size='small' color='info' onClick={displayProjectInfo}>
+                            {user.role === 'Consultant' && 'Edit/View Project'}
+                            {user.role === 'Owner' && 'View Project'}
+                        </Button>
                     </HorizontallyFlexGapContainer>
                 </HorizontallyFlexSpaceBetweenContainer>
                 }
@@ -111,18 +116,21 @@ const MileStones = () => {
                         })}
                     </VerticallyFlexGapContainer>
                     {/* Add form  */}
-                    <HorizontallyFlexGapContainer style={{ borderTop: "1px solid rgba(0,0,0,.2)", position: 'sticky' }}>
-                        <input id="name" name="name" value={issue.name || ''} placeholder="Add Task..." type={'text'} onChange={handleInput} style={{ width: '80%', padding: '8px 12px', border: 'none', color:"gray", fontSize:'100%',borderRadius: '0 0 0 5px' }} />
-                        {issue.name && 
-                            <>
-                                {isProcessing ? 
-                                    <button type="button" disabled style={{ width: '20%', padding: '8px 12px', border: 'none', background: 'gray', color: 'white', fontSize:'100%', borderRadius: '0 0 5px' }}>...</button>
-                                    :
-                                    <button type="submit" style={{ width: '20%', padding: '8px 12px', border: 'none', background: 'blue', color: 'white', fontSize:'100%', borderRadius: '0 0 5px' }}>Create</button>
-                                }
-                            </>
-                        }
-                    </HorizontallyFlexGapContainer>
+                    {
+                        user.role === 'Consultant' &&    
+                        <HorizontallyFlexGapContainer style={{ borderTop: "1px solid rgba(0,0,0,.2)", position: 'sticky' }}>
+                            <input id="name" name="name" value={issue.name || ''} placeholder="Add Task..." type={'text'} onChange={handleInput} style={{ width: '80%', padding: '8px 12px', border: 'none', color:"gray", fontSize:'100%',borderRadius: '0 0 0 5px' }} />
+                            {issue.name && 
+                                <>
+                                    {isProcessing ? 
+                                        <button type="button" disabled style={{ width: '20%', padding: '8px 12px', border: 'none', background: 'gray', color: 'white', fontSize:'100%', borderRadius: '0 0 5px' }}>...</button>
+                                        :
+                                        <button type="submit" style={{ width: '20%', padding: '8px 12px', border: 'none', background: 'blue', color: 'white', fontSize:'100%', borderRadius: '0 0 5px' }}>Create</button>
+                                    }
+                                </>
+                            }
+                        </HorizontallyFlexGapContainer>
+                    }
                 </VerticallyFlexSpaceBetweenForm>
 
                 {/* In progress  */}
