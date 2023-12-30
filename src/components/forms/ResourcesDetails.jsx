@@ -96,7 +96,7 @@ const ResourcesDetails = ({data}) => {
           <h2>Resource Info</h2>
           <p style={{ color: 'gray' }}>Entry date: <strong>{resource.entryDate}</strong></p>
         </div>
-        <Button variant='contained' size='small' color='error' onClick={deleteResource}>Delete</Button>
+        {user.role === 'Consultant' && <Button variant='contained' size='small' color='error' onClick={deleteResource}>Delete</Button>}
       </HorizontallyFlexSpaceBetweenContainer>
       <VerticallyFlexGapForm onSubmit={updateResouce} style={{ gap: '20px', color: 'gray', fontSize:'90%' }}>
         <HorizontallyFlexSpaceBetweenContainer style={{ color: 'black', alignItems: 'flex-start' }}>
